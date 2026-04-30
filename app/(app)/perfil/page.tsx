@@ -144,7 +144,7 @@ export default function PerfilPage() {
                 <Camera size={15} color="#fff" />
               </button>
             )}
-            <input ref={fileInputRef} type="file" accept="image/*" capture="user" className="hidden" onChange={handlePhotoChange} />
+            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
           </div>
 
           {!editing && <h1 className="text-xl font-extrabold text-gray-800 mb-1">{userName}</h1>}
