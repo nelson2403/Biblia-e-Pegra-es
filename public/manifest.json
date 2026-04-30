@@ -1,7 +1,7 @@
 {
-  "name": "Biblia & Pregacoes",
-  "short_name": "Biblia",
-  "description": "Palavra, estudo e ministerio",
+  "name": "Bíblia & Pregações",
+  "short_name": "Bíblia",
+  "description": "Palavra, estudo e ministério",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#1E1B4B",
@@ -10,22 +10,22 @@
   "categories": ["education", "lifestyle"],
   "icons": [
     {
+      "src": "/icon",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-icon",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
       "src": "/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
-    },
-    {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
     }
   ]
 }

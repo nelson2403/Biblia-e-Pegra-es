@@ -3,13 +3,19 @@ import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
 
 export const metadata: Metadata = {
-  title: 'Biblia & Pregacoes',
-  description: 'Palavra, estudo e ministerio',
+  title: 'Bíblia & Pregações',
+  description: 'Palavra, estudo e ministério',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Biblia',
+    title: 'Bíblia',
+    startupImage: '/apple-icon',
+  },
+  icons: {
+    icon: '/icon',
+    apple: '/apple-icon',
+    shortcut: '/icon',
   },
 }
 
