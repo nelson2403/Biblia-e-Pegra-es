@@ -1,13 +1,28 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { Plus, Search, X, BookOpen, Pencil, Trash2, ChevronDown } from 'lucide-react'
+import { Plus, Search, X, BookOpen, Pencil, Trash2, ChevronDown, Sparkles } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { EstudoBiblico } from '@/types'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { ESTUDOS_PRONTOS } from '@/data/estudosProntos'
 
 type SortKey = 'recente' | 'antigo' | 'livro'
+type Tab = 'meus' | 'prontos'
+
+const CATEGORY_COLORS: Record<string, { bg: string; color: string }> = {
+  'Salvacao':       { bg: '#DCFCE7', color: '#15803D' },
+  'Espirito Santo': { bg: '#EDE9FE', color: '#6D28D9' },
+  'Fe':             { bg: '#FEF3C7', color: '#92400E' },
+  'Amor':           { bg: '#FCE7F3', color: '#9D174D' },
+  'Arrependimento': { bg: '#FEE2E2', color: '#991B1B' },
+  'Oracao':         { bg: '#DBEAFE', color: '#1D4ED8' },
+  'Palavra':        { bg: '#FEF9C3', color: '#854D0E' },
+  'Alianca':        { bg: '#F0FDF4', color: '#166534' },
+  'Igreja':         { bg: '#EEF2FF', color: '#3730A3' },
+  'Profecia':       { bg: '#FFF7ED', color: '#9A3412' },
+}
 
 function completeness(e: EstudoBiblico) {
   return [e.contexto_historico, e.interpretacao, e.aplicacao, e.insights].filter(v => v?.trim()).length
@@ -15,6 +30,7 @@ function completeness(e: EstudoBiblico) {
 
 export default function EstudosPage() {
   const { user } = useAuth()
+  const [tab, setTab] = useState<Tab>('meus')
   const [estudos, setEstudos] = useState<EstudoBiblico[]>([])
   const [filtered, setFiltered] = useState<EstudoBiblico[]>([])
   const [search, setSearch] = useState('')
@@ -22,6 +38,7 @@ export default function EstudosPage() {
   const [sort, setSort] = useState<SortKey>('recente')
   const [showSort, setShowSort] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [searchProntos, setSearchProntos] = useState('')
 
   const fetchEstudos = useCallback(async () => {
     if (!user) return
@@ -72,21 +89,84 @@ export default function EstudosPage() {
 
   const SORT_LABELS: Record<SortKey, string> = { recente: 'Mais recentes', antigo: 'Mais antigos', livro: 'Por livro' }
 
+  const prontosFiltrados = ESTUDOS_PRONTOS.filter(e => {
+    if (!searchProntos.trim()) return true
+    const q = searchProntos.toLowerCase()
+    return e.titulo.toLowerCase().includes(q) || e.categoria.toLowerCase().includes(q) || e.tags.some(t => t.toLowerCase().includes(q))
+  })
+
   return (
     <div className="flex flex-col min-h-full">
       <div className="flex items-center justify-between px-6 pt-6 pb-3">
         <div>
           <h1 className="text-2xl font-extrabold text-gray-800">Estudos</h1>
-          <Link href="/anotacoes" className="text-xs font-semibold text-primary">Ver Anotacoes &rarr;</Link>
+          <Link href="/anotacoes" className="text-xs font-semibold" style={{ color: '#4F46E5' }}>Ver Anotacoes &rarr;</Link>
         </div>
-        <Link href="/estudos/novo"
-          className="w-10 h-10 rounded-full flex items-center justify-center text-white"
-          style={{ backgroundColor: '#4F46E5' }}>
-          <Plus size={22} />
-        </Link>
+        {tab === 'meus' && (
+          <Link href="/estudos/novo"
+            className="w-10 h-10 rounded-full flex items-center justify-center text-white"
+            style={{ backgroundColor: '#4F46E5' }}>
+            <Plus size={22} />
+          </Link>
+        )}
       </div>
 
-      {estudos.length > 0 && (
+      {/* Tabs */}
+      <div className="flex px-6 mb-4 border-b border-gray-200">
+        {([['meus', 'Meus Estudos'], ['prontos', 'Estudos Prontos']] as const).map(([key, label]) => (
+          <button key={key} onClick={() => setTab(key)}
+            className="flex-1 py-2.5 text-sm font-bold transition-colors"
+            style={{
+              color: tab === key ? '#4F46E5' : '#9CA3AF',
+              borderBottom: tab === key ? '3px solid #4F46E5' : '3px solid transparent',
+            }}>
+            {label}
+          </button>
+        ))}
+      </div>
+
+
+      {/* ── Estudos Prontos Tab ── */}
+      {tab === 'prontos' && (
+        <div className="px-6 pb-6 flex flex-col gap-3">
+          <div className="flex items-center gap-2 border border-gray-200 bg-white rounded-xl px-3 py-2.5 mb-1">
+            <Search size={17} color="#9CA3AF" />
+            <input type="text" placeholder="Buscar tema ou categoria..." value={searchProntos}
+              onChange={e => setSearchProntos(e.target.value)}
+              className="flex-1 text-sm text-gray-700 outline-none" />
+            {searchProntos && <button onClick={() => setSearchProntos('')}><X size={16} color="#9CA3AF" /></button>}
+          </div>
+          {prontosFiltrados.map(estudo => {
+            const cat = Object.entries(CATEGORY_COLORS).find(([k]) =>
+              estudo.categoria.toLowerCase().includes(k.toLowerCase())
+            )
+            const catStyle = cat ? cat[1] : { bg: '#EEF2FF', color: '#4F46E5' }
+            return (
+              <Link key={estudo.id} href={`/estudos/prontos/${estudo.id}`}
+                className="bg-white rounded-2xl p-4 shadow-sm flex items-start gap-3">
+                <div className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: catStyle.bg }}>
+                  <Sparkles size={20} color={catStyle.color} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+                      style={{ backgroundColor: catStyle.bg, color: catStyle.color }}>
+                      {estudo.categoria}
+                    </span>
+                  </div>
+                  <p className="font-bold text-gray-800 text-sm">{estudo.titulo}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{estudo.textoBase}</p>
+                  <p className="text-xs text-gray-400 mt-1 line-clamp-2">{estudo.subtitulo}</p>
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+      )}
+
+      {/* ── Meus Estudos Tab ── */}
+      {tab === 'meus' && estudos.length > 0 && (
         <div className="px-6 mb-3 grid grid-cols-3 gap-2">
           {[
             { label: 'Total', value: estudos.length, color: '#4F46E5', bg: '#EEF2FF' },
@@ -101,8 +181,8 @@ export default function EstudosPage() {
         </div>
       )}
 
-      {/* Tag filter */}
-      {estudos.length > 0 && (() => {
+      {/* Tag filter — só na aba meus */}
+      {tab === 'meus' && estudos.length > 0 && (() => {
         const allTags = [...new Set(estudos.flatMap(e => (e.tags ?? '').split(',').map(t => t.trim()).filter(Boolean)))]
         if (!allTags.length) return null
         return (
@@ -126,7 +206,7 @@ export default function EstudosPage() {
         )
       })()}
 
-      <div className="px-6 mb-2 flex gap-2">
+      {tab === 'meus' && <div className="px-6 mb-2 flex gap-2">
         <div className="flex-1 flex items-center gap-2 border border-gray-200 bg-white rounded-xl px-3 py-2.5">
           <Search size={17} color="#9CA3AF" />
           <input
@@ -155,9 +235,9 @@ export default function EstudosPage() {
             </div>
           )}
         </div>
-      </div>
+      </div>}
 
-      <div className="px-6 pb-6 flex flex-col gap-3">
+      {tab === 'meus' && <div className="px-6 pb-6 flex flex-col gap-3">
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center py-20 gap-3">
             <BookOpen size={48} color="#D1D5DB" />
@@ -213,7 +293,7 @@ export default function EstudosPage() {
             </div>
           )
         })}
-      </div>
+      </div>}
     </div>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { BookOpen, Home, Layers, Mic, User, LogOut, BookMarked, Heart, Map, Search } from 'lucide-react'
+import { BookOpen, Home, Layers, Mic, User, LogOut, BookMarked, Heart, Map, Search, BookA } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
 const NAV = [
@@ -13,6 +13,7 @@ const NAV = [
   { href: '/pregacoes', label: 'Pregacoes', Icon: Mic },
   { href: '/plano', label: 'Plano', Icon: Map },
   { href: '/busca', label: 'Busca', Icon: Search },
+  { href: '/dicionario', label: 'Dicionario', Icon: BookA },
   { href: '/perfil', label: 'Perfil', Icon: User },
 ]
 
