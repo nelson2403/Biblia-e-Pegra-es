@@ -37,12 +37,15 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
     } else {
       setLoading(true)
       try {
-        const res = await fetch(`https://bible-api.com/${bookData.en}+${currentChapter}?translation=almeida`)
+        const bookName = bookData.en.replace(/\+/g, '%20')
+        const res = await fetch(`https://bible-api.com/${bookName}%20${currentChapter}?translation=almeida`)
         const data = await res.json()
-        if (data.verses) {
+        if (data.verses && data.verses.length > 0) {
           const parsed: Verse[] = data.verses.map((v: any) => ({ verse: v.verse, text: v.text.trim() }))
           cache[key] = parsed
           setVerses(parsed)
+        } else {
+          setVerses([])
         }
       } catch { setVerses([]) }
       setLoading(false)
@@ -156,6 +159,11 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
       {/* Verses */}
       {loading ? <LoadingSpinner fullScreen={false} /> : (
         <div className="flex-1 px-4 py-4 pb-36 space-y-0.5">
+          {verses.length === 0 && (
+            <div className="flex flex-col items-center py-20 gap-3">
+              <p className="text-gray-400 text-sm text-center">Versículos não disponíveis para este capítulo.</p>
+            </div>
+          )}
           {verses.map(v => {
             const isSelected = selected?.verse === v.verse
             const isFav = favorites.has(v.verse)
