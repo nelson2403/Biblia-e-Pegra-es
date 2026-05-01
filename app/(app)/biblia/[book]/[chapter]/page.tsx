@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, ChevronLeft, ChevronRight, Share2, Heart, Copy, BookmarkPlus } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, Share2, Heart, Copy, BookmarkPlus, BookOpen } from 'lucide-react'
 import { BIBLE_BOOKS } from '@/data/bibleBooks'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { supabase } from '@/lib/supabase'
@@ -10,14 +10,21 @@ import { useAuth } from '@/contexts/AuthContext'
 interface Verse { verse: number; text: string }
 interface BibleJson { abbrev: string; chapters: string[][] }
 
-const cache: Record<string, Verse[]> = {}
-let bibleJson: BibleJson[] | null = null
+const TRANSLATIONS = [
+  { code: 'aa',   name: 'Almeida Atualizada',          abbr: 'AA',   url: 'https://cdn.jsdelivr.net/gh/thiagobodruk/biblia@master/json/aa.json' },
+  { code: 'nvi',  name: 'Nova Versão Internacional',    abbr: 'NVI',  url: 'https://cdn.jsdelivr.net/gh/thiagobodruk/biblia@master/json/nvi.json' },
+  { code: 'arc',  name: 'Almeida Revisada e Corrigida', abbr: 'ARC',  url: 'https://cdn.jsdelivr.net/gh/thiagobodruk/biblia@master/json/acf.json' },
+]
 
-async function getBibleData(): Promise<BibleJson[]> {
-  if (bibleJson) return bibleJson
-  const res = await fetch('https://cdn.jsdelivr.net/gh/thiagobodruk/biblia@master/json/aa.json')
-  bibleJson = await res.json()
-  return bibleJson!
+const verseCache: Record<string, Verse[]> = {}
+const bibleCache: Record<string, BibleJson[]> = {}
+
+async function getBibleData(code: string): Promise<BibleJson[]> {
+  if (bibleCache[code]) return bibleCache[code]
+  const t = TRANSLATIONS.find(t => t.code === code) ?? TRANSLATIONS[0]
+  const res = await fetch(t.url)
+  bibleCache[code] = await res.json()
+  return bibleCache[code]
 }
 
 export default function CapituloPage({ params }: { params: { book: string; chapter: string } }) {
@@ -33,34 +40,41 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
   const [selected, setSelected] = useState<Verse | null>(null)
   const [fontSize, setFontSize] = useState(16)
   const [showPicker, setShowPicker] = useState(false)
+  const [showTranslations, setShowTranslations] = useState(false)
+  const [translation, setTranslation] = useState('aa')
   const [favorites, setFavorites] = useState<Set<number>>(new Set())
   const [copied, setCopied] = useState(false)
 
+  useEffect(() => {
+    const saved = localStorage.getItem('bible_translation')
+    if (saved && TRANSLATIONS.find(t => t.code === saved)) setTranslation(saved)
+  }, [])
+
+  const currentTranslation = TRANSLATIONS.find(t => t.code === translation) ?? TRANSLATIONS[0]
   const totalChapters = bookData?.chapters ?? 1
   const isAT = bookData?.testament === 'AT'
   const gradientColors = isAT ? 'from-indigo-900 to-purple-700' : 'from-blue-900 to-blue-600'
 
   const loadChapter = useCallback(async () => {
     if (!bookData) return
-    const key = `${bookData.en}-${currentChapter}`
-    if (cache[key]) {
-      setVerses(cache[key])
+    const key = `${translation}-${bookData.id}-${currentChapter}`
+    if (verseCache[key]) {
+      setVerses(verseCache[key])
       setLoading(false)
     } else {
       setLoading(true)
       try {
-        const bible = await getBibleData()
+        const bible = await getBibleData(translation)
         const bookEntry = bible[bookData.id - 1]
         const chapterVerses = bookEntry?.chapters?.[currentChapter - 1] ?? []
         const parsed: Verse[] = chapterVerses.map((text, i) => ({ verse: i + 1, text: text.trim() }))
-        cache[key] = parsed
+        verseCache[key] = parsed
         setVerses(parsed)
       } catch { setVerses([]) }
       setLoading(false)
     }
 
     if (user) {
-      // Load favorites for this chapter
       supabase.from('favoritos')
         .select('versiculo')
         .eq('user_id', user.id)
@@ -68,7 +82,6 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
         .eq('capitulo', currentChapter)
         .then(({ data }) => setFavorites(new Set((data ?? []).map((f: any) => f.versiculo))))
 
-      // Record chapter read in history
       supabase.from('historico_leitura').upsert({
         user_id: user.id,
         livro_en: bookData.en,
@@ -77,7 +90,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
         lido_em: new Date().toISOString().split('T')[0],
       }, { onConflict: 'user_id,livro_en,capitulo' }).then(() => {})
     }
-  }, [bookData, currentChapter, user])
+  }, [bookData, currentChapter, user, translation])
 
   useEffect(() => { loadChapter() }, [loadChapter])
   useEffect(() => { setSelected(null) }, [currentChapter])
@@ -88,6 +101,13 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
       if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200)
     }
   }, [highlightVerse, verses])
+
+  const changeTranslation = (code: string) => {
+    setTranslation(code)
+    localStorage.setItem('bible_translation', code)
+    setShowTranslations(false)
+    setVerses([])
+  }
 
   const goChapter = (dir: 1 | -1) => {
     const next = currentChapter + dir
@@ -115,14 +135,14 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
 
   const copyVerse = async (v: Verse) => {
     if (!bookData) return
-    await navigator.clipboard.writeText(`"${v.text}" — ${bookData.pt} ${currentChapter}:${v.verse}`)
+    await navigator.clipboard.writeText(`"${v.text}" — ${bookData.pt} ${currentChapter}:${v.verse} (${currentTranslation.abbr})`)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
   const handleShare = async () => {
     if (!selected || !bookData) return
-    const text = `"${selected.text}"\n\n— ${bookData.pt} ${currentChapter}:${selected.verse} (Almeida)`
+    const text = `"${selected.text}"\n\n— ${bookData.pt} ${currentChapter}:${selected.verse} (${currentTranslation.abbr})`
     if (navigator.share) await navigator.share({ text })
     else { await navigator.clipboard.writeText(text); alert('Copiado!') }
   }
@@ -134,7 +154,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
     router.push(`/anotacoes/nova?ref=${ref}&texto=${texto}`)
   }
 
-  if (!bookData) return <div className="p-6 text-gray-500">Livro nao encontrado.</div>
+  if (!bookData) return <div className="p-6 text-gray-500">Livro não encontrado.</div>
 
   return (
     <div className="flex flex-col min-h-full">
@@ -150,7 +170,13 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
               Cap. {currentChapter} ▾
             </span>
           </button>
-          <div className="flex gap-1">
+          <div className="flex gap-1 items-center">
+            {/* Translation picker button */}
+            <button
+              onClick={() => setShowTranslations(true)}
+              className="px-2 py-1 rounded-lg bg-white/15 text-xs font-bold hover:bg-white/25 transition-colors">
+              {currentTranslation.abbr} ▾
+            </button>
             <button onClick={() => setFontSize(s => Math.min(s + 2, 24))}
               className="p-1 text-sm font-bold bg-white/15 rounded-lg w-8 h-8 flex items-center justify-center">A+</button>
             <button onClick={() => setFontSize(s => Math.max(s - 2, 12))}
@@ -166,7 +192,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
           <span className="text-xs text-white/60">{currentChapter} / {totalChapters}</span>
           <button onClick={() => goChapter(1)} disabled={currentChapter >= totalChapters}
             className="flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-semibold bg-white/15 disabled:opacity-30">
-            Proximo <ChevronRight size={16} />
+            Próximo <ChevronRight size={16} />
           </button>
         </div>
       </div>
@@ -176,7 +202,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
         <div className="flex-1 px-4 py-4 pb-36 space-y-0.5">
           {verses.length === 0 && (
             <div className="flex flex-col items-center py-20 gap-3">
-              <p className="text-gray-400 text-sm text-center">Versículos não disponíveis para este capítulo.</p>
+              <p className="text-gray-400 text-sm text-center">Versículos não disponíveis para esta versão.</p>
             </div>
           )}
           {verses.map(v => {
@@ -208,7 +234,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
         <div className="fixed bottom-16 md:bottom-0 left-0 right-0 md:left-60 bg-white border-t border-gray-200 shadow-xl z-40">
           <div className="px-4 py-2 border-b border-gray-100">
             <p className="text-xs font-bold text-gray-500 text-center">
-              {bookData.pt} {currentChapter}:{selected.verse}
+              {bookData.pt} {currentChapter}:{selected.verse} · {currentTranslation.abbr}
             </p>
           </div>
           <div className="px-4 py-3 grid grid-cols-4 gap-2">
@@ -250,7 +276,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
           <div className="bg-white w-full max-w-lg rounded-t-3xl p-5 max-h-[70vh] flex flex-col"
             onClick={e => e.stopPropagation()}>
             <div className="w-10 h-1 bg-gray-200 rounded self-center mb-4" />
-            <h3 className="text-lg font-bold text-gray-800 text-center mb-4">Escolher Capitulo</h3>
+            <h3 className="text-lg font-bold text-gray-800 text-center mb-4">Escolher Capítulo</h3>
             <div className="overflow-y-auto flex flex-wrap gap-2 justify-center pb-4">
               {Array.from({ length: totalChapters }, (_, i) => i + 1).map(ch => (
                 <button key={ch}
@@ -263,6 +289,49 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
                   {ch}
                 </button>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Translation Picker Modal */}
+      {showTranslations && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center"
+          onClick={() => setShowTranslations(false)}>
+          <div className="bg-white w-full max-w-lg rounded-t-3xl p-5 flex flex-col"
+            onClick={e => e.stopPropagation()}>
+            <div className="w-10 h-1 bg-gray-200 rounded self-center mb-4" />
+            <h3 className="text-lg font-bold text-gray-800 text-center mb-1">Versão da Bíblia</h3>
+            <p className="text-xs text-gray-400 text-center mb-5">Escolha a tradução que prefere</p>
+            <div className="flex flex-col gap-2 pb-4">
+              {TRANSLATIONS.map(t => {
+                const active = translation === t.code
+                return (
+                  <button key={t.code} onClick={() => changeTranslation(t.code)}
+                    className="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-left transition-all"
+                    style={{
+                      backgroundColor: active ? '#EEF2FF' : '#F9FAFB',
+                      border: active ? '2px solid #4F46E5' : '2px solid transparent',
+                    }}>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{ backgroundColor: active ? '#4F46E5' : '#E5E7EB' }}>
+                      <BookOpen size={20} color={active ? '#fff' : '#6B7280'} />
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm" style={{ color: active ? '#4F46E5' : '#1F2937' }}>
+                        {t.abbr}
+                      </p>
+                      <p className="text-xs text-gray-500">{t.name}</p>
+                    </div>
+                    {active && (
+                      <div className="ml-auto w-5 h-5 rounded-full flex items-center justify-center"
+                        style={{ backgroundColor: '#4F46E5' }}>
+                        <span className="text-white text-xs">✓</span>
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
             </div>
           </div>
         </div>
