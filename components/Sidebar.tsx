@@ -21,7 +21,7 @@ const BOTTOM_NAV = [
   { href: '/dashboard', label: 'Inicio', Icon: Home },
   { href: '/biblia', label: 'Biblia', Icon: BookOpen },
   { href: '/estudos', label: 'Estudos', Icon: Layers },
-  { href: '/busca', label: 'Busca', Icon: Search },
+  { href: '/dicionario', label: 'Dic.', Icon: BookA },
   { href: '/perfil', label: 'Perfil', Icon: User },
 ]
 
