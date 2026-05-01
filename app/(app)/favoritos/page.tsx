@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { Favorito } from '@/types'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { BIBLE_BOOKS } from '@/data/bibleBooks'
 
 export default function FavoritosPage() {
   const { user } = useAuth()
@@ -103,7 +104,7 @@ export default function FavoritosPage() {
               {verses.map(f => (
                 <div key={f.id} className="bg-white rounded-2xl p-4 shadow-sm">
                   <div className="flex items-start gap-3">
-                    <Link href={`/biblia/${f.livro_en}/${f.capitulo}`} className="flex-1 min-w-0">
+                    <Link href={`/biblia/${BIBLE_BOOKS.find(b => b.en === f.livro_en)?.id ?? f.livro_en}/${f.capitulo}?v=${f.versiculo}`} className="flex-1 min-w-0">
                       <p className="text-xs font-bold mb-1.5" style={{ color: '#4F46E5' }}>
                         {f.livro_pt} {f.capitulo}:{f.versiculo}
                       </p>

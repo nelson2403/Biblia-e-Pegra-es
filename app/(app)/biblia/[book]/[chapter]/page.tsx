@@ -1,6 +1,6 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, ChevronLeft, ChevronRight, Share2, Heart, Copy, BookmarkPlus } from 'lucide-react'
 import { BIBLE_BOOKS } from '@/data/bibleBooks'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
@@ -23,6 +23,9 @@ async function getBibleData(): Promise<BibleJson[]> {
 export default function CapituloPage({ params }: { params: { book: string; chapter: string } }) {
   const { user } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const highlightVerse = parseInt(searchParams.get('v') ?? '0')
+  const verseRefs = useRef<Record<number, HTMLButtonElement | null>>({})
   const bookData = BIBLE_BOOKS.find(b => b.id === parseInt(params.book) || b.en === params.book)
   const [currentChapter, setCurrentChapter] = useState(parseInt(params.chapter) || 1)
   const [verses, setVerses] = useState<Verse[]>([])
@@ -78,6 +81,13 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
 
   useEffect(() => { loadChapter() }, [loadChapter])
   useEffect(() => { setSelected(null) }, [currentChapter])
+
+  useEffect(() => {
+    if (highlightVerse && verses.length > 0) {
+      const el = verseRefs.current[highlightVerse]
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200)
+    }
+  }, [highlightVerse, verses])
 
   const goChapter = (dir: 1 | -1) => {
     const next = currentChapter + dir
@@ -171,12 +181,14 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
           )}
           {verses.map(v => {
             const isSelected = selected?.verse === v.verse
+            const isHighlighted = highlightVerse === v.verse
             const isFav = favorites.has(v.verse)
             return (
               <button key={v.verse}
+                ref={el => { verseRefs.current[v.verse] = el }}
                 onClick={() => setSelected(prev => prev?.verse === v.verse ? null : v)}
                 className="flex gap-3 w-full text-left px-3 py-2.5 rounded-xl transition-colors"
-                style={{ backgroundColor: isSelected ? '#EEF2FF' : 'transparent' }}>
+                style={{ backgroundColor: isSelected ? '#EEF2FF' : isHighlighted ? '#FEF9C3' : 'transparent' }}>
                 <span className="text-xs font-bold w-5 pt-1 flex-shrink-0"
                   style={{ color: isFav ? '#EF4444' : isSelected ? '#4F46E5' : '#9CA3AF' }}>
                   {isFav ? '♥' : v.verse}
