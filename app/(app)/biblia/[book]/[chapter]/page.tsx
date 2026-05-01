@@ -32,6 +32,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
   const router = useRouter()
   const searchParams = useSearchParams()
   const highlightVerse = parseInt(searchParams.get('v') ?? '0')
+  const isPlano = searchParams.get('plano') === '1'
   const verseRefs = useRef<Record<number, HTMLButtonElement | null>>({})
   const bookData = BIBLE_BOOKS.find(b => b.id === parseInt(params.book) || b.en === params.book)
   const [currentChapter, setCurrentChapter] = useState(parseInt(params.chapter) || 1)
@@ -82,15 +83,17 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
         .eq('capitulo', currentChapter)
         .then(({ data }) => setFavorites(new Set((data ?? []).map((f: any) => f.versiculo))))
 
-      supabase.from('historico_leitura').upsert({
-        user_id: user.id,
-        livro_en: bookData.en,
-        livro_pt: bookData.pt,
-        capitulo: currentChapter,
-        lido_em: new Date().toISOString().split('T')[0],
-      }, { onConflict: 'user_id,livro_en,capitulo' }).then(() => {})
+      if (isPlano) {
+        supabase.from('historico_leitura').upsert({
+          user_id: user.id,
+          livro_en: bookData.en,
+          livro_pt: bookData.pt,
+          capitulo: currentChapter,
+          lido_em: new Date().toISOString().split('T')[0],
+        }, { onConflict: 'user_id,livro_en,capitulo' }).then(() => {})
+      }
     }
-  }, [bookData, currentChapter, user, translation])
+  }, [bookData, currentChapter, user, translation, isPlano])
 
   useEffect(() => { loadChapter() }, [loadChapter])
   useEffect(() => { setSelected(null) }, [currentChapter])
@@ -113,7 +116,8 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
     const next = currentChapter + dir
     if (next < 1 || next > totalChapters) return
     setCurrentChapter(next)
-    router.replace(`/biblia/${params.book}/${next}`, { scroll: false })
+    const suffix = isPlano ? '?plano=1' : ''
+    router.replace(`/biblia/${params.book}/${next}${suffix}`, { scroll: false })
   }
 
   const toggleFavorite = async (v: Verse) => {
@@ -280,7 +284,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
             <div className="overflow-y-auto flex flex-wrap gap-2 justify-center pb-4">
               {Array.from({ length: totalChapters }, (_, i) => i + 1).map(ch => (
                 <button key={ch}
-                  onClick={() => { setCurrentChapter(ch); setShowPicker(false); router.replace(`/biblia/${params.book}/${ch}`, { scroll: false }) }}
+                  onClick={() => { setCurrentChapter(ch); setShowPicker(false); router.replace(`/biblia/${params.book}/${ch}${isPlano ? '?plano=1' : ''}`, { scroll: false }) }}
                   className="w-12 h-12 rounded-xl text-sm font-semibold transition-colors"
                   style={{
                     backgroundColor: ch === currentChapter ? '#4F46E5' : '#F3F4F6',

@@ -156,7 +156,7 @@ export default function PlanoPage() {
             </div>
             <p className="text-lg font-extrabold">{nextUnread.book.pt} {nextUnread.ch}</p>
             <p className="text-xs text-white/60 mb-3">{nextUnread.book.testament === 'AT' ? 'Antigo Testamento' : 'Novo Testamento'}</p>
-            <Link href={`/biblia/${nextUnread.book.id}/${nextUnread.ch}`}
+            <Link href={`/biblia/${nextUnread.book.id}/${nextUnread.ch}?plano=1`}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/20 text-sm font-bold text-white hover:bg-white/30 transition-colors">
               <BookOpen size={16} /> Ler agora
             </Link>
@@ -183,7 +183,7 @@ export default function PlanoPage() {
               const hasRead = read > 0
               return (
                 <div key={book.id} className="flex items-center gap-2">
-                  <Link href={`/biblia/${book.id}/1`} className="flex-1 min-w-0">
+                  <Link href={`/biblia/${book.id}/1?plano=1`} className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-2">
                         {done
@@ -220,7 +220,7 @@ export default function PlanoPage() {
             <div className="flex flex-col gap-1">
               {recentBooks.map(({ book, ch, lido_em, id }) => (
                 <div key={`${book.en}-${ch}`} className="flex items-center gap-3 py-1.5">
-                  <Link href={`/biblia/${book.id}/${ch}`} className="flex items-center gap-3 flex-1 min-w-0">
+                  <Link href={`/biblia/${book.id}/${ch}?plano=1`} className="flex items-center gap-3 flex-1 min-w-0">
                     <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
                       style={{ backgroundColor: '#EEF2FF' }}>
                       <BookOpen size={16} color="#4F46E5" />
