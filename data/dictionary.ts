@@ -592,4 +592,508 @@ export const DICTIONARY: DictEntry[] = [
       'Makarios descreve o estado de felicidade plena e profunda que transcende as circunstâncias. Na cultura grega, era usado para descrever os deuses e os que participavam de sua vida feliz. Jesus usa makarios nas Bem-aventuranças (Mt 5:3-12) para inverter a expectativa de quem é realmente feliz: não os poderosos e ricos, mas os pobres de espírito, os mansos, os puros de coração. A makariotez (bem-aventurança) é um estado escatológico que começa agora e se completa no reino.',
     verses: ['Mt 5:3', 'Ap 14:13'],
   },
+
+  // ── HEBRAICO (adicionais) ─────────────────────────────────────────────────
+  {
+    id: 'H113',
+    lang: 'H',
+    word: 'אָדוֹן',
+    translit: 'Adon',
+    ptGloss: 'Senhor, mestre, soberano',
+    definition:
+      'Adon designa autoridade e soberania sobre pessoas ou coisas. Na forma plural intensiva "Adonai" tornou-se o substituto oral mais comum para o nome sagrado YHWH. Chamar a Deus de Adonai implica total submissão e reconhecimento de sua señoria absoluta sobre todas as áreas da vida. O profeta Isaías usa Adonai de forma magistral na visão do trono celestial (Is 6:1), onde vê ao Adonai "assentado sobre um trono alto e exaltado".',
+    verses: ['Is 6:1', 'Sl 110:1'],
+  },
+  {
+    id: 'H2896',
+    lang: 'H',
+    word: 'טוֹב',
+    translit: 'tov',
+    ptGloss: 'bom, bondade, bem',
+    definition:
+      'Tov é a primeira avaliação que Deus faz de sua criação: "e viu Deus que era tov" (Gn 1:4). Abrange bondade moral, beleza estética, utilidade prática e bem-estar relacional. A bondade (tov) de Deus é o fundamento do Salmo 34:8 — "provai e vede que o SENHOR é bom" — um convite à experiência pessoal da generosidade divina. Tudo o que Deus faz é tov, e o ser humano criado à sua imagem é chamado a discernir e escolher o tov.',
+    verses: ['Gn 1:31', 'Sl 34:8'],
+  },
+  {
+    id: 'H6440',
+    lang: 'H',
+    word: 'פָּנִים',
+    translit: 'panim',
+    ptGloss: 'face, presença',
+    definition:
+      'Panim literalmente significa "rosto" ou "face", mas na teologia bíblica representa a presença pessoal e ativa de Deus. "Buscar o panim de Deus" é buscar sua presença e favor (Sl 27:8). "O SENHOR faça resplandecer seu panim sobre ti" (Nm 6:25) é a bênção sacerdotal que pede a presença favorável de Deus. O pecado separa o ser humano do panim de Deus; a redenção restaura essa comunhão face a face, prefiguração da visão beatífica na eternidade (Ap 22:4).',
+    verses: ['Nm 6:25', 'Sl 27:8'],
+  },
+  {
+    id: 'H3548',
+    lang: 'H',
+    word: 'כֹּהֵן',
+    translit: 'kohen',
+    ptGloss: 'sacerdote, mediador',
+    definition:
+      'O kohen era o mediador oficial entre Deus e o povo — o único autorizado a entrar nas áreas sagradas do Tabernáculo e a oferecer sacrifícios. Aaron e seus descendentes foram consagrados ao kohanim, mas Israel inteiro foi chamado a ser "reino de sacerdotes" (Êx 19:6). Cristo é o Sumo Sacerdote definitivo (Hb 4:14), que se ofereceu a si mesmo como sacrifício eterno. Por Cristo, todos os crentes são constituídos "sacerdócio real" (1Pe 2:9).',
+    verses: ['Lv 1:7', 'Sl 110:4'],
+  },
+  {
+    id: 'H5030',
+    lang: 'H',
+    word: 'נָבִיא',
+    translit: 'navi',
+    ptGloss: 'profeta, porta-voz',
+    definition:
+      'O navi não era primariamente um previsor do futuro, mas um porta-voz (o que é "chamado" ou "borbulha" as palavras divinas). Ele falava em nome de Deus para o povo, chamando-o à obediência, denunciando a injustiça e anunciando a redenção futura. O profetismo bíblico atingiu seu ápice em Jesus, o profeta definitivo anunciado por Moisés (Dt 18:15), que não apenas comunicou a Palavra de Deus, mas é ele mesmo a Palavra encarnada.',
+    verses: ['Dt 18:15', 'Am 3:7'],
+  },
+  {
+    id: 'H4428',
+    lang: 'H',
+    word: 'מֶלֶךְ',
+    translit: 'melech',
+    ptGloss: 'rei, governante',
+    definition:
+      'Melech é o rei, o governante soberano. No Antigo Testamento, YHWH é o Melech supremo de Israel — "o SENHOR é o nosso Rei" (Is 33:22). A monarquia humana foi estabelecida como concessão (1Sm 8), mas cada rei deveria ser um vice-rei que governava em nome de YHWH, mantendo a justiça e a fidelidade à aliança. O reino davídico apontava para o Messias, o Melech eterno cujo reino não terá fim (Lc 1:33).',
+    verses: ['Sl 47:7', 'Lc 1:33'],
+  },
+  {
+    id: 'H5650',
+    lang: 'H',
+    word: 'עֶבֶד',
+    translit: 'eved',
+    ptGloss: 'servo, escravo, ministro',
+    definition:
+      'Eved designa o servo ou escravo — alguém cuja existência está totalmente à disposição de seu senhor. No Antigo Testamento, ser chamado de "eved YHWH" (servo do SENHOR) é uma das maiores honras: Moisés, Davi, os profetas e o próprio Israel são chamados assim. Isaías 53 apresenta o Servo Sofredor, o eved por excelência, que carrega os pecados de muitos. Jesus inverteu os valores ao dizer que "quem quiser ser grande entre vós, que seja vosso eved" (Mt 20:27).',
+    verses: ['Is 53:11', 'Mt 20:27'],
+  },
+  {
+    id: 'H1293',
+    lang: 'H',
+    word: 'בְּרָכָה',
+    translit: 'berakah',
+    ptGloss: 'bênção, prosperidade',
+    definition:
+      'Berakah é o substantivo de bênção — a palavra de favor, poder e vida declarada sobre alguém por uma autoridade. Deus abençoa (barak) e a berakah que flui dessa ação é real e transformadora. A promessa abraâmica — "serei a tua grande berakah" (Gn 12:2) — é o motor de toda a história da redenção: Abraão é abençoado para ser canal de berakah para todas as nações. Em Cristo, "todos os que são da fé são abençoados com o fiel Abraão" (Gl 3:9).',
+    verses: ['Gn 12:2', 'Gl 3:9'],
+  },
+  {
+    id: 'H7812',
+    lang: 'H',
+    word: 'שָׁחָה',
+    translit: 'shachah',
+    ptGloss: 'prostrar-se, adorar, reverenciar',
+    definition:
+      'Shachah é o ato de prostrar-se com o rosto no chão — a postura corporal mais humilde de reverência diante de um superior. No Antigo Testamento, é a palavra mais usada para adoração a Deus, expressando total dependência e submissão ao Soberano. O mandamento "não te prostrarás (shachah) a outros deuses" (Êx 20:5) usa exatamente esse verbo. A adoração genuína começa com o reconhecimento de quem Deus é e do que somos diante dele.',
+    verses: ['Êx 20:5', 'Sl 95:6'],
+  },
+  {
+    id: 'H8104',
+    lang: 'H',
+    word: 'שָׁמַר',
+    translit: 'shamar',
+    ptGloss: 'guardar, obedecer, preservar',
+    definition:
+      'Shamar é uma palavra de vigilância cuidadosa — guardar algo precioso, proteger, manter intacto. Adão foi colocado no jardim para "lavrar e guardar" (shamar, Gn 2:15). Guardar os mandamentos de Deus (shamar mitzvot) é expressão central da aliança no Deuteronômio. O Salmo 121 afirma que YHWH é o shamar de Israel — o guardião que não dorme nem cochila, protegendo seu povo de todo o mal.',
+    verses: ['Sl 121:4', 'Dt 5:12'],
+  },
+  {
+    id: 'H1980',
+    lang: 'H',
+    word: 'הָלַךְ',
+    translit: 'halak',
+    ptGloss: 'andar, caminhar, viver',
+    definition:
+      'Halak é o verbo de movimento mais básico do hebraico — andar, ir — mas na linguagem bíblica tornou-se metáfora da vida moral e espiritual inteira. "Andar com Deus" (halak et-Elohim) é o testemunho de Enoque (Gn 5:24) e Noé (Gn 6:9) — uma vida de comunhão íntima com o Criador. O Salmo 1 contrasta os dois caminhos: o justo que não anda (halak) no conselho dos ímpios, e a via do bem que Deus conhece e abençoa.',
+    verses: ['Mq 6:8', 'Sl 1:1'],
+  },
+  {
+    id: 'H3034',
+    lang: 'H',
+    word: 'יָדָה',
+    translit: 'yadah',
+    ptGloss: 'louvar, agradecer, confessar',
+    definition:
+      'Yadah vem da raiz "yad" (mão) e literalmente evoca o ato de estender as mãos — seja em gesto de confissão humilde ou de louvor exuberante. O mesmo verbo serve tanto para "confessar os pecados" (Sl 32:5) quanto para "louvar o SENHOR com toda a minha vida" (Sl 146:2). Essa dupla dimensão revela que o louvor genuíno passa pela honestidade diante de Deus. "Toda a Judá" (Yehudah) tem seu nome derivado de yadah — o povo do louvor.',
+    verses: ['Sl 107:1', 'Sl 32:5'],
+  },
+  {
+    id: 'H2403',
+    lang: 'H',
+    word: 'חַטָּאת',
+    translit: 'chattat',
+    ptGloss: 'pecado, oferta pelo pecado',
+    definition:
+      'Chattat deriva do verbo "chata" — errar o alvo, desviar do caminho certo. Designa tanto o ato de pecar quanto o sacrifício exigido para expiá-lo (oferta pelo pecado). O sistema sacrificial levítico prescrevia a chattat como o meio de restauração da relação com Deus após a transgressão. A profecia do Servo Sofredor em Isaías 53:10 afirma que sua vida seria "oferta pelo pecado" (chattat) — cumprida supremamente em Cristo que "por nós, o fez pecado" (2Co 5:21).',
+    verses: ['Lv 4:3', 'Is 53:10'],
+  },
+  {
+    id: 'H4194',
+    lang: 'H',
+    word: 'מָוֶת',
+    translit: 'mavet',
+    ptGloss: 'morte, falecimento',
+    definition:
+      'Mavet é a morte em todas as suas dimensões: física, espiritual e como separação de Deus. O resultado do pecado no jardim é mavet (Gn 2:17), e a morte passou a todos os seres humanos por causa da Queda (Rm 5:12). Os profetas personificam mavet como uma força hostil que devora (Os 13:14; Is 25:8). O Novo Testamento anuncia que Cristo destruiu o poder do mavet pela ressurreição — "a morte foi tragada pela vitória" (1Co 15:54-55).',
+    verses: ['Gn 2:17', 'Os 13:14'],
+  },
+  {
+    id: 'H2416',
+    lang: 'H',
+    word: 'חַי',
+    translit: 'chay',
+    ptGloss: 'vida, vivo, vivente',
+    definition:
+      'Chay é a vida em sentido amplo — biológica, relacional e espiritual. "El Chay" — o Deus vivo — é o único ser que tem vida em si mesmo e a comunica a tudo o que existe. A bênção da aliança prometia chay abundante à comunidade obediente, enquanto a desobediência levava à morte. A "água viva" (mayim chayim) é símbolo frequente da vida espiritual que brota da presença de Deus, evocada por Jesus na conversa com a samaritana (Jo 4:10).',
+    verses: ['Dt 30:19', 'Jo 4:10'],
+  },
+  {
+    id: 'H4687',
+    lang: 'H',
+    word: 'מִצְוָה',
+    translit: 'mitzvah',
+    ptGloss: 'mandamento, preceito',
+    definition:
+      'Mitzvah é o mandamento ou preceito ordenado por Deus — cada uma das instruções específicas da Torah. Para Israel, as mitzvot não eram um fardo, mas um privilégio: sinalizavam a relação de aliança com Deus e distinguiam Israel das nações. O Salmo 119, o mais longo da Bíblia, é inteiramente dedicado ao amor pelas mitzvot divinas. Jesus resumiu todas as mitzvot no duplo mandamento do amor (Mt 22:37-40), cumprindo e transcendendo a Lei.',
+    verses: ['Sl 119:10', 'Mt 22:38'],
+  },
+  {
+    id: 'H1350',
+    lang: 'H',
+    word: 'גָּאַל',
+    translit: 'gaal',
+    ptGloss: 'remir, resgatar, parente-redentor',
+    definition:
+      'Gaal descreve o ato do "parente-redentor" (go\'el) — o familiar mais próximo obrigado por lei a resgatar um parente em dificuldade: comprar de volta terras vendidas, libertar da escravidão ou vingar o sangue. O livro de Rute apresenta Boaz como go\'el de Rute e Noemi. YHWH é o go\'el supremo de Israel (Is 41:14), que resgata seu povo da escravidão do Egito e do pecado. Cristo é o parente-redentor definitivo que pagou o preço de nossa liberdade.',
+    verses: ['Is 41:14', 'Rt 4:14'],
+  },
+  {
+    id: 'H5771',
+    lang: 'H',
+    word: 'עָוֺן',
+    translit: 'avon',
+    ptGloss: 'iniquidade, culpa, tortuosidade',
+    definition:
+      'Avon descreve a iniquidade como distorção ou tortuosidade moral — o desvio do caminho reto. Inclui tanto o ato pecaminoso quanto a culpa resultante. O Salmo 51, oração de arrependimento de Davi, usa avon para a profundidade de sua transgressão: "lava-me completamente da minha iniquidade" (v.2). Isaías 53:6 declara que YHWH fez recair sobre o Servo o avon de todos nós — base bíblica da doutrina da expiação substitutiva.',
+    verses: ['Is 53:6', 'Sl 51:2'],
+  },
+  {
+    id: 'H6588',
+    lang: 'H',
+    word: 'פֶּשַׁע',
+    translit: 'pesha',
+    ptGloss: 'transgressão, rebelião',
+    definition:
+      'Pesha é a palavra mais grave para pecado no hebraico bíblico — não um mero erro, mas uma rebelião deliberada e intencional contra a autoridade de Deus. Implica a ruptura consciente de uma relação de aliança. Isaías 53 usa pesha três vezes para descrever o que o Servo Sofredor carregou: "ele foi traspassado pelas nossas transgressões" (v.5). A expiação em Cristo trata do pesha em toda a sua gravidade — a rebelião do ser humano contra o Soberano.',
+    verses: ['Is 53:5', 'Sl 32:1'],
+  },
+  {
+    id: 'H6754',
+    lang: 'H',
+    word: 'צֶלֶם',
+    translit: 'tselem',
+    ptGloss: 'imagem, semelhança',
+    definition:
+      'Tselem é a palavra de "imagem" usada em Gênesis 1:26-27 — o ser humano criado à imagem (tselem) de Deus. No Antigo Oriente, o tselem do rei era erguido nos territórios conquistados para representar sua presença e autoridade. O ser humano, portanto, foi criado para ser a representação e o vice-regente de Deus na criação. O pecado danificou (mas não destruiu) esse tselem; a redenção em Cristo o restaura progressivamente à perfeita imagem divina (2Co 3:18; Cl 3:10).',
+    verses: ['Gn 1:27', '2Co 3:18'],
+  },
+  {
+    id: 'H7355',
+    lang: 'H',
+    word: 'רָחַם',
+    translit: 'racham',
+    ptGloss: 'ter compaixão, amar ternamente',
+    definition:
+      'Racham vem da raiz "rechem" — útero materno. É um amor visceral e protetor, como o de uma mãe por seu filho. YHWH descreve a si mesmo com esse amor visceral: "pode uma mulher esquecer o filho que ainda mama? ... mas eu nunca me esquecerei de ti" (Is 49:15). "YHWH Raum" — o SENHOR compassivo — revela um Deus que sente o sofrimento de seu povo e é movido a agir. O substantivo "rahamim" (misericórdias/compaixões) aparece frequentemente ao lado de chesed.',
+    verses: ['Is 49:15', 'Sl 103:13'],
+  },
+  {
+    id: 'H5162',
+    lang: 'H',
+    word: 'נָחַם',
+    translit: 'nacham',
+    ptGloss: 'consolar, confortar, arrepender-se',
+    definition:
+      'Nacham tem dois sentidos aparentemente opostos: consolar alguém em luto e arrepender-se de uma ação. Ambos compartilham a ideia de mudança emocional profunda. Quando Deus "se arrepende" (nacham) de algo, não é porque errou, mas porque as circunstâncias mudaram e ele age de forma diferente em resposta. O consolador por excelência é YHWH: "como alguém a quem sua mãe conforta, assim eu vos consolarei" (Is 66:13). "Naum" e "Menahem" são nomes derivados de nacham.',
+    verses: ['Is 40:1', 'Is 66:13'],
+  },
+  {
+    id: 'H7725',
+    lang: 'H',
+    word: 'שׁוּב',
+    translit: 'shuv',
+    ptGloss: 'retornar, voltar, arrepender-se',
+    definition:
+      'Shuv é o verbo do arrependimento por excelência no Antigo Testamento — não teshuvah (o conceito), mas o ato concreto de dar meia-volta e retornar ao ponto de partida. "Voltai para mim, e eu voltarei para vós" (Ml 3:7) usa shuv duas vezes, revelando que o arrependimento é correspondido pelo retorno de Deus. Os profetas chamavam Israel ao shuv a cada geração. A parábola do filho pródigo em Lucas 15 é a encarnação neotestamentária do shuv.',
+    verses: ['Ml 3:7', 'Os 6:1'],
+  },
+  {
+    id: 'H5459',
+    lang: 'H',
+    word: 'סְגֻלָּה',
+    translit: 'segulah',
+    ptGloss: 'tesouro particular, propriedade especial',
+    definition:
+      'Segulah descreve a propriedade pessoal mais valiosa de um rei — seu tesouro particular, distinto do erário público. Quando Deus chama Israel de sua segulah (Êx 19:5; Dt 7:6), está declarando que este povo não é apenas parte de uma posse genérica, mas seu bem mais precioso e inestimável. Pedro retoma essa imagem para a Igreja: "povo que é propriedade exclusiva de Deus" (1Pe 2:9). O crente é a segulah do Criador do universo.',
+    verses: ['Êx 19:5', '1Pe 2:9'],
+  },
+  {
+    id: 'H5971',
+    lang: 'H',
+    word: 'עַם',
+    translit: 'am',
+    ptGloss: 'povo, nação, comunidade',
+    definition:
+      'Am designa um povo unido por laços de família, história ou aliança — não apenas uma multidão, mas uma comunidade com identidade compartilhada. "Am Yisrael" — o povo de Israel — é a comunidade de aliança formada pelos doze filhos de Jacó. A promessa de aliança "vós sereis o meu povo e eu serei o vosso Deus" usa am para expressar a relação íntima e exclusiva entre YHWH e Israel. No Novo Testamento, essa identidade se expande para incluir todas as nações em Cristo.',
+    verses: ['Lv 26:12', 'Jr 31:33'],
+  },
+  {
+    id: 'H4467',
+    lang: 'H',
+    word: 'מַמְלָכָה',
+    translit: 'mamlakah',
+    ptGloss: 'reino, reinado',
+    definition:
+      'Mamlakah é o reino — o território e o povo sob a soberania de um melech (rei). O grande sonho dos profetas era a mamlakah de Deus se estabelecendo sobre toda a terra, substituindo todos os reinos humanos. Daniel vê uma pedra cortar uma grande estátua e tornar-se um monte que enche a terra inteira — símbolo da mamlakah divina que consumirá todos os impérios (Dn 2:44). Jesus proclamou a chegada dessa mamlakah como o coração de seu ministério (Mc 1:15).',
+    verses: ['Dn 2:44', 'Sl 22:28'],
+  },
+  {
+    id: 'H5797',
+    lang: 'H',
+    word: 'עֹז',
+    translit: 'oz',
+    ptGloss: 'força, poder, refúgio',
+    definition:
+      'Oz é a força robusta e protetora — não apenas poder físico, mas a força que provê segurança e estabilidade. YHWH é o oz de seu povo: "O SENHOR é a minha força (oz) e o meu escudo" (Sl 28:7). A Arca da Aliança é chamada de "oz de Deus" porque representava sua presença poderosa (Sl 78:61). A força humana é transitória; somente no oz divino o ser humano encontra sustentação permanente. Paulo ecoa isso ao dizer "tudo posso naquele que me fortalece".',
+    verses: ['Sl 28:7', 'Sl 46:1'],
+  },
+  {
+    id: 'H8416',
+    lang: 'H',
+    word: 'תְּהִלָּה',
+    translit: 'tehillah',
+    ptGloss: 'louvor, hino, celebração',
+    definition:
+      'Tehillah é o louvor exaltado e público — o hino cantado em honra de Deus. O livro dos Salmos em hebraico se chama "Tehillim" (louvores), revelando que a coleção inteira é uma escola de louvor. Deus "habita entre os louvores (tehillot) de Israel" (Sl 22:3) — a adoração cria o ambiente de sua presença manifesta. O ser humano foi criado para a tehillah: a existência humana encontra seu propósito mais profundo no louvor contínuo ao Criador.',
+    verses: ['Sl 22:3', 'Is 60:18'],
+  },
+  {
+    id: 'H7200',
+    lang: 'H',
+    word: 'רָאָה',
+    translit: 'raah',
+    ptGloss: 'ver, contemplar, perceber',
+    definition:
+      'Raah é o verbo de ver com todos os seus matizes: visão física, percepção espiritual e revelação profética. "El Roi" — o Deus que vê — é o nome que Hagar dá a Deus após ele ver sua aflição no deserto (Gn 16:13). O nome do profeta em hebraico antigo era "ro\'eh" (vidente) — aquele que raah com olhos espirituais o que outros não percebem. "No monte do SENHOR será provido (raah)" — YHWH Yireh — o Deus que provê porque vê a necessidade.',
+    verses: ['Gn 22:14', 'Gn 16:13'],
+  },
+  {
+    id: 'H6942',
+    lang: 'H',
+    word: 'קָדַשׁ',
+    translit: 'qadash',
+    ptGloss: 'santificar, consagrar, apartar',
+    definition:
+      'Qadash é o verbo de consagração — o ato de apartar algo do comum e dedicá-lo exclusivamente a Deus. Deus qadash o sétimo dia (Gn 2:3), o monte Sinai (Êx 19:23) e o tabernáculo. Ele também chama seu povo: "santificai-vos (qadash) e sede santos" (Lv 11:44). No Novo Testamento, Cristo, por sua obra, santifica (hagiazo) a Igreja, tornando-a seu corpo santo e sem mancha. A santificação progressiva é a obra do Espírito que qadash o crente ao longo de toda a vida.',
+    verses: ['Lv 11:44', 'Jo 17:19'],
+  },
+
+  // ── GREGO (adicionais) ────────────────────────────────────────────────────
+  {
+    id: 'G2316',
+    lang: 'G',
+    word: 'θεός',
+    translit: 'theos',
+    ptGloss: 'Deus, divindade',
+    definition:
+      'Theos é o termo grego mais geral para Deus, equivalente ao hebraico Elohim. João 1:1 afirma de forma revolucionária que "o Logos era theos" — não um deus entre outros, mas o próprio Deus absoluto. O Novo Testamento usa theos predominantemente para o Pai, mas também o aplica ao Filho (Jo 20:28; Hb 1:8) e ao Espírito Santo. O monoteísmo cristão distingue-se ao afirmar que o único Theos subsiste em três Pessoas distintas mas em essência unificada.',
+    verses: ['Jo 1:1', 'Jo 20:28'],
+  },
+  {
+    id: 'G5547',
+    lang: 'G',
+    word: 'Χριστός',
+    translit: 'Christos',
+    ptGloss: 'Cristo, o Ungido',
+    definition:
+      'Christos é a tradução grega do hebraico "Mashiach" (Messias) — o Ungido. Na cultura israelita, a unção com óleo consagrava profetas, sacerdotes e reis para seus ofícios. Jesus é o Cristo porque recebeu a unção do Espírito sem medida (Jo 3:34) e é simultaneamente o Profeta definitivo, o Sumo Sacerdote eterno e o Rei dos reis. Confiar em Jesus como o Christos é reconhecer que ele cumpriu todas as esperanças messiânicas do Antigo Testamento.',
+    verses: ['Jo 20:31', 'Mt 16:16'],
+  },
+  {
+    id: 'G1680',
+    lang: 'G',
+    word: 'ἐλπίς',
+    translit: 'elpis',
+    ptGloss: 'esperança, expectativa confiante',
+    definition:
+      'Elpis no Novo Testamento não é uma esperança incerta ("espero que sim, mas não sei"), mas uma expectativa confiante e fundamentada nas promessas de Deus. A tríade fé, esperança e amor (1Co 13:13) coloca a elpis no centro da vida cristã. A elpis cristã está ancorada na ressurreição de Cristo: sem ela, nossa fé seria vã (1Co 15:19). Paulo descreve Abraão como aquele que "esperou contra toda a esperança" (Rm 4:18) — a elpis que persiste além de toda evidência contrária.',
+    verses: ['Rm 8:24', 'Hb 6:19'],
+  },
+  {
+    id: 'G2098',
+    lang: 'G',
+    word: 'εὐαγγέλιον',
+    translit: 'euangelion',
+    ptGloss: 'evangelho, boa notícia',
+    definition:
+      'Euangelion significa literalmente "boa notícia" — no mundo romano, era o anúncio de uma vitória militar ou do nascimento de um herdeiro imperial. Paulo usa a palavra para o anúncio da morte e ressurreição de Cristo como a notícia mais boa que o mundo já ouviu (1Co 15:1-4). O euangelion não é uma ideologia, uma moral ou uma filosofia, mas um fato histórico: Jesus morreu, foi sepultado e ressuscitou. Essa notícia é "poder de Deus para a salvação de todo aquele que crê" (Rm 1:16).',
+    verses: ['Rm 1:16', 'Mc 1:1'],
+  },
+  {
+    id: 'G932',
+    lang: 'G',
+    word: 'βασιλεία',
+    translit: 'basileia',
+    ptGloss: 'reino, reinado, soberania',
+    definition:
+      'Basileia é o reino ou reinado — não primariamente um território geográfico, mas o exercício soberano do governo de Deus. A "basileia de Deus" (ou "dos céus" em Mateus) é o tema central da pregação de Jesus: ela chegou na pessoa do próprio Jesus (Lc 17:21), é recebida como criança (Mc 10:15) e ainda virá em plenitude escatológica (Ap 11:15). A basileia é ao mesmo tempo presente e futura — já inaugurada, mas ainda não plenamente consumada.',
+    verses: ['Mc 1:15', 'Mt 6:33'],
+  },
+  {
+    id: 'G40',
+    lang: 'G',
+    word: 'ἅγιος',
+    translit: 'hagios',
+    ptGloss: 'santo, consagrado, separado',
+    definition:
+      'Hagios é o adjetivo "santo" — separado, dedicado a Deus, distinto do profano. Deus é o Hagios por excelência (Is 6:3; Ap 4:8). Os crentes são chamados de "hagioi" (santos) não por mérito pessoal, mas porque foram separados para Deus em Cristo (1Co 1:2). O Espírito Santo (Pneuma Hagion) é a fonte da santidade que flui para o crente. A hagiosyne (santidade) é o caráter que Deus produz em seu povo ao longo do processo de santificação.',
+    verses: ['1Pe 1:16', '1Co 1:2'],
+  },
+  {
+    id: 'G5479',
+    lang: 'G',
+    word: 'χαρά',
+    translit: 'chara',
+    ptGloss: 'alegria, júbilo',
+    definition:
+      'Chara é a alegria profunda que resulta da experiência de salvação e da presença de Deus — distinta do prazer circunstancial (hedone). É fruto do Espírito (Gl 5:22) e por isso transcende as dificuldades externas: Paulo escreve sobre a chara estando na prisão (Fp 4:4). "Regozijai-vos sempre no Senhor" (Fp 4:4) usa chara como mandamento, mostrando que a alegria cristã não depende das circunstâncias mas da realidade permanente de Cristo. A chara plena é promessa escatológica (Jo 16:24).',
+    verses: ['Fp 4:4', 'Jo 15:11'],
+  },
+  {
+    id: 'G5590',
+    lang: 'G',
+    word: 'ψυχή',
+    translit: 'psyche',
+    ptGloss: 'alma, vida, ser interior',
+    definition:
+      'Psyche no Novo Testamento corresponde ao hebraico nefesh — a vida ou o ser vivo em sua dimensão pessoal e interior. Jesus distingue psyche de corpo (Mt 10:28) e de pneuma (1Ts 5:23). "Não temais os que matam o corpo mas não podem matar a psyche" (Mt 10:28). O "curador de almas" (therapon psychon) era título honroso no mundo antigo. Cristo veio para dar sua psyche como resgate por muitos (Mt 20:28), e o crente é chamado a segui-lo mesmo ao custo de perder a própria psyche por ele.',
+    verses: ['Mt 10:28', 'Mt 20:28'],
+  },
+  {
+    id: 'G2288',
+    lang: 'G',
+    word: 'θάνατος',
+    translit: 'thanatos',
+    ptGloss: 'morte, separação',
+    definition:
+      'Thanatos é a morte como realidade universal — resultado do pecado (Rm 5:12) e "o último inimigo a ser destruído" (1Co 15:26). O Novo Testamento distingue a morte física da "segunda morte" (Ap 20:14) — a separação eterna de Deus. Cristo "padeceu a morte" (thanatos, Hb 2:9) para libertar todos os que, por medo do thanatos, estavam sujeitos à escravidão por toda a vida. Pela ressurreição, Cristo aboliu o thanatos e trouxe à luz a vida e a imortalidade pelo euangelion (2Tm 1:10).',
+    verses: ['Rm 6:23', '1Co 15:26'],
+  },
+  {
+    id: 'G386',
+    lang: 'G',
+    word: 'ἀνάστασις',
+    translit: 'anastasis',
+    ptGloss: 'ressurreição, levantamento',
+    definition:
+      'Anastasis significa "levantar-se" — a ressurreição dos mortos à vida corporal. É o coração do euangelion cristão: "se Cristo não ressuscitou (anastasis), vã é a nossa fé" (1Co 15:17). A anastasis de Jesus não foi uma ressuscitação (retorno ao mesmo corpo mortal), mas uma transformação em corpo glorificado e imperecível — primícias de nossa própria anastasis futura. Jesus se autodenomina "a Anastasis e a Vida" (Jo 11:25), afirmando ser em sua pessoa a fonte e a garantia da ressurreição.',
+    verses: ['Jo 11:25', '1Co 15:20'],
+  },
+  {
+    id: 'G3875',
+    lang: 'G',
+    word: 'παράκλητος',
+    translit: 'parakletos',
+    ptGloss: 'Consolador, Advogado, Intercessor',
+    definition:
+      'Parakletos vem de "para" (ao lado) + "kaleo" (chamar) — aquele chamado para ficar ao lado de alguém em necessidade. No âmbito jurídico, era o advogado de defesa. Jesus usa a palavra para o Espírito Santo (Jo 14:16; 16:7): o Parakletos ficará para sempre com os discípulos, ensinará todas as coisas e os guiará à verdade plena. João também chama Jesus de Parakletos (1Jo 2:1) — nosso advogado junto ao Pai. A Igreja nunca está desacompanhada; o Parakletos está sempre presente.',
+    verses: ['Jo 14:16', '1Jo 2:1'],
+  },
+  {
+    id: 'G3551',
+    lang: 'G',
+    word: 'νόμος',
+    translit: 'nomos',
+    ptGloss: 'lei, norma, princípio',
+    definition:
+      'Nomos no Novo Testamento refere-se principalmente à Torah hebraica — a Lei mosaica. Paulo desenvolve uma teologia complexa do nomos: a Lei é santa, justa e boa (Rm 7:12), mas não tem o poder de salvar porque o pecado usa seus mandamentos para despertar o desejo de transgredir (Rm 7:7-11). Cristo é o "fim do nomos para a justificação de todo aquele que crê" (Rm 10:4). O crente não está "sob o nomos" como sistema de justificação, mas a ama como expressão do caráter de Deus.',
+    verses: ['Rm 3:31', 'Gl 3:24'],
+  },
+  {
+    id: 'G129',
+    lang: 'G',
+    word: 'αἷμα',
+    translit: 'haima',
+    ptGloss: 'sangue, vida derramada',
+    definition:
+      'Haima no contexto bíblico representa a vida derramada — no Antigo Testamento o sangue do sacrifício expiava o pecado porque "a vida da carne está no sangue" (Lv 17:11). O Novo Testamento declara que sem haima não há remissão (Hb 9:22), e que o haima de Cristo é o sacrifício definitivo que purifica de todo pecado (1Jo 1:7). A Ceia do Senhor celebra o "haima da nova aliança" (Lc 22:20), lembrando que nossa redenção custou a vida do Filho de Deus.',
+    verses: ['Hb 9:22', '1Jo 1:7'],
+  },
+  {
+    id: 'G2435',
+    lang: 'G',
+    word: 'ἱλαστήριον',
+    translit: 'hilasterion',
+    ptGloss: 'propiciação, lugar de expiação',
+    definition:
+      'Hilasterion é o lugar ou o ato de aplacar a ira justa de Deus contra o pecado por meio de um sacrifício. Paulo usa o termo em Romanos 3:25 para descrever Cristo como o hilasterion — o propiciatório vivo que absorveu a ira divina em nosso lugar. Ao contrário das divindades pagãs que exigiam sacrifícios para ser apaziguadas, o Deus bíblico tomou a iniciativa: ele mesmo proveu o hilasterion em Cristo, demonstrando ao mesmo tempo sua justiça e seu amor (Rm 3:25-26).',
+    verses: ['Rm 3:25', '1Jo 2:2'],
+  },
+  {
+    id: 'G2920',
+    lang: 'G',
+    word: 'κρίσις',
+    translit: 'krisis',
+    ptGloss: 'julgamento, decisão, sentença',
+    definition:
+      'Krisis é o julgamento — o ato de distinguir, avaliar e proferir sentença. No Evangelho de João, a krisis já está em operação: "esta é a krisis, que a luz veio ao mundo, e os homens amaram as trevas mais do que a luz" (Jo 3:19). A presença de Jesus força uma decisão — uma krisis — entre a luz e as trevas. Há também a krisis futura e final (o Dia do Juízo), quando toda a humanidade prestará contas a Deus. Cristo, o Filho, recebeu do Pai toda a autoridade para executar a krisis (Jo 5:27).',
+    verses: ['Jo 3:19', 'Jo 5:30'],
+  },
+  {
+    id: 'G2537',
+    lang: 'G',
+    word: 'καινός',
+    translit: 'kainos',
+    ptGloss: 'novo (qualitativo), diferente',
+    definition:
+      'Kainos difere de "neos" (novo em sentido temporal) por indicar novidade qualitativa — algo que é de uma ordem superior, diferente por natureza, não apenas por idade. A "nova aliança" (kainos diatheke) de Hebreus não é apenas uma aliança mais recente, mas qualitativamente superior à mosaica. A "nova criação" (kainos ktisis, 2Co 5:17) em Cristo não é um remendo no velho, mas uma nova ordem de existência. "Eis que faço novas todas as coisas (kainos)" (Ap 21:5) anuncia a consumação escatológica.',
+    verses: ['2Co 5:17', 'Ap 21:5'],
+  },
+  {
+    id: 'G165',
+    lang: 'G',
+    word: 'αἰών',
+    translit: 'aion',
+    ptGloss: 'era, eternidade, século',
+    definition:
+      'Aion designa uma era ou período de tempo — mas também a qualidade da vida que pertence a essa era. "Vida eterna" (zoe aionios) é literalmente "vida da era vindoura" — a vida do Reino de Deus. O "deus deste aion" (2Co 4:4) é Satanás, que governa a ordem presente. Cristo inaugurou o "aion vindouro" em sua ressurreição, tornando possível que os crentes participem agora da vida do Reino futuro. "Ap aionon" (desde os séculos) descreve os propósitos eternos de Deus (Ef 3:11).',
+    verses: ['Jo 17:3', 'Ef 3:11'],
+  },
+  {
+    id: 'G4335',
+    lang: 'G',
+    word: 'προσευχή',
+    translit: 'proseuche',
+    ptGloss: 'oração, súplica',
+    definition:
+      'Proseuche é a palavra mais abrangente para oração no Novo Testamento — o diálogo da criatura com o Criador. Vem de "pros" (em direção a) + "euche" (voto/oração), expressando a ideia de orientar-se em direção a Deus. Paulo instrui à oração contínua: "perseverai na proseuche" (Rm 12:12; 1Ts 5:17). O modelo de proseuche dado por Jesus — o Pai-Nosso (Mt 6:9-13) — estrutura a oração em torno da glória de Deus, das necessidades diárias e do perdão mútuo. A proseuche é o pulso da vida espiritual.',
+    verses: ['Fp 4:6', 'Mt 6:9'],
+  },
+  {
+    id: 'G652',
+    lang: 'G',
+    word: 'ἀπόστολος',
+    translit: 'apostolos',
+    ptGloss: 'apóstolo, enviado',
+    definition:
+      'Apostolos vem de "apostellō" — enviar com autoridade e missão. No Novo Testamento, refere-se primariamente aos doze chamados por Jesus e a Paulo, que foram enviados como representantes plenos do Ressuscitado para lançar os fundamentos da Igreja (Ef 2:20). Em sentido mais amplo, todo crente é apostolado — enviado ao mundo com a mensagem do Evangelho. A Grande Comissão (Mt 28:19-20) é o mandado apostólico que a Igreja toda deve obedecer em cada geração.',
+    verses: ['Ef 2:20', 'Lc 6:13'],
+  },
+  {
+    id: 'G4396',
+    lang: 'G',
+    word: 'προφήτης',
+    translit: 'prophetes',
+    ptGloss: 'profeta, porta-voz',
+    definition:
+      'Prophetes significa literalmente "o que fala em frente" — o porta-voz que proclama a mensagem de Deus. No contexto do Antigo Testamento grego (LXX), traduzia o hebraico navi. No Novo Testamento, o ministério profético continua na Igreja como dom do Espírito (1Co 12:28; Ef 4:11): o prophetes edifica, exorta e consola a comunidade (1Co 14:3). Jesus é o Prophetes definitivo (At 3:22), e a revelação apostólica e profética é o fundamento sobre o qual a Igreja é edificada (Ef 2:20).',
+    verses: ['1Co 14:3', 'At 3:22'],
+  },
 ]
