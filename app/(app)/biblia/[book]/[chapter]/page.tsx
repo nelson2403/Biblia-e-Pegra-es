@@ -8,8 +8,17 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/contexts/AuthContext'
 
 interface Verse { verse: number; text: string }
+interface BibleJson { abbrev: string; chapters: string[][] }
 
 const cache: Record<string, Verse[]> = {}
+let bibleJson: BibleJson[] | null = null
+
+async function getBibleData(): Promise<BibleJson[]> {
+  if (bibleJson) return bibleJson
+  const res = await fetch('https://cdn.jsdelivr.net/gh/thiagobodruk/biblia@master/json/aa.json')
+  bibleJson = await res.json()
+  return bibleJson!
+}
 
 export default function CapituloPage({ params }: { params: { book: string; chapter: string } }) {
   const { user } = useAuth()
@@ -37,16 +46,12 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
     } else {
       setLoading(true)
       try {
-        const bookName = bookData.en.replace(/\+/g, '%20')
-        const res = await fetch(`https://bible-api.com/${bookName}%20${currentChapter}?translation=almeida`)
-        const data = await res.json()
-        if (data.verses && data.verses.length > 0) {
-          const parsed: Verse[] = data.verses.map((v: any) => ({ verse: v.verse, text: v.text.trim() }))
-          cache[key] = parsed
-          setVerses(parsed)
-        } else {
-          setVerses([])
-        }
+        const bible = await getBibleData()
+        const bookEntry = bible[bookData.id - 1]
+        const chapterVerses = bookEntry?.chapters?.[currentChapter - 1] ?? []
+        const parsed: Verse[] = chapterVerses.map((text, i) => ({ verse: i + 1, text: text.trim() }))
+        cache[key] = parsed
+        setVerses(parsed)
       } catch { setVerses([]) }
       setLoading(false)
     }
