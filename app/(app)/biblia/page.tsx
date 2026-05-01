@@ -74,7 +74,7 @@ function BookCard({ book }: { book: BibleBook }) {
   const badgeBg = isAT ? '#EDE9FE' : '#DBEAFE'
 
   return (
-    <Link href={`/biblia/${book.en}/1`}
+    <Link href={`/biblia/${book.id}/1`}
       className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow border-l-4 flex flex-col"
       style={{ borderLeftColor: accentColor }}>
       <span className="self-start text-xs font-extrabold px-2 py-1 rounded-md mb-2"

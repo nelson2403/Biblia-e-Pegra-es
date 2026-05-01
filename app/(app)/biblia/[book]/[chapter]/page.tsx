@@ -14,7 +14,7 @@ const cache: Record<string, Verse[]> = {}
 export default function CapituloPage({ params }: { params: { book: string; chapter: string } }) {
   const { user } = useAuth()
   const router = useRouter()
-  const bookData = BIBLE_BOOKS.find(b => b.en === params.book)
+  const bookData = BIBLE_BOOKS.find(b => b.id === parseInt(params.book) || b.en === params.book)
   const [currentChapter, setCurrentChapter] = useState(parseInt(params.chapter) || 1)
   const [verses, setVerses] = useState<Verse[]>([])
   const [loading, setLoading] = useState(true)
