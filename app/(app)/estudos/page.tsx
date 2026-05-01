@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { Plus, Search, X, BookOpen, Pencil, Trash2, ChevronDown, Sparkles } from 'lucide-react'
+import { Plus, Search, X, BookOpen, Pencil, Trash2, ChevronDown, Sparkles, SlidersHorizontal } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { EstudoBiblico } from '@/types'
@@ -96,8 +96,8 @@ export default function EstudosPage() {
   })
 
   return (
-    <div className="flex flex-col min-h-full">
-      <div className="flex items-center justify-between px-6 pt-6 pb-3">
+    <div className="flex flex-col min-h-full overflow-x-hidden">
+      <div className="flex items-center justify-between px-4 pt-6 pb-3">
         <div>
           <h1 className="text-2xl font-extrabold text-gray-800">Estudos</h1>
           <Link href="/anotacoes" className="text-xs font-semibold" style={{ color: '#4F46E5' }}>Ver Anotacoes &rarr;</Link>
@@ -112,7 +112,7 @@ export default function EstudosPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex px-6 mb-4 border-b border-gray-200">
+      <div className="flex px-4 mb-4 border-b border-gray-200">
         {([['meus', 'Meus Estudos'], ['prontos', 'Estudos Prontos']] as const).map(([key, label]) => (
           <button key={key} onClick={() => setTab(key)}
             className="flex-1 py-2.5 text-sm font-bold transition-colors"
@@ -128,7 +128,7 @@ export default function EstudosPage() {
 
       {/* ── Estudos Prontos Tab ── */}
       {tab === 'prontos' && (
-        <div className="px-6 pb-6 flex flex-col gap-3">
+        <div className="px-4 pb-6 flex flex-col gap-3">
           <div className="flex items-center gap-2 border border-gray-200 bg-white rounded-xl px-3 py-2.5 mb-1">
             <Search size={17} color="#9CA3AF" />
             <input type="text" placeholder="Buscar tema ou categoria..." value={searchProntos}
@@ -167,15 +167,15 @@ export default function EstudosPage() {
 
       {/* ── Meus Estudos Tab ── */}
       {tab === 'meus' && estudos.length > 0 && (
-        <div className="px-6 mb-3 grid grid-cols-3 gap-2">
+        <div className="px-4 mb-3 grid grid-cols-3 gap-2">
           {[
             { label: 'Total', value: estudos.length, color: '#4F46E5', bg: '#EEF2FF' },
             { label: 'Completos', value: completeCount, color: '#059669', bg: '#D1FAE5' },
-            { label: 'Em progresso', value: estudos.length - completeCount, color: '#D97706', bg: '#FEF3C7' },
+            { label: 'Em andamento', value: estudos.length - completeCount, color: '#D97706', bg: '#FEF3C7' },
           ].map(s => (
             <div key={s.label} className="rounded-2xl p-3 text-center" style={{ backgroundColor: s.bg }}>
               <p className="text-xl font-extrabold" style={{ color: s.color }}>{s.value}</p>
-              <p className="text-xs font-semibold text-gray-500">{s.label}</p>
+              <p className="text-[10px] font-semibold text-gray-500 leading-tight">{s.label}</p>
             </div>
           ))}
         </div>
@@ -186,7 +186,7 @@ export default function EstudosPage() {
         const allTags = [...new Set(estudos.flatMap(e => (e.tags ?? '').split(',').map(t => t.trim()).filter(Boolean)))]
         if (!allTags.length) return null
         return (
-          <div className="px-6 mb-2 flex gap-2 overflow-x-auto pb-1">
+          <div className="px-4 mb-2 flex gap-2 overflow-x-auto pb-1">
             <button onClick={() => onTag(null)}
               className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-bold transition-all"
               style={{ backgroundColor: !activeTag ? '#4F46E5' : '#F3F4F6', color: !activeTag ? '#fff' : '#6B7280' }}>
@@ -206,25 +206,27 @@ export default function EstudosPage() {
         )
       })()}
 
-      {tab === 'meus' && <div className="px-6 mb-2 flex gap-2">
-        <div className="flex-1 flex items-center gap-2 border border-gray-200 bg-white rounded-xl px-3 py-2.5">
-          <Search size={17} color="#9CA3AF" />
+      {tab === 'meus' && <div className="px-4 mb-2 flex gap-2">
+        <div className="flex-1 min-w-0 flex items-center gap-2 border border-gray-200 bg-white rounded-xl px-3 py-2.5">
+          <Search size={17} color="#9CA3AF" className="flex-shrink-0" />
           <input
             type="text"
             placeholder="Buscar por livro ou texto..."
             value={search}
             onChange={e => onSearch(e.target.value)}
-            className="flex-1 text-sm text-gray-700 outline-none"
+            className="flex-1 min-w-0 text-sm text-gray-700 outline-none"
           />
           {search && <button onClick={() => onSearch('')}><X size={16} color="#9CA3AF" /></button>}
         </div>
-        <div className="relative">
+        <div className="relative flex-shrink-0">
           <button onClick={() => setShowSort(v => !v)}
-            className="flex items-center gap-1 border border-gray-200 bg-white rounded-xl px-3 py-2.5 text-sm text-gray-600 font-semibold whitespace-nowrap">
-            {SORT_LABELS[sort]} <ChevronDown size={15} />
+            className="flex items-center gap-1.5 border border-gray-200 bg-white rounded-xl px-3 py-2.5 text-gray-600 font-semibold"
+            style={{ color: sort !== 'recente' ? '#4F46E5' : undefined }}>
+            <SlidersHorizontal size={16} />
+            <ChevronDown size={14} />
           </button>
           {showSort && (
-            <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden w-40">
+            <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-20 overflow-hidden w-44">
               {(Object.keys(SORT_LABELS) as SortKey[]).map(k => (
                 <button key={k} onClick={() => onSort(k)}
                   className="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 font-medium"
@@ -237,7 +239,7 @@ export default function EstudosPage() {
         </div>
       </div>}
 
-      {tab === 'meus' && <div className="px-6 pb-6 flex flex-col gap-3">
+      {tab === 'meus' && <div className="px-4 pb-6 flex flex-col gap-3">
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center py-20 gap-3">
             <BookOpen size={48} color="#D1D5DB" />
