@@ -1,9 +1,28 @@
 'use client'
 import { useState, useMemo, useRef, useEffect } from 'react'
+import Link from 'next/link'
 import { Search, X, BookOpen, ChevronRight } from 'lucide-react'
 import { DICTIONARY, DictEntry } from '@/data/dictionary'
+import { BIBLE_BOOKS } from '@/data/bibleBooks'
 
 type LangFilter = 'todos' | 'H' | 'G'
+
+function parseVerseLink(verse: string): string | null {
+  const lastSpace = verse.lastIndexOf(' ')
+  if (lastSpace === -1) return null
+  let abbr = verse.substring(0, lastSpace)
+  const chVerse = verse.substring(lastSpace + 1)
+  const colon = chVerse.indexOf(':')
+  if (colon === -1) return null
+  const chapter = parseInt(chVerse.substring(0, colon))
+  const verseNum = parseInt(chVerse.substring(colon + 1))
+  if (isNaN(chapter) || isNaN(verseNum)) return null
+  // Normaliza abreviaturas com acento (ex: Êx → Ex)
+  abbr = abbr.replace(/Ê/g, 'E').replace(/Á/g, 'A')
+  const book = BIBLE_BOOKS.find(b => b.abbr === abbr)
+  if (!book) return null
+  return `/biblia/${book.id}/${chapter}?v=${verseNum}`
+}
 
 function Badge({ lang }: { lang: 'H' | 'G' }) {
   const isH = lang === 'H'
@@ -161,16 +180,31 @@ function ModalBottomSheet({
                 Versículos de Referência
               </p>
               <div className="flex flex-col gap-2">
-                {entry.verses.map((v, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-2 rounded-xl px-3 py-2"
-                    style={{ backgroundColor: '#F9FAFB', borderLeft: '3px solid #4F46E5' }}
-                  >
-                    <BookOpen size={14} color="#4F46E5" className="flex-shrink-0" />
-                    <p className="text-sm font-semibold text-gray-700">{v}</p>
-                  </div>
-                ))}
+                {entry.verses.map((v, i) => {
+                  const link = parseVerseLink(v)
+                  return link ? (
+                    <Link
+                      key={i}
+                      href={link}
+                      onClick={onClose}
+                      className="flex items-center gap-2 rounded-xl px-3 py-2 active:opacity-60 transition-opacity"
+                      style={{ backgroundColor: '#EEF2FF', borderLeft: '3px solid #4F46E5' }}
+                    >
+                      <BookOpen size={14} color="#4F46E5" className="flex-shrink-0" />
+                      <p className="text-sm font-bold flex-1" style={{ color: '#4F46E5' }}>{v}</p>
+                      <ChevronRight size={14} color="#4F46E5" className="flex-shrink-0" />
+                    </Link>
+                  ) : (
+                    <div
+                      key={i}
+                      className="flex items-center gap-2 rounded-xl px-3 py-2"
+                      style={{ backgroundColor: '#F9FAFB', borderLeft: '3px solid #4F46E5' }}
+                    >
+                      <BookOpen size={14} color="#4F46E5" className="flex-shrink-0" />
+                      <p className="text-sm font-semibold text-gray-700">{v}</p>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           )}
