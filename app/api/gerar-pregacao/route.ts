@@ -1,39 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
-  const key = process.env.GEMINI_API_KEY
+  const key = process.env.GROQ_API_KEY
 
   if (!key || key === 'sua_chave_aqui') {
-    return NextResponse.json({ error: 'Chave GEMINI_API_KEY não configurada.' }, { status: 500 })
+    return NextResponse.json({ error: 'Chave GROQ_API_KEY não configurada.' }, { status: 500 })
   }
-
-  const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`
 
   try {
     const { tema, texto_base, publico } = await req.json()
 
     const prompt = `Gere uma pregação cristã evangélica completa e poderosa sobre "${tema}" baseada em ${texto_base}${publico ? ` para: ${publico}` : ''}.
 
-Responda APENAS com JSON válido, sem markdown, sem explicações, neste formato exato:
+Responda APENAS com JSON válido, sem markdown, sem texto extra, neste formato:
 {
   "titulo": "Título impactante e memorável",
   "mensagem_central": "A grande verdade central em uma frase poderosa",
-  "introducao": "Parágrafo de introdução envolvente que conecta com o público e apresenta o problema",
-  "ponto1": "Primeiro ponto com desenvolvimento e versículo bíblico de apoio (cite a referência completa)",
-  "ponto2": "Segundo ponto com desenvolvimento e versículo bíblico de apoio (cite a referência completa)",
-  "ponto3": "Terceiro ponto com desenvolvimento e versículo bíblico de apoio (cite a referência completa)",
-  "ilustracao": "Uma ilustração prática, história ou exemplo que ilustra a mensagem",
-  "aplicacao_pratica": "Como a congregação pode aplicar isso na vida prática esta semana",
-  "conclusao": "Conclusão poderosa que amarra tudo e apela ao coração",
+  "introducao": "Parágrafo de introdução envolvente que conecta com o público",
+  "ponto1": "Primeiro ponto com desenvolvimento e versículo bíblico de apoio",
+  "ponto2": "Segundo ponto com desenvolvimento e versículo bíblico de apoio",
+  "ponto3": "Terceiro ponto com desenvolvimento e versículo bíblico de apoio",
+  "ilustracao": "Uma ilustração prática ou história que ilustra a mensagem",
+  "aplicacao_pratica": "Como a congregação pode aplicar isso na vida prática",
+  "conclusao": "Conclusão poderosa que amarra tudo",
   "apelo_final": "Chamada para decisão, compromisso ou oração"
 }`
 
-    const res = await fetch(GEMINI_URL, {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${key}`,
+      },
       body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.85, maxOutputTokens: 2048 },
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.85,
+        max_tokens: 2048,
       }),
     })
 
@@ -41,11 +44,11 @@ Responda APENAS com JSON válido, sem markdown, sem explicações, neste formato
 
     if (!res.ok) {
       const msg = data?.error?.message ?? `HTTP ${res.status}`
-      console.error('[gerar-pregacao] Gemini error:', msg)
+      console.error('[gerar-pregacao] Groq error:', msg)
       return NextResponse.json({ error: `Erro da IA: ${msg}` }, { status: 502 })
     }
 
-    const text: string | undefined = data.candidates?.[0]?.content?.parts?.[0]?.text
+    const text: string | undefined = data.choices?.[0]?.message?.content
 
     if (!text) throw new Error('Sem resposta da IA')
 
