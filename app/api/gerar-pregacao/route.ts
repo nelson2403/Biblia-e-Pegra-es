@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`
-
 export async function POST(req: NextRequest) {
+  const key = process.env.GEMINI_API_KEY
+
+  if (!key || key === 'sua_chave_aqui') {
+    return NextResponse.json({ error: 'Chave GEMINI_API_KEY não configurada.' }, { status: 500 })
+  }
+
+  const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`
+
   try {
     const { tema, texto_base, publico } = await req.json()
-
-    if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json({ error: 'Chave da IA não configurada.' }, { status: 500 })
-    }
 
     const prompt = `Gere uma pregação cristã evangélica completa e poderosa sobre "${tema}" baseada em ${texto_base}${publico ? ` para: ${publico}` : ''}.
 
@@ -36,6 +38,13 @@ Responda APENAS com JSON válido, sem markdown, sem explicações, neste formato
     })
 
     const data = await res.json()
+
+    if (!res.ok) {
+      const msg = data?.error?.message ?? `HTTP ${res.status}`
+      console.error('[gerar-pregacao] Gemini error:', msg)
+      return NextResponse.json({ error: `Erro da IA: ${msg}` }, { status: 502 })
+    }
+
     const text: string | undefined = data.candidates?.[0]?.content?.parts?.[0]?.text
 
     if (!text) throw new Error('Sem resposta da IA')
@@ -44,7 +53,8 @@ Responda APENAS com JSON válido, sem markdown, sem explicações, neste formato
     const pregacao = JSON.parse(jsonText)
 
     return NextResponse.json({ pregacao })
-  } catch {
-    return NextResponse.json({ error: 'Erro ao gerar a pregação. Tente novamente.' }, { status: 500 })
+  } catch (e: any) {
+    console.error('[gerar-pregacao] Erro:', e?.message)
+    return NextResponse.json({ error: `Erro ao gerar a pregação: ${e?.message ?? 'tente novamente'}` }, { status: 500 })
   }
 }
