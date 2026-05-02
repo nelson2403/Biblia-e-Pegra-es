@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { BookOpen, Home, Layers, Mic, User, LogOut, BookMarked, Heart, Map, Search, BookA } from 'lucide-react'
+import { BookOpen, Home, Layers, Mic, User, LogOut, BookMarked, Heart, Map, Search, BookA, HeartHandshake, Bot, Sparkles } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
 const NAV = [
@@ -14,14 +14,17 @@ const NAV = [
   { href: '/plano', label: 'Plano', Icon: Map },
   { href: '/busca', label: 'Busca', Icon: Search },
   { href: '/dicionario', label: 'Dicionario', Icon: BookA },
+  { href: '/oracao', label: 'Mural de Oracao', Icon: HeartHandshake },
+  { href: '/conselheiro', label: 'Conselheiro IA', Icon: Bot },
+  { href: '/pregacoes/ia', label: 'Gerar Pregacao IA', Icon: Sparkles },
   { href: '/perfil', label: 'Perfil', Icon: User },
 ]
 
 const BOTTOM_NAV = [
   { href: '/dashboard', label: 'Inicio', Icon: Home },
   { href: '/biblia', label: 'Biblia', Icon: BookOpen },
-  { href: '/estudos', label: 'Estudos', Icon: Layers },
-  { href: '/dicionario', label: 'Dic.', Icon: BookA },
+  { href: '/oracao', label: 'Oracao', Icon: HeartHandshake },
+  { href: '/conselheiro', label: 'IA', Icon: Bot },
   { href: '/perfil', label: 'Perfil', Icon: User },
 ]
 

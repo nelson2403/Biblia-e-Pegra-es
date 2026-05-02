@@ -119,3 +119,48 @@ CREATE INDEX IF NOT EXISTS idx_pregacoes_user ON public.pregacoes(user_id);
 CREATE INDEX IF NOT EXISTS idx_favoritos_user ON public.favoritos(user_id);
 CREATE INDEX IF NOT EXISTS idx_historico_user ON public.historico_leitura(user_id);
 CREATE INDEX IF NOT EXISTS idx_historico_data ON public.historico_leitura(user_id, lido_em);
+
+-- ============================================
+-- MURAL DE ORAÇÃO
+-- ============================================
+
+CREATE TABLE IF NOT EXISTS public.pedidos_oracao (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  autor_nome TEXT NOT NULL DEFAULT 'Anônimo',
+  texto TEXT NOT NULL,
+  anonimo BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.oracoes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  pedido_id UUID NOT NULL REFERENCES public.pedidos_oracao(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(pedido_id, user_id)
+);
+
+ALTER TABLE public.pedidos_oracao ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.oracoes ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Autenticados veem pedidos" ON public.pedidos_oracao
+  FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Usuarios criam pedidos" ON public.pedidos_oracao
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Usuarios deletam seus pedidos" ON public.pedidos_oracao
+  FOR DELETE USING (auth.uid() = user_id);
+
+CREATE POLICY "Autenticados veem oracoes" ON public.oracoes
+  FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Usuarios inserem oracoes" ON public.oracoes
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Usuarios deletam suas oracoes" ON public.oracoes
+  FOR DELETE USING (auth.uid() = user_id);
+
+CREATE INDEX IF NOT EXISTS idx_pedidos_created ON public.pedidos_oracao(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_oracoes_pedido ON public.oracoes(pedido_id);
