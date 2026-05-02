@@ -11,7 +11,6 @@ export default function CadastroPage() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' })
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const set = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,29 +39,8 @@ export default function CadastroPage() {
     if (error) {
       setErrors({ general: error })
     } else {
-      setSuccess(true)
+      router.push('/dashboard')
     }
-  }
-
-  if (success) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-4"
-        style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #3730A3 50%, #4F46E5 100%)' }}>
-        <div className="w-full max-w-sm bg-white rounded-3xl p-8 shadow-2xl text-center">
-          <div className="text-5xl mb-4">✉️</div>
-          <h2 className="text-xl font-bold text-gray-800 mb-3">Verifique seu e-mail!</h2>
-          <p className="text-sm text-gray-500 mb-6 leading-relaxed">
-            Enviamos um link de confirmação para <span className="font-bold text-primary">{form.email}</span>.
-            Clique no link para ativar sua conta.
-          </p>
-          <Link href="/login"
-            className="block w-full py-3 rounded-xl font-bold text-white text-sm text-center"
-            style={{ backgroundColor: '#4F46E5' }}>
-            Ir para o Login
-          </Link>
-        </div>
-      </div>
-    )
   }
 
   return (
