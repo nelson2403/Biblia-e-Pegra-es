@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`
-
 const SYSTEM = `Você é um conselheiro bíblico cristão compassivo e sábio, chamado Elias. Seu papel é oferecer orientação espiritual embasada nas Escrituras Sagradas.
 
 Regras:
@@ -13,12 +11,16 @@ Regras:
 - Termine com um versículo de encorajamento em itálico`
 
 export async function POST(req: NextRequest) {
+  const key = process.env.GEMINI_API_KEY
+
+  if (!key || key === 'sua_chave_aqui') {
+    return NextResponse.json({ error: 'Chave da IA não configurada no servidor.' }, { status: 500 })
+  }
+
+  const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`
+
   try {
     const { mensagem, historico } = await req.json()
-
-    if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json({ error: 'Chave da IA não configurada.' }, { status: 500 })
-    }
 
     const contents = [
       ...(historico as { role: string; text: string }[]).map(m => ({
@@ -39,12 +41,23 @@ export async function POST(req: NextRequest) {
     })
 
     const data = await res.json()
+
+    if (!res.ok) {
+      const geminiError = data?.error?.message ?? `HTTP ${res.status}`
+      console.error('Gemini API error:', geminiError)
+      return NextResponse.json({ error: `Erro da IA: ${geminiError}` }, { status: 502 })
+    }
+
     const text: string | undefined = data.candidates?.[0]?.content?.parts?.[0]?.text
 
-    if (!text) throw new Error('Sem resposta da IA')
+    if (!text) {
+      console.error('Gemini sem texto. Resposta completa:', JSON.stringify(data))
+      return NextResponse.json({ error: 'A IA não retornou resposta. Tente novamente.' }, { status: 502 })
+    }
 
     return NextResponse.json({ resposta: text })
-  } catch {
-    return NextResponse.json({ error: 'Erro ao consultar o conselheiro.' }, { status: 500 })
+  } catch (e: any) {
+    console.error('Conselheiro route error:', e?.message)
+    return NextResponse.json({ error: 'Erro interno ao consultar o conselheiro.' }, { status: 500 })
   }
 }

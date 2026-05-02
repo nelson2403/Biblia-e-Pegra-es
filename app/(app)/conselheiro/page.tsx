@@ -41,14 +41,18 @@ export default function ConselheiroPage() {
         body: JSON.stringify({ mensagem: texto, historico }),
       })
       const data = await res.json()
-      const resposta: string = data.resposta ?? 'Desculpe, não consegui processar sua mensagem. Tente novamente.'
 
-      setMensagens(prev => [...prev, { role: 'model', text: resposta }])
-      setHistorico(prev => [...prev, { role: 'user', text: texto }, { role: 'model', text: resposta }])
-    } catch {
+      if (data.error || !data.resposta) {
+        const msg = data.error ?? 'Não foi possível obter resposta. Tente novamente.'
+        setMensagens(prev => [...prev, { role: 'model', text: `⚠️ ${msg}` }])
+      } else {
+        setMensagens(prev => [...prev, { role: 'model', text: data.resposta }])
+        setHistorico(prev => [...prev, { role: 'user', text: texto }, { role: 'model', text: data.resposta }])
+      }
+    } catch (e: any) {
       setMensagens(prev => [
         ...prev,
-        { role: 'model', text: 'Erro ao conectar. Verifique sua conexão e tente novamente.' },
+        { role: 'model', text: '⚠️ Erro de conexão. Verifique sua internet e tente novamente.' },
       ])
     } finally {
       setLoading(false)
