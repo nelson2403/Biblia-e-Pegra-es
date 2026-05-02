@@ -1,7 +1,12 @@
 'use client'
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { BookOpen, Home, Layers, Mic, User, LogOut, BookMarked, Heart, Map, Search, BookA, HeartHandshake, Bot, Sparkles } from 'lucide-react'
+import {
+  BookOpen, Home, Layers, Mic, User, LogOut, BookMarked,
+  Heart, Map, Search, BookA, HeartHandshake, Bot, Sparkles,
+  Grid2x2, X,
+} from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
 const NAV = [
@@ -23,8 +28,19 @@ const NAV = [
 const BOTTOM_NAV = [
   { href: '/dashboard', label: 'Inicio', Icon: Home },
   { href: '/biblia', label: 'Biblia', Icon: BookOpen },
+  { href: '/estudos', label: 'Estudos', Icon: Layers },
   { href: '/oracao', label: 'Oracao', Icon: HeartHandshake },
-  { href: '/conselheiro', label: 'IA', Icon: Bot },
+]
+
+const MAIS_MENU = [
+  { href: '/conselheiro', label: 'Conselheiro IA', Icon: Bot },
+  { href: '/pregacoes/ia', label: 'Gerar Pregacao IA', Icon: Sparkles },
+  { href: '/pregacoes', label: 'Pregacoes', Icon: Mic },
+  { href: '/favoritos', label: 'Favoritos', Icon: Heart },
+  { href: '/anotacoes', label: 'Anotacoes', Icon: BookMarked },
+  { href: '/dicionario', label: 'Dicionario', Icon: BookA },
+  { href: '/plano', label: 'Plano', Icon: Map },
+  { href: '/busca', label: 'Busca', Icon: Search },
   { href: '/perfil', label: 'Perfil', Icon: User },
 ]
 
@@ -43,7 +59,6 @@ export function Sidebar() {
 
   return (
     <aside className="hidden md:flex flex-col w-60 min-h-screen bg-white border-r border-gray-100 shadow-sm">
-      {/* Brand */}
       <div className="px-5 py-5 border-b border-gray-100"
         style={{ background: 'linear-gradient(135deg, #1E1B4B, #4F46E5)' }}>
         <div className="flex items-center gap-3">
@@ -57,7 +72,6 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Nav */}
       <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5 overflow-y-auto">
         {NAV.map(({ href, label, Icon }) => {
           const active = pathname === href || pathname.startsWith(href + '/')
@@ -75,7 +89,6 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* User footer */}
       <div className="px-3 py-4 border-t border-gray-100">
         <div className="flex items-center gap-3 px-3 mb-3">
           <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
@@ -99,21 +112,78 @@ export function Sidebar() {
 
 export function BottomNav() {
   const pathname = usePathname()
+  const [showMais, setShowMais] = useState(false)
+
+  const maisActive = MAIS_MENU.some(item => pathname === item.href || pathname.startsWith(item.href + '/'))
+
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
-      <div className="flex">
-        {BOTTOM_NAV.map(({ href, label, Icon }) => {
-          const active = pathname === href || pathname.startsWith(href + '/')
-          return (
-            <Link key={href} href={href}
-              className="flex-1 flex flex-col items-center py-2 gap-0.5 text-xs font-semibold transition-colors"
-              style={{ color: active ? '#4F46E5' : '#9CA3AF' }}>
-              <Icon size={21} />
-              <span className="text-[10px]">{label}</span>
-            </Link>
-          )
-        })}
-      </div>
-    </nav>
+    <>
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+        <div className="flex">
+          {BOTTOM_NAV.map(({ href, label, Icon }) => {
+            const active = pathname === href || pathname.startsWith(href + '/')
+            return (
+              <Link key={href} href={href}
+                className="flex-1 flex flex-col items-center py-2 gap-0.5 transition-colors"
+                style={{ color: active ? '#4F46E5' : '#9CA3AF' }}>
+                <Icon size={21} />
+                <span className="text-[10px] font-semibold">{label}</span>
+              </Link>
+            )
+          })}
+
+          {/* Botão Mais */}
+          <button
+            onClick={() => setShowMais(v => !v)}
+            className="flex-1 flex flex-col items-center py-2 gap-0.5 transition-colors"
+            style={{ color: showMais || maisActive ? '#4F46E5' : '#9CA3AF' }}>
+            <Grid2x2 size={21} />
+            <span className="text-[10px] font-semibold">Mais</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* Menu Mais */}
+      {showMais && (
+        <div
+          className="md:hidden fixed inset-0 z-40 flex items-end"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+          onClick={() => setShowMais(false)}
+        >
+          <div
+            className="w-full bg-white rounded-t-3xl px-5 pt-4 pb-24"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-extrabold text-gray-800 text-base">Todas as seções</h3>
+              <button onClick={() => setShowMais(false)} className="p-1 text-gray-400">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-3 gap-3">
+              {MAIS_MENU.map(({ href, label, Icon }) => {
+                const active = pathname === href || pathname.startsWith(href + '/')
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setShowMais(false)}
+                    className="flex flex-col items-center gap-2 py-4 rounded-2xl transition-all"
+                    style={{
+                      backgroundColor: active ? '#EEF2FF' : '#F9FAFB',
+                      color: active ? '#4F46E5' : '#6B7280',
+                    }}
+                  >
+                    <Icon size={24} />
+                    <span className="text-[11px] font-bold text-center leading-tight">{label}</span>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
