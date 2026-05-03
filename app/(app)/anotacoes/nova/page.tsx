@@ -39,12 +39,18 @@ export default function NovaAnotacaoPage() {
     setSaving(true)
     const now = new Date().toISOString()
     const { error } = await supabase.from('anotacoes').insert({
-      titulo, conteudo,
-      tags: tags.join(','),
-      user_id: user!.id, created_at: now, updated_at: now,
+      titulo: titulo.trim(),
+      conteudo: conteudo.trim(),
+      tags: tags.join(',') || null,
+      user_id: user!.id,
+      created_at: now,
+      updated_at: now,
     })
     setSaving(false)
-    if (error) { alert('Nao foi possivel salvar.'); return }
+    if (error) {
+      alert(`Erro ao salvar: ${error.message}`)
+      return
+    }
     router.push('/anotacoes')
   }
 
