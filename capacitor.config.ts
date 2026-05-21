@@ -5,10 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Bíblia & Pregações',
   webDir: 'out',
   server: {
-    // URL de produção no Vercel — atualizar após o deploy
-    // url: 'https://SEU-APP.vercel.app',
-    // Para desenvolvimento local com Android Emulator:
-    // url: 'http://10.0.2.2:3000',
+    url: 'https://biblia-e-pegra-ejo5j995s-nelsonhenriquebrisa-8411s-projects.vercel.app',
     cleartext: false,
     androidScheme: 'https',
   },
