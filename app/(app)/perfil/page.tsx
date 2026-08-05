@@ -257,17 +257,18 @@ export default function PerfilPage() {
         <div className="bg-surface rounded-2xl shadow-sm p-4">
           <p className="text-xs font-bold text-conteudo-faint uppercase tracking-wider mb-3">Informações</p>
           {[
-            { Icon: BookOpen, label: 'Sobre o App' },
-            { Icon: Shield, label: 'Privacidade' },
-            { Icon: HelpCircle, label: 'Suporte' },
-          ].map(({ Icon, label }) => (
-            <div key={label} className="flex items-center gap-3 py-3 border-b border-borda last:border-0">
+            { Icon: Shield, label: 'Política de Privacidade', href: '/privacidade' },
+            { Icon: HelpCircle, label: 'Suporte', href: 'mailto:financeiropedradopombal@gmail.com' },
+          ].map(({ Icon, label, href }) => (
+            <a key={label} href={href}
+              className="flex items-center gap-3 py-3 border-b border-borda last:border-0">
               <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
                 style={{ backgroundColor: 'var(--surface-2)' }}>
                 <Icon size={19} color="var(--text-muted)" />
               </div>
               <span className="flex-1 text-sm font-medium text-conteudo">{label}</span>
-            </div>
+              <span className="text-conteudo-faint" aria-hidden="true">›</span>
+            </a>
           ))}
         </div>
 
