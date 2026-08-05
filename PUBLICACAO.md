@@ -95,29 +95,46 @@ Saída:
 
 O app vai para a Play Store como **Trusted Web Activity**: um invólucro Android que abre o seu PWA em tela cheia, sem barra de navegador.
 
+> **Por que TWA e não Capacitor?** O Capacitor roda dentro do *Android System WebView*,
+> que não expõe `PushManager` nem faz `speechSynthesis` falar. As notificações diárias e o
+> leitor de áudio simplesmente não funcionariam. O TWA usa o Chrome de verdade, então tudo
+> que funciona no navegador funciona no app — sem escrever código nativo.
+
 ### 5.1 Pré-requisitos
 
 - Conta de desenvolvedor Google Play (US$ 25, pagamento único)
-- Node 18+ e JDK 17
-- O app já publicado em HTTPS
+- Node 18+
+- O app já publicado em HTTPS: **https://biblia-e-pegra-es.vercel.app**
+
+O Bubblewrap baixa sozinho o JDK 17 e o Android SDK na primeira execução (~1 GB).
+Não precisa instalar Android Studio nem se preocupar com a versão do Java da máquina.
 
 ### 5.2 Gerar o projeto Android
 
+Rode **fora** da pasta do projeto web, para não misturar os arquivos:
+
 ```bash
 npm install -g @bubblewrap/cli
-bubblewrap init --manifest https://seu-app.vercel.app/manifest.json
+mkdir ~/biblia-twa && cd ~/biblia-twa
+bubblewrap init --manifest https://biblia-e-pegra-es.vercel.app/manifest.json
 ```
 
 Responda:
 
-| Pergunta | Resposta sugerida |
+| Pergunta | Resposta |
 |---|---|
-| Application ID | `app.bibliapregacoes.twa` |
+| Domain | `biblia-e-pegra-es.vercel.app` |
+| Application ID | `com.bibliaepregacoes.app` |
 | App name | Bíblia & Pregações |
 | Short name | Bíblia |
-| Theme color | `#1E1B4B` |
-| Background color | `#1E1B4B` |
+| Start URL | `/dashboard?origem=pwa` |
+| Theme color / Background | `#1E1B4B` |
 | Include support for Play Billing | Não |
+| Request geolocation permission | Não |
+
+Na sequência ele pede para **criar um keystore** (a chave que assina o app).
+Guarde o arquivo `android.keystore` e as senhas em lugar seguro — **se perder, você nunca mais
+consegue atualizar o app na Play Store**. Não dá para recuperar.
 
 Depois:
 
@@ -131,26 +148,34 @@ Gera `app-release-bundle.aab` (o arquivo que sobe para a Play) e `app-release-si
 
 **Sem isso o app abre com a barra de endereço do Chrome aparecendo** — e a Google reprova.
 
-O `bubblewrap build` imprime a impressão digital SHA-256 da sua chave. Também dá para obter com:
+O arquivo `public/.well-known/assetlinks.json` já existe com o `package_name` certo, mas com
+**duas impressões digitais de exemplo** que você precisa substituir:
+
+**Impressão 1 — a sua chave.** O `bubblewrap build` a imprime no fim. Ou obtenha com:
 
 ```bash
-keytool -list -v -keystore android.keystore -alias android
+bubblewrap fingerprint list
 ```
 
-Cole essa impressão em `public/.well-known/assetlinks.json`, substituindo o texto
-`SUBSTITUA:PELA:IMPRESSAO:DIGITAL:...`, e faça o deploy.
+**Impressão 2 — a do Google.** Como o Play App Signing é obrigatório para apps novos, a Google
+reassina seu app com outra chave. Suba o primeiro release (mesmo em teste interno) e pegue em
+**Play Console → Configuração → Integridade do app → Certificado de assinatura do app**.
 
-Confirme que está no ar:
+As **duas** precisam estar no array. Depois de colar, faça o deploy e confirme:
 
 ```
-https://seu-app.vercel.app/.well-known/assetlinks.json
+https://biblia-e-pegra-es.vercel.app/.well-known/assetlinks.json
 ```
 
-> Se você usar **Play App Signing** (recomendado e padrão), a Google reassina o app com
-> outra chave. Depois de subir o primeiro release, pegue a impressão em
-> **Play Console → Configuração → Integridade do app → Certificado de assinatura do app**
-> e **acrescente** essa segunda impressão ao array `sha256_cert_fingerprints`.
-> São duas impressões no arquivo — a sua e a do Google.
+Para validar se a Google enxerga o vínculo:
+
+```
+https://digitalassetlinks.googleapis.com/v1/statements:list?source.web.site=https://biblia-e-pegra-es.vercel.app&relation=delegate_permission/common.handle_all_urls
+```
+
+> **Como saber se deu certo:** instale o APK e abra o app. Se aparecer uma barra de endereço
+> do Chrome no topo por 2 segundos, o assetlinks está errado. Se abrir em tela cheia limpa,
+> está tudo certo.
 
 ### 5.4 Ficha da loja
 
@@ -187,14 +212,14 @@ https://seu-app.vercel.app/.well-known/assetlinks.json
 
 ## 6. Checklist antes de publicar
 
-- [ ] `schema_v2.sql` executado no Supabase
-- [ ] `SUPABASE_SERVICE_ROLE_KEY` real preenchida (local e na Vercel)
-- [ ] Todas as variáveis cadastradas na Vercel
-- [ ] `/diario` carrega o versículo e o estudo do dia
+- [x] `schema_v2.sql` executado no Supabase
+- [x] `SUPABASE_SERVICE_ROLE_KEY` e `GROQ_API_KEY` preenchidas no `.env.local`
+- [ ] **As 6 variáveis novas cadastradas na Vercel** ← pendente
+- [ ] `/diario` carrega o versículo e o estudo do dia em produção
 - [ ] Notificação de teste chega (Perfil → Palavra do dia → Enviar teste)
 - [ ] Botão "Ouvir" lê a Bíblia em voz alta no celular
 - [ ] Ditado por voz transcreve corretamente
-- [ ] `assetlinks.json` com a impressão digital correta no ar
+- [ ] `assetlinks.json` com as duas impressões digitais no ar
 - [ ] Política de privacidade publicada
 
 ---
