@@ -111,6 +111,12 @@ export interface ConteudoDiario {
   estudo_pontos: PontoEstudo[]
   estudo_aplicacao: string | null
   estudo_conclusao: string | null
+  /** Vídeo sugerido para o estudo (YouTube). Ausente quando não houve resultado. */
+  video_id: string | null
+  video_titulo: string | null
+  video_canal: string | null
+  video_canal_id: string | null
+  video_oculto?: boolean
   gerado_por: string
   created_at?: string
 }

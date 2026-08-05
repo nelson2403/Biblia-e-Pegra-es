@@ -2,6 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   TOKENS DE COR
+   Paleta enxuta: superfícies neutras + um dourado de destaque
+   e um índigo de ação. Tudo o mais herda desses tokens, então
+   trocar o tema muda o app inteiro.
+   ============================================ */
+
+:root {
+  --bg: #f6f6f8;
+  --surface: #ffffff;
+  --surface-2: #f0f0f3;
+  --surface-3: #e7e7ec;
+
+  --text: #14141a;
+  --text-muted: #64646f;
+  --text-faint: #9a9aa4;
+
+  --border: #e3e3e9;
+  --border-strong: #d1d1da;
+
+  /* Ação primária */
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-soft: #ecebfd;
+  --accent-fg: #ffffff;
+
+  /* Destaque de Escritura */
+  --gold: #b47509;
+  --gold-soft: #fdf4e3;
+
+  --danger: #d32f2f;
+  --danger-soft: #fdeded;
+  --success: #17784f;
+  --success-soft: #e7f6ee;
+
+  /* Faixa escura usada em capas e cabeçalhos de leitura */
+  --deep: #171720;
+  --deep-fg: #f7f7f9;
+
+  --shadow: 0 1px 2px rgba(20, 20, 26, 0.06), 0 4px 12px rgba(20, 20, 26, 0.04);
+  --shadow-lg: 0 8px 30px rgba(20, 20, 26, 0.12);
+
+  --radius: 16px;
+  --radius-lg: 22px;
+}
+
+:root[data-tema='escuro'] {
+  --bg: #0a0a0d;
+  --surface: #151519;
+  --surface-2: #1e1e24;
+  --surface-3: #2a2a32;
+
+  --text: #f4f4f6;
+  --text-muted: #9c9ca8;
+  --text-faint: #6b6b78;
+
+  --border: #26262e;
+  --border-strong: #34343e;
+
+  --accent: #8b83f5;
+  --accent-hover: #a09af7;
+  --accent-soft: #1e1b33;
+  --accent-fg: #0a0a0d;
+
+  --gold: #f0b64d;
+  --gold-soft: #2a2113;
+
+  --danger: #f27272;
+  --danger-soft: #2c1717;
+  --success: #5cc98f;
+  --success-soft: #14261d;
+
+  --deep: #000000;
+  --deep-fg: #f4f4f6;
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.6);
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -12,9 +91,16 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  background-color: #F9FAFB;
-  color: #1F2937;
+  background-color: var(--bg);
+  color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* A troca de tema não deve animar — evita o "arrastão" de cor na tela toda. */
+html.trocando-tema,
+html.trocando-tema * {
+  transition: none !important;
 }
 
 a {
@@ -26,14 +112,38 @@ a {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--surface-2);
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--border-strong);
   border-radius: 3px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  color: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-faint);
+}
+
+/* O autofill do Chrome pinta o campo de branco e some com o texto no escuro. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text);
+  -webkit-box-shadow: 0 0 0 1000px var(--surface-2) inset;
+  caret-color: var(--text);
 }
 
 /* ============================================
@@ -41,39 +151,43 @@ a {
    Ativadas em Perfil → Acessibilidade.
    ============================================ */
 
-/* Texto maior em todo o app, sem quebrar o layout (tudo usa rem/em). */
 html[data-fonte='grande'] {
   font-size: 19px;
 }
 
-/* Alto contraste: reforça a cor do texto e as bordas para quem enxerga pouco. */
-html[data-contraste='alto'] body {
-  color: #000;
-  background-color: #fff;
+/* Alto contraste: preto no branco (ou branco no preto) e bordas visíveis. */
+html[data-contraste='alto'] {
+  --text: #000000;
+  --text-muted: #1f1f27;
+  --text-faint: #3a3a45;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f2f2f2;
+  --border: #000000;
+  --border-strong: #000000;
 }
-html[data-contraste='alto'] .text-gray-400,
-html[data-contraste='alto'] .text-gray-500,
-html[data-contraste='alto'] .text-gray-600 {
-  color: #1f2937 !important;
+html[data-contraste='alto'][data-tema='escuro'] {
+  --text: #ffffff;
+  --text-muted: #e4e4e8;
+  --text-faint: #c4c4cc;
+  --bg: #000000;
+  --surface: #000000;
+  --surface-2: #121212;
+  --border: #ffffff;
+  --border-strong: #ffffff;
 }
-html[data-contraste='alto'] .text-gray-700,
-html[data-contraste='alto'] .text-gray-800 {
-  color: #000 !important;
-}
-html[data-contraste='alto'] .shadow-sm,
-html[data-contraste='alto'] .shadow-md {
-  box-shadow: none !important;
-  border: 2px solid #1f2937;
+html[data-contraste='alto'] .cartao {
+  border: 2px solid var(--border);
+  box-shadow: none;
 }
 
 /* Foco sempre visível — navegação por teclado e leitores de tela. */
 :focus-visible {
-  outline: 3px solid #4f46e5;
+  outline: 3px solid var(--accent);
   outline-offset: 2px;
   border-radius: 6px;
 }
 
-/* Conteúdo visível apenas para leitores de tela. */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -86,7 +200,6 @@ html[data-contraste='alto'] .shadow-md {
   border-width: 0;
 }
 
-/* Respeita quem pediu menos animação no sistema. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -94,5 +207,89 @@ html[data-contraste='alto'] .shadow-md {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   Componentes recorrentes
+   ============================================ */
+
+@layer components {
+  .cartao {
+    background-color: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  .campo {
+    width: 100%;
+    background-color: var(--surface-2);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s, background-color 0.15s;
+  }
+  .campo:focus {
+    border-color: var(--accent);
+    background-color: var(--surface);
+  }
+  .campo[aria-invalid='true'] {
+    border-color: var(--danger);
+  }
+
+  .btn-primario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    background-color: var(--accent);
+    color: var(--accent-fg);
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: background-color 0.15s, transform 0.1s;
+  }
+  .btn-primario:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+  }
+  .btn-primario:active:not(:disabled) {
+    transform: scale(0.985);
+  }
+  .btn-primario:disabled {
+    opacity: 0.55;
+  }
+
+  .btn-secundario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 14px;
+    background-color: var(--surface-2);
+    color: var(--text);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color 0.15s;
+  }
+  .btn-secundario:hover {
+    background-color: var(--surface-3);
+  }
+
+  .etiqueta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background-color: var(--surface-2);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
   }
 }

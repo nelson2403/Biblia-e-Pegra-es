@@ -18,11 +18,11 @@ function Field({ label, required, error, hint, children }: {
   return (
     <div>
       <div className="flex items-baseline justify-between mb-1">
-        <label className="text-sm font-semibold text-gray-700">{label}{required && <span className="text-red-500"> *</span>}</label>
-        {hint && <span className="text-xs text-gray-400">{hint}</span>}
+        <label className="text-sm font-semibold text-conteudo">{label}{required && <span className="text-perigo"> *</span>}</label>
+        {hint && <span className="text-xs text-conteudo-faint">{hint}</span>}
       </div>
       {children}
-      {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+      {error && <p className="text-xs text-perigo mt-1">{error}</p>}
     </div>
   )
 }
@@ -47,29 +47,29 @@ function BookSelector({ value, onChange, error }: { value: string; onChange: (v:
   return (
     <div ref={ref} className="relative">
       <button type="button" onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center justify-between border rounded-xl px-4 py-2.5 text-sm bg-white text-left"
-        style={{ borderColor: error ? '#EF4444' : '#E5E7EB' }}>
-        <span style={{ color: value ? '#1F2937' : '#9CA3AF' }}>{value || 'Selecione o livro...'}</span>
+        className="w-full flex items-center justify-between border rounded-xl px-4 py-2.5 text-sm bg-surface text-left"
+        style={{ borderColor: error ? 'var(--danger)' : 'var(--border)' }}>
+        <span style={{ color: value ? 'var(--text)' : 'var(--text-faint)' }}>{value || 'Selecione o livro...'}</span>
         {value ? (
           <button type="button" onClick={e => { e.stopPropagation(); onChange('') }}>
-            <X size={14} color="#9CA3AF" />
+            <X size={14} color="var(--text-faint)" />
           </button>
-        ) : <ChevronDown size={15} color="#9CA3AF" />}
+        ) : <ChevronDown size={15} color="var(--text-faint)" />}
       </button>
       {open && (
-        <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl z-20 overflow-hidden">
-          <div className="p-2 border-b border-gray-100">
+        <div className="absolute left-0 right-0 top-full mt-1 bg-surface border border-borda rounded-xl shadow-xl z-20 overflow-hidden">
+          <div className="p-2 border-b border-borda">
             <input autoFocus type="text" placeholder="Buscar livro..." value={query} onChange={e => setQuery(e.target.value)}
-              className="w-full px-3 py-2 text-sm rounded-lg bg-gray-50 outline-none text-gray-800" />
+              className="w-full px-3 py-2 text-sm rounded-lg bg-bg outline-none text-conteudo" />
           </div>
           <div className="overflow-y-auto" style={{ maxHeight: 260 }}>
             {AT.length > 0 && (
               <>
-                <p className="px-3 py-1.5 text-xs font-bold text-gray-400 uppercase tracking-wider bg-gray-50">Antigo Testamento</p>
+                <p className="px-3 py-1.5 text-xs font-bold text-conteudo-faint uppercase tracking-wider bg-bg">Antigo Testamento</p>
                 {AT.map(b => (
                   <button key={b.id} type="button" onClick={() => select(b.pt)}
                     className="w-full text-left px-4 py-2 text-sm hover:bg-indigo-50 font-medium"
-                    style={{ color: value === b.pt ? '#4F46E5' : '#374151' }}>
+                    style={{ color: value === b.pt ? 'var(--accent)' : 'var(--text)' }}>
                     {b.pt}
                   </button>
                 ))}
@@ -77,18 +77,18 @@ function BookSelector({ value, onChange, error }: { value: string; onChange: (v:
             )}
             {NT.length > 0 && (
               <>
-                <p className="px-3 py-1.5 text-xs font-bold text-gray-400 uppercase tracking-wider bg-gray-50">Novo Testamento</p>
+                <p className="px-3 py-1.5 text-xs font-bold text-conteudo-faint uppercase tracking-wider bg-bg">Novo Testamento</p>
                 {NT.map(b => (
                   <button key={b.id} type="button" onClick={() => select(b.pt)}
                     className="w-full text-left px-4 py-2 text-sm hover:bg-indigo-50 font-medium"
-                    style={{ color: value === b.pt ? '#4F46E5' : '#374151' }}>
+                    style={{ color: value === b.pt ? 'var(--accent)' : 'var(--text)' }}>
                     {b.pt}
                   </button>
                 ))}
               </>
             )}
             {AT.length === 0 && NT.length === 0 && (
-              <p className="px-4 py-6 text-sm text-gray-400 text-center">Nenhum livro encontrado</p>
+              <p className="px-4 py-6 text-sm text-conteudo-faint text-center">Nenhum livro encontrado</p>
             )}
           </div>
         </div>
@@ -151,25 +151,25 @@ export default function NovoEstudoPage() {
     router.push('/estudos')
   }
 
-  if (fetchLoading) return <div className="flex items-center justify-center py-20 text-gray-400">Carregando...</div>
+  if (fetchLoading) return <div className="flex items-center justify-center py-20 text-conteudo-faint">Carregando...</div>
 
-  const inputCls = "w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 outline-none focus:ring-2 focus:border-transparent"
+  const inputCls = "w-full border border-borda rounded-xl px-4 py-2.5 text-sm text-conteudo outline-none focus:ring-2 focus:border-transparent"
   const textareaCls = inputCls + " min-h-[110px] resize-none"
 
   const filled = [form.contexto_historico, form.interpretacao, form.aplicacao, form.insights].filter(v => v.trim()).length
 
   return (
     <div className="flex flex-col min-h-full">
-      <div className="flex items-center gap-3 px-4 py-4 bg-white border-b border-gray-100">
-        <button onClick={() => router.back()} className="p-2 rounded-xl hover:bg-gray-100">
-          <ArrowLeft size={22} color="#1F2937" />
+      <div className="flex items-center gap-3 px-4 py-4 bg-surface border-b border-borda">
+        <button onClick={() => router.back()} className="p-2 rounded-xl hover:bg-surface-2">
+          <ArrowLeft size={22} color="var(--text)" />
         </button>
-        <h1 className="text-lg font-bold text-gray-800 flex-1 text-center">{isEdit ? 'Editar Estudo' : 'Novo Estudo'}</h1>
+        <h1 className="text-lg font-bold text-conteudo flex-1 text-center">{isEdit ? 'Editar Estudo' : 'Novo Estudo'}</h1>
         <div className="w-9" />
       </div>
 
       {!isEdit && (
-        <div className="mx-5 mt-4 rounded-xl p-3 flex items-center gap-2" style={{ backgroundColor: '#EEF2FF' }}>
+        <div className="mx-5 mt-4 rounded-xl p-3 flex items-center gap-2" style={{ backgroundColor: 'var(--accent-soft)' }}>
           <span className="text-lg">📖</span>
           <p className="text-xs text-primary font-semibold flex-1">Preencha a referencia e o texto. Os demais campos enriquecem seu estudo!</p>
         </div>
@@ -178,20 +178,20 @@ export default function NovoEstudoPage() {
       {isEdit && (
         <div className="mx-5 mt-4">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs text-gray-500 font-semibold">Progresso do estudo</span>
-            <span className="text-xs font-bold" style={{ color: filled === 4 ? '#059669' : '#4F46E5' }}>{filled}/4</span>
+            <span className="text-xs text-conteudo-muted font-semibold">Progresso do estudo</span>
+            <span className="text-xs font-bold" style={{ color: filled === 4 ? 'var(--success)' : 'var(--accent)' }}>{filled}/4</span>
           </div>
-          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-surface-2 rounded-full overflow-hidden">
             <div className="h-1.5 rounded-full transition-all"
-              style={{ width: `${(filled / 4) * 100}%`, backgroundColor: filled === 4 ? '#059669' : '#4F46E5' }} />
+              style={{ width: `${(filled / 4) * 100}%`, backgroundColor: filled === 4 ? 'var(--success)' : 'var(--accent)' }} />
           </div>
         </div>
       )}
 
       <form onSubmit={handleSave} className="flex-1 overflow-auto p-5 flex flex-col gap-5 pb-10">
         {/* Reference */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-3">
-          <p className="text-sm font-bold text-gray-700 flex items-center gap-2">📍 Referencia Biblica</p>
+        <div className="bg-surface rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+          <p className="text-sm font-bold text-conteudo flex items-center gap-2">📍 Referencia Biblica</p>
           <Field label="Livro" required error={errors.livro}>
             <BookSelector value={form.livro} onChange={v => setForm(p => ({ ...p, livro: v, capitulo: '', versiculo: '' }))} error={errors.livro} />
           </Field>
@@ -199,31 +199,31 @@ export default function NovoEstudoPage() {
             <Field label="Capitulo" required error={errors.capitulo}>
               <input type="number" placeholder="Ex: 3" min="1" max={maxCapitulo}
                 value={form.capitulo} onChange={set('capitulo')}
-                className={inputCls} style={{ borderColor: errors.capitulo ? '#EF4444' : '#E5E7EB' }} />
-              {selectedBook && <p className="text-xs text-gray-400 mt-0.5">1 a {selectedBook.chapters}</p>}
+                className={inputCls} style={{ borderColor: errors.capitulo ? 'var(--danger)' : 'var(--border)' }} />
+              {selectedBook && <p className="text-xs text-conteudo-faint mt-0.5">1 a {selectedBook.chapters}</p>}
             </Field>
             <Field label="Versiculo" required error={errors.versiculo}>
               <input type="number" placeholder="Ex: 16" min="1"
                 value={form.versiculo} onChange={set('versiculo')}
-                className={inputCls} style={{ borderColor: errors.versiculo ? '#EF4444' : '#E5E7EB' }} />
+                className={inputCls} style={{ borderColor: errors.versiculo ? 'var(--danger)' : 'var(--border)' }} />
             </Field>
           </div>
         </div>
 
         {/* Verse text */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-3">
-          <p className="text-sm font-bold text-gray-700 flex items-center gap-2">✍️ Texto Biblico</p>
+        <div className="bg-surface rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+          <p className="text-sm font-bold text-conteudo flex items-center gap-2">✍️ Texto Biblico</p>
           <Field label="Versiculo ou Passagem" required error={errors.texto_biblico}
             hint={form.texto_biblico ? `${form.texto_biblico.length} char` : undefined}>
             <textarea placeholder="Digite o versiculo ou passagem completa..." value={form.texto_biblico}
               onChange={set('texto_biblico')} className={textareaCls}
-              style={{ borderColor: errors.texto_biblico ? '#EF4444' : '#E5E7EB' }} />
+              style={{ borderColor: errors.texto_biblico ? 'var(--danger)' : 'var(--border)' }} />
           </Field>
         </div>
 
         {/* Analysis */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-4">
-          <p className="text-sm font-bold text-gray-700 flex items-center gap-2">🔬 Analise</p>
+        <div className="bg-surface rounded-2xl p-4 shadow-sm flex flex-col gap-4">
+          <p className="text-sm font-bold text-conteudo flex items-center gap-2">🔬 Analise</p>
           <Field label="Contexto Historico" hint={form.contexto_historico ? `${form.contexto_historico.length} char` : 'Opcional'}>
             <textarea placeholder="Contexto historico, cultural e geografico do texto..." value={form.contexto_historico}
               onChange={set('contexto_historico')} className={textareaCls} />
@@ -235,8 +235,8 @@ export default function NovoEstudoPage() {
         </div>
 
         {/* Application */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-4">
-          <p className="text-sm font-bold text-gray-700 flex items-center gap-2">🙏 Aplicacao Pratica</p>
+        <div className="bg-surface rounded-2xl p-4 shadow-sm flex flex-col gap-4">
+          <p className="text-sm font-bold text-conteudo flex items-center gap-2">🙏 Aplicacao Pratica</p>
           <Field label="Como Aplicar" hint={form.aplicacao ? `${form.aplicacao.length} char` : 'Opcional'}>
             <textarea placeholder="Como aplicar esta verdade na vida cotidiana..." value={form.aplicacao}
               onChange={set('aplicacao')} className={textareaCls} />
@@ -248,18 +248,18 @@ export default function NovoEstudoPage() {
         </div>
 
         {/* Tags */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <p className="text-sm font-bold text-gray-700 mb-2">🏷️ Tags</p>
+        <div className="bg-surface rounded-2xl p-4 shadow-sm">
+          <p className="text-sm font-bold text-conteudo mb-2">🏷️ Tags</p>
           <input type="text" placeholder="Ex: fe, oracao, promessa (separar por virgula)"
             value={form.tags ?? ''}
             onChange={set('tags')}
             className={inputCls} />
-          <p className="text-xs text-gray-400 mt-1">Ajuda a encontrar e filtrar seus estudos</p>
+          <p className="text-xs text-conteudo-faint mt-1">Ajuda a encontrar e filtrar seus estudos</p>
         </div>
 
         <button type="submit" disabled={loading}
           className="w-full py-3.5 rounded-xl font-bold text-white text-sm disabled:opacity-60"
-          style={{ backgroundColor: '#4F46E5' }}>
+          style={{ backgroundColor: 'var(--accent)' }}>
           {loading ? 'Salvando...' : isEdit ? 'Salvar alteracoes' : 'Salvar estudo'}
         </button>
       </form>

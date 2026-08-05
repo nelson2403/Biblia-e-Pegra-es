@@ -177,7 +177,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
     router.push(`/anotacoes/nova?ref=${ref}&texto=${texto}`)
   }
 
-  if (!bookData) return <div className="p-6 text-gray-500">Livro não encontrado.</div>
+  if (!bookData) return <div className="p-6 text-conteudo-muted">Livro não encontrado.</div>
 
   return (
     <div className="flex flex-col min-h-full">
@@ -225,7 +225,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
         <div className="flex-1 px-4 py-4 pb-36 space-y-0.5">
           {verses.length === 0 && (
             <div className="flex flex-col items-center py-20 gap-3">
-              <p className="text-gray-400 text-sm text-center">Versículos não disponíveis para esta versão.</p>
+              <p className="text-conteudo-faint text-sm text-center">Versículos não disponíveis para esta versão.</p>
             </div>
           )}
           {verses.map(v => {
@@ -240,17 +240,17 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
                 aria-current={isLendo ? 'true' : undefined}
                 className="flex gap-3 w-full text-left px-3 py-2.5 rounded-xl transition-colors"
                 style={{
-                  backgroundColor: isLendo ? '#DBEAFE' : isSelected ? '#EEF2FF' : isHighlighted ? '#FEF9C3' : 'transparent',
+                  backgroundColor: isLendo ? 'var(--accent-soft)' : isSelected ? 'var(--accent-soft)' : isHighlighted ? 'var(--gold-soft)' : 'transparent',
                   boxShadow: isLendo ? 'inset 3px 0 0 #4F46E5' : undefined,
                 }}>
                 <span className="text-xs font-bold w-5 pt-1 flex-shrink-0"
-                  style={{ color: isFav ? '#EF4444' : isSelected || isLendo ? '#4F46E5' : '#9CA3AF' }}>
+                  style={{ color: isFav ? 'var(--danger)' : isSelected || isLendo ? 'var(--accent)' : 'var(--text-faint)' }}>
                   {isFav ? '♥' : v.verse}
                 </span>
                 <span className="leading-relaxed flex-1"
                   style={{
                     fontSize,
-                    color: isSelected || isLendo ? '#3730A3' : '#1F2937',
+                    color: isSelected || isLendo ? 'var(--accent-hover)' : 'var(--text)',
                     fontWeight: isSelected || isLendo ? 500 : 400,
                   }}>
                   {v.text}
@@ -272,39 +272,39 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
 
       {/* Selected verse action bar */}
       {selected && (
-        <div className="fixed bottom-16 md:bottom-0 left-0 right-0 md:left-60 bg-white border-t border-gray-200 shadow-xl z-40">
-          <div className="px-4 py-2 border-b border-gray-100">
-            <p className="text-xs font-bold text-gray-500 text-center">
+        <div className="fixed bottom-16 md:bottom-0 left-0 right-0 md:left-60 bg-surface border-t border-borda shadow-xl z-40">
+          <div className="px-4 py-2 border-b border-borda">
+            <p className="text-xs font-bold text-conteudo-muted text-center">
               {bookData.pt} {currentChapter}:{selected.verse} · {currentTranslation.abbr}
             </p>
           </div>
           <div className="px-4 py-3 grid grid-cols-4 gap-2">
             <button onClick={() => copyVerse(selected)}
-              className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-gray-50">
-              <Copy size={18} color={copied ? '#059669' : '#4F46E5'} />
-              <span className="text-[11px] font-semibold" style={{ color: copied ? '#059669' : '#4F46E5' }}>
+              className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-bg">
+              <Copy size={18} color={copied ? 'var(--success)' : 'var(--accent)'} />
+              <span className="text-[11px] font-semibold" style={{ color: copied ? 'var(--success)' : 'var(--accent)' }}>
                 {copied ? 'Copiado!' : 'Copiar'}
               </span>
             </button>
             <button onClick={() => toggleFavorite(selected)}
-              className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-gray-50">
+              className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-bg">
               <Heart size={18}
-                fill={favorites.has(selected.verse) ? '#EF4444' : 'none'}
-                color={favorites.has(selected.verse) ? '#EF4444' : '#6B7280'} />
+                fill={favorites.has(selected.verse) ? 'var(--danger)' : 'none'}
+                color={favorites.has(selected.verse) ? 'var(--danger)' : 'var(--text-muted)'} />
               <span className="text-[11px] font-semibold"
-                style={{ color: favorites.has(selected.verse) ? '#EF4444' : '#6B7280' }}>
+                style={{ color: favorites.has(selected.verse) ? 'var(--danger)' : 'var(--text-muted)' }}>
                 {favorites.has(selected.verse) ? 'Salvo' : 'Favoritar'}
               </span>
             </button>
             <button onClick={handleNoteVerse}
-              className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-gray-50">
-              <BookmarkPlus size={18} color="#D97706" />
-              <span className="text-[11px] font-semibold text-amber-600">Anotar</span>
+              className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-bg">
+              <BookmarkPlus size={18} color="var(--gold)" />
+              <span className="text-[11px] font-semibold text-gold">Anotar</span>
             </button>
             <button onClick={handleShare}
-              className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-gray-50">
-              <Share2 size={18} color="#059669" />
-              <span className="text-[11px] font-semibold text-green-600">Partilhar</span>
+              className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-bg">
+              <Share2 size={18} color="var(--success)" />
+              <span className="text-[11px] font-semibold text-sucesso">Partilhar</span>
             </button>
           </div>
         </div>
@@ -314,18 +314,18 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
       {showPicker && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center"
           onClick={() => setShowPicker(false)}>
-          <div className="bg-white w-full max-w-lg rounded-t-3xl p-5 max-h-[70vh] flex flex-col"
+          <div className="bg-surface w-full max-w-lg rounded-t-3xl p-5 max-h-[70vh] flex flex-col"
             onClick={e => e.stopPropagation()}>
-            <div className="w-10 h-1 bg-gray-200 rounded self-center mb-4" />
-            <h3 className="text-lg font-bold text-gray-800 text-center mb-4">Escolher Capítulo</h3>
+            <div className="w-10 h-1 bg-surface-3 rounded self-center mb-4" />
+            <h3 className="text-lg font-bold text-conteudo text-center mb-4">Escolher Capítulo</h3>
             <div className="overflow-y-auto flex flex-wrap gap-2 justify-center pb-4">
               {Array.from({ length: totalChapters }, (_, i) => i + 1).map(ch => (
                 <button key={ch}
                   onClick={() => { setCurrentChapter(ch); setShowPicker(false); router.replace(`/biblia/${params.book}/${ch}${isPlano ? '?plano=1' : ''}`, { scroll: false }) }}
                   className="w-12 h-12 rounded-xl text-sm font-semibold transition-colors"
                   style={{
-                    backgroundColor: ch === currentChapter ? '#4F46E5' : '#F3F4F6',
-                    color: ch === currentChapter ? '#fff' : '#1F2937',
+                    backgroundColor: ch === currentChapter ? 'var(--accent)' : 'var(--surface-2)',
+                    color: ch === currentChapter ? '#fff' : 'var(--text)',
                   }}>
                   {ch}
                 </button>
@@ -339,11 +339,11 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
       {showTranslations && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center"
           onClick={() => setShowTranslations(false)}>
-          <div className="bg-white w-full max-w-lg rounded-t-3xl p-5 flex flex-col"
+          <div className="bg-surface w-full max-w-lg rounded-t-3xl p-5 flex flex-col"
             onClick={e => e.stopPropagation()}>
-            <div className="w-10 h-1 bg-gray-200 rounded self-center mb-4" />
-            <h3 className="text-lg font-bold text-gray-800 text-center mb-1">Versão da Bíblia</h3>
-            <p className="text-xs text-gray-400 text-center mb-5">Escolha a tradução que prefere</p>
+            <div className="w-10 h-1 bg-surface-3 rounded self-center mb-4" />
+            <h3 className="text-lg font-bold text-conteudo text-center mb-1">Versão da Bíblia</h3>
+            <p className="text-xs text-conteudo-faint text-center mb-5">Escolha a tradução que prefere</p>
             <div className="flex flex-col gap-2 pb-4">
               {TRANSLATIONS.map(t => {
                 const active = translation === t.code
@@ -351,22 +351,22 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
                   <button key={t.code} onClick={() => changeTranslation(t.code)}
                     className="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-left transition-all"
                     style={{
-                      backgroundColor: active ? '#EEF2FF' : '#F9FAFB',
+                      backgroundColor: active ? 'var(--accent-soft)' : 'var(--surface-2)',
                       border: active ? '2px solid #4F46E5' : '2px solid transparent',
                     }}>
                     <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: active ? '#4F46E5' : '#E5E7EB' }}>
-                      <BookOpen size={20} color={active ? '#fff' : '#6B7280'} />
+                      style={{ backgroundColor: active ? 'var(--accent)' : 'var(--border)' }}>
+                      <BookOpen size={20} color={active ? '#fff' : 'var(--text-muted)'} />
                     </div>
                     <div>
-                      <p className="font-bold text-sm" style={{ color: active ? '#4F46E5' : '#1F2937' }}>
+                      <p className="font-bold text-sm" style={{ color: active ? 'var(--accent)' : 'var(--text)' }}>
                         {t.abbr}
                       </p>
-                      <p className="text-xs text-gray-500">{t.name}</p>
+                      <p className="text-xs text-conteudo-muted">{t.name}</p>
                     </div>
                     {active && (
                       <div className="ml-auto w-5 h-5 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: '#4F46E5' }}>
+                        style={{ backgroundColor: 'var(--accent)' }}>
                         <span className="text-white text-xs">✓</span>
                       </div>
                     )}

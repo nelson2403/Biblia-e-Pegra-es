@@ -1,6 +1,7 @@
 import { getSupabaseAdmin } from '@/lib/supabaseAdmin'
 import { groqJson, GROQ_MODELS } from '@/lib/groq'
 import { versiculoDoDia } from '@/data/versiculosDiarios'
+import { buscarVideoDoEstudo } from '@/lib/youtube'
 import type { ConteudoDiario, PontoEstudo } from '@/types'
 
 /** Data de hoje no fuso de São Paulo, no formato YYYY-MM-DD. */
@@ -182,9 +183,11 @@ export async function obterConteudoDiario(data = hojeISO()): Promise<ConteudoDia
   const v = versiculoDoDia(data)
 
   // Duas chamadas focadas rendem muito mais profundidade que uma só pedindo tudo.
-  let [devocional, estudo] = await Promise.all([
+  // O vídeo vai junto: se falhar, o dia simplesmente não tem vídeo.
+  let [devocional, estudo, video] = await Promise.all([
     gerarDevocional(v.texto, v.ref, v.tema, data),
     gerarEstudo(v.texto, v.ref, v.tema, data),
+    buscarVideoDoEstudo(v.tema, v.ref),
   ])
 
   if (devocionalRaso(devocional)) {
@@ -209,6 +212,10 @@ export async function obterConteudoDiario(data = hojeISO()): Promise<ConteudoDia
     estudo_pontos: pontos,
     estudo_aplicacao: (estudo?.aplicacao ?? '').trim() || null,
     estudo_conclusao: (estudo?.conclusao ?? '').trim() || null,
+    video_id: video?.id ?? null,
+    video_titulo: video?.titulo ?? null,
+    video_canal: video?.canal ?? null,
+    video_canal_id: video?.canalId ?? null,
     gerado_por: 'ia',
   }
 

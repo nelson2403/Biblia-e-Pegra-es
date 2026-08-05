@@ -99,15 +99,15 @@ export default function ConselheiroPage() {
           <div key={i} className={`flex gap-2 ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
             <div
               className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-1"
-              style={{ backgroundColor: m.role === 'user' ? '#4F46E5' : '#7C3AED' }}
+              style={{ backgroundColor: m.role === 'user' ? 'var(--accent)' : 'var(--accent)' }}
             >
               {m.role === 'user' ? <User size={13} color="#fff" /> : <Bot size={13} color="#fff" />}
             </div>
             <div
               className="max-w-[82%] px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap"
               style={{
-                backgroundColor: m.role === 'user' ? '#4F46E5' : '#fff',
-                color: m.role === 'user' ? '#fff' : '#374151',
+                backgroundColor: m.role === 'user' ? 'var(--accent)' : '#fff',
+                color: m.role === 'user' ? '#fff' : 'var(--text)',
                 borderRadius: m.role === 'user' ? '20px 20px 4px 20px' : '20px 20px 20px 4px',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
               }}
@@ -121,13 +121,13 @@ export default function ConselheiroPage() {
           <div className="flex gap-2">
             <div
               className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-1"
-              style={{ backgroundColor: '#7C3AED' }}
+              style={{ backgroundColor: 'var(--accent)' }}
             >
               <Bot size={13} color="#fff" />
             </div>
-            <div className="bg-white px-4 py-3 rounded-2xl shadow-sm flex items-center gap-2">
-              <Loader2 size={14} className="animate-spin" style={{ color: '#7C3AED' }} />
-              <span className="text-xs text-gray-400">Consultando as Escrituras...</span>
+            <div className="bg-surface px-4 py-3 rounded-2xl shadow-sm flex items-center gap-2">
+              <Loader2 size={14} className="animate-spin" style={{ color: 'var(--accent)' }} />
+              <span className="text-xs text-conteudo-faint">Consultando as Escrituras...</span>
             </div>
           </div>
         )}
@@ -137,7 +137,7 @@ export default function ConselheiroPage() {
 
       {/* Input */}
       <div
-        className="sticky bottom-16 md:bottom-0 bg-white border-t border-gray-100 px-4 py-3 flex items-end gap-2"
+        className="sticky bottom-16 md:bottom-0 bg-surface border-t border-borda px-4 py-3 flex items-end gap-2"
       >
         <textarea
           ref={textareaRef}
@@ -146,14 +146,14 @@ export default function ConselheiroPage() {
           onKeyDown={handleKey}
           placeholder="Compartilhe o que está em seu coração..."
           rows={1}
-          className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 outline-none resize-none max-h-28"
-          style={{ borderColor: input ? '#7C3AED' : '#E5E7EB' }}
+          className="flex-1 border border-borda rounded-xl px-4 py-2.5 text-sm text-conteudo outline-none resize-none max-h-28"
+          style={{ borderColor: input ? 'var(--accent)' : 'var(--border)' }}
         />
         <button
           onClick={handleSend}
           disabled={!input.trim() || loading}
           className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 disabled:opacity-40 transition-opacity"
-          style={{ backgroundColor: '#7C3AED' }}
+          style={{ backgroundColor: 'var(--accent)' }}
         >
           <Send size={16} color="#fff" />
         </button>

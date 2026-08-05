@@ -43,12 +43,12 @@ export default function BibliaPage() {
       </div>
 
       {!isSearching && (
-        <div className="flex border-b border-gray-200 bg-white">
+        <div className="flex border-b border-borda bg-surface">
           {(['AT', 'NT'] as const).map(t => (
             <button key={t} onClick={() => setTab(t)}
               className="flex-1 py-3 text-sm font-semibold transition-colors"
               style={{
-                color: tab === t ? '#4F46E5' : '#6B7280',
+                color: tab === t ? 'var(--accent)' : 'var(--text-muted)',
                 borderBottom: tab === t ? '3px solid #4F46E5' : '3px solid transparent',
               }}>
               {t === 'AT' ? 'Antigo Testamento' : 'Novo Testamento'}
@@ -70,21 +70,21 @@ export default function BibliaPage() {
 
 function BookCard({ book }: { book: BibleBook }) {
   const isAT = book.testament === 'AT'
-  const accentColor = isAT ? '#7C3AED' : '#1D4ED8'
-  const badgeBg = isAT ? '#EDE9FE' : '#DBEAFE'
+  const accentColor = isAT ? 'var(--accent)' : 'var(--accent)'
+  const badgeBg = isAT ? 'var(--accent-soft)' : 'var(--accent-soft)'
 
   return (
     <Link href={`/biblia/${book.id}/1`}
-      className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow border-l-4 flex flex-col"
+      className="bg-surface rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow border-l-4 flex flex-col"
       style={{ borderLeftColor: accentColor }}>
       <span className="self-start text-xs font-extrabold px-2 py-1 rounded-md mb-2"
         style={{ backgroundColor: badgeBg, color: accentColor }}>
         {book.abbr}
       </span>
-      <p className="text-sm font-bold text-gray-800 leading-tight mb-2">{book.pt}</p>
+      <p className="text-sm font-bold text-conteudo leading-tight mb-2">{book.pt}</p>
       <div className="flex items-center gap-1 mt-auto">
-        <Layers size={11} color="#9CA3AF" />
-        <span className="text-xs text-gray-400">{book.chapters} cap.</span>
+        <Layers size={11} color="var(--text-faint)" />
+        <span className="text-xs text-conteudo-faint">{book.chapters} cap.</span>
       </div>
     </Link>
   )

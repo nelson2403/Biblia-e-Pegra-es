@@ -76,11 +76,11 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
       <div
         role="region"
         aria-label="Leitor de áudio"
-        className="fixed bottom-16 md:bottom-0 left-0 right-0 md:left-60 z-40 bg-white border-t border-gray-200 shadow-2xl"
+        className="fixed bottom-16 md:bottom-0 left-0 right-0 md:left-60 z-40 bg-surface border-t border-borda shadow-2xl"
         style={{ marginBottom: deslocamento }}
       >
         {/* Barra de progresso */}
-        <div className="h-1 bg-gray-100" aria-hidden="true">
+        <div className="h-1 bg-surface-2" aria-hidden="true">
           <div
             className="h-1 transition-all duration-300"
             style={{ width: `${leitor.progresso}%`, background: 'linear-gradient(90deg, #4F46E5, #7C3AED)' }}
@@ -89,19 +89,19 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
 
         <div className="px-4 py-2.5 flex items-center gap-2">
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#7C3AED' }}>
+            <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: 'var(--accent)' }}>
               {tocando ? 'Ouvindo agora' : parado ? 'Leitor de áudio' : 'Pausado'}
             </p>
-            <p className="text-sm font-bold text-gray-800 truncate">{titulo}</p>
+            <p className="text-sm font-bold text-conteudo truncate">{titulo}</p>
           </div>
 
           <button
             onClick={leitor.anterior}
             disabled={parado}
             aria-label="Trecho anterior"
-            className="p-2.5 rounded-xl hover:bg-gray-100 disabled:opacity-30"
+            className="p-2.5 rounded-xl hover:bg-surface-2 disabled:opacity-30"
           >
-            <SkipBack size={20} color="#4B5563" />
+            <SkipBack size={20} color="var(--text-muted)" />
           </button>
 
           <button
@@ -117,25 +117,25 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
             onClick={leitor.proximo}
             disabled={parado}
             aria-label="Próximo trecho"
-            className="p-2.5 rounded-xl hover:bg-gray-100 disabled:opacity-30"
+            className="p-2.5 rounded-xl hover:bg-surface-2 disabled:opacity-30"
           >
-            <SkipForward size={20} color="#4B5563" />
+            <SkipForward size={20} color="var(--text-muted)" />
           </button>
 
           <button
             onClick={() => setConfig(true)}
             aria-label="Ajustes de voz e velocidade"
-            className="p-2.5 rounded-xl hover:bg-gray-100"
+            className="p-2.5 rounded-xl hover:bg-surface-2"
           >
-            <Settings2 size={19} color="#4B5563" />
+            <Settings2 size={19} color="var(--text-muted)" />
           </button>
 
           <button
             onClick={() => { leitor.parar(); setAberto(false) }}
             aria-label="Fechar leitor de áudio"
-            className="p-2.5 rounded-xl hover:bg-red-50"
+            className="p-2.5 rounded-xl hover:bg-perigo-soft"
           >
-            <Square size={17} color="#EF4444" fill="#EF4444" />
+            <Square size={17} color="var(--danger)" fill="var(--danger)" />
           </button>
         </div>
       </div>
@@ -151,17 +151,17 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
           aria-label="Ajustes do leitor"
         >
           <div
-            className="bg-white w-full max-w-lg rounded-t-3xl p-5 max-h-[80vh] overflow-y-auto"
+            className="bg-surface w-full max-w-lg rounded-t-3xl p-5 max-h-[80vh] overflow-y-auto"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-5">
-              <h3 className="font-extrabold text-gray-800 text-base">Ajustes de leitura</h3>
-              <button onClick={() => setConfig(false)} aria-label="Fechar ajustes" className="p-1.5 text-gray-400">
+              <h3 className="font-extrabold text-conteudo text-base">Ajustes de leitura</h3>
+              <button onClick={() => setConfig(false)} aria-label="Fechar ajustes" className="p-1.5 text-conteudo-faint">
                 <X size={20} />
               </button>
             </div>
 
-            <p className="text-sm font-bold text-gray-700 mb-2">Velocidade</p>
+            <p className="text-sm font-bold text-conteudo mb-2">Velocidade</p>
             <div className="grid grid-cols-4 gap-2 mb-6">
               {VELOCIDADES.map(v => {
                 const ativo = Math.abs(leitor.velocidade - v) < 0.01
@@ -172,8 +172,8 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
                     aria-pressed={ativo}
                     className="py-2.5 rounded-xl text-sm font-bold transition-colors"
                     style={{
-                      backgroundColor: ativo ? '#4F46E5' : '#F3F4F6',
-                      color: ativo ? '#fff' : '#4B5563',
+                      backgroundColor: ativo ? 'var(--accent)' : 'var(--surface-2)',
+                      color: ativo ? '#fff' : 'var(--text-muted)',
                     }}
                   >
                     {v}×
@@ -182,14 +182,14 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
               })}
             </div>
 
-            <p className="text-sm font-bold text-gray-700 mb-1">Voz</p>
-            <p className="text-xs text-gray-400 mb-3">
+            <p className="text-sm font-bold text-conteudo mb-1">Voz</p>
+            <p className="text-xs text-conteudo-faint mb-3">
               As vozes vêm do seu aparelho. Se a lista estiver pequena, instale vozes em português nas
               configurações do celular.
             </p>
             <div className="flex flex-col gap-2 pb-4">
               {leitor.vozes.length === 0 && (
-                <p className="text-sm text-gray-400 py-3">Nenhuma voz encontrada neste aparelho.</p>
+                <p className="text-sm text-conteudo-faint py-3">Nenhuma voz encontrada neste aparelho.</p>
               )}
               {leitor.vozes.map(v => {
                 const ativo = leitor.vozURI === v.voiceURI
@@ -200,24 +200,24 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
                     aria-pressed={ativo}
                     className="flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-all"
                     style={{
-                      backgroundColor: ativo ? '#EEF2FF' : '#F9FAFB',
+                      backgroundColor: ativo ? 'var(--accent-soft)' : 'var(--surface-2)',
                       border: ativo ? '2px solid #4F46E5' : '2px solid transparent',
                     }}
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-sm truncate" style={{ color: ativo ? '#4F46E5' : '#1F2937' }}>
+                      <p className="font-bold text-sm truncate" style={{ color: ativo ? 'var(--accent)' : 'var(--text)' }}>
                         {v.name}
                       </p>
-                      <p className="text-xs text-gray-400">{v.lang}</p>
+                      <p className="text-xs text-conteudo-faint">{v.lang}</p>
                     </div>
-                    {ativo && <Check size={18} color="#4F46E5" />}
+                    {ativo && <Check size={18} color="var(--accent)" />}
                   </button>
                 )
               })}
             </div>
 
             {prefs.tts_velocidade !== leitor.velocidade && (
-              <p className="text-xs text-gray-400 text-center pb-2">Suas escolhas ficam salvas no perfil.</p>
+              <p className="text-xs text-conteudo-faint text-center pb-2">Suas escolhas ficam salvas no perfil.</p>
             )}
           </div>
         </div>

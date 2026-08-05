@@ -34,20 +34,20 @@ const SECOES: { key: keyof PregacaoGerada; label: string; icon: string }[] = [
 function SecaoCard({ secao, texto }: { secao: (typeof SECOES)[0]; texto: string }) {
   const [aberta, setAberta] = useState(true)
   return (
-    <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+    <div className="bg-surface rounded-2xl shadow-sm overflow-hidden">
       <button
         className="w-full flex items-center justify-between px-4 py-3"
         onClick={() => setAberta(v => !v)}
       >
         <div className="flex items-center gap-2">
           <span className="text-lg">{secao.icon}</span>
-          <span className="font-bold text-gray-800 text-sm">{secao.label}</span>
+          <span className="font-bold text-conteudo text-sm">{secao.label}</span>
         </div>
-        {aberta ? <ChevronUp size={16} color="#9CA3AF" /> : <ChevronDown size={16} color="#9CA3AF" />}
+        {aberta ? <ChevronUp size={16} color="var(--text-faint)" /> : <ChevronDown size={16} color="var(--text-faint)" />}
       </button>
       {aberta && (
         <div className="px-4 pb-4">
-          <p className="text-sm text-gray-700 leading-relaxed">{texto}</p>
+          <p className="text-sm text-conteudo leading-relaxed">{texto}</p>
         </div>
       )}
     </div>
@@ -119,7 +119,7 @@ export default function PregacaoIAPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-gray-50">
+    <div className="flex flex-col min-h-full bg-bg">
       {/* Header */}
       <div
         className="px-4 py-4 flex items-center gap-3"
@@ -141,9 +141,9 @@ export default function PregacaoIAPage() {
       <div className="px-4 py-5 flex flex-col gap-4">
         {/* Form */}
         {!pregacao && (
-          <div className="bg-white rounded-2xl p-5 shadow-sm flex flex-col gap-4">
+          <div className="bg-surface rounded-2xl p-5 shadow-sm flex flex-col gap-4">
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-conteudo-muted uppercase tracking-wider mb-1.5">
                 Tema da Pregação *
               </label>
               <input
@@ -151,12 +151,12 @@ export default function PregacaoIAPage() {
                 value={form.tema}
                 onChange={e => setForm(p => ({ ...p, tema: e.target.value }))}
                 placeholder="Ex: A graça de Deus, Fé que move montanhas..."
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 outline-none"
-                style={{ borderColor: form.tema ? '#7C3AED' : '#E5E7EB' }}
+                className="w-full border border-borda rounded-xl px-4 py-3 text-sm text-conteudo outline-none"
+                style={{ borderColor: form.tema ? 'var(--accent)' : 'var(--border)' }}
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-conteudo-muted uppercase tracking-wider mb-1.5">
                 Texto Base *
               </label>
               <input
@@ -164,12 +164,12 @@ export default function PregacaoIAPage() {
                 value={form.texto_base}
                 onChange={e => setForm(p => ({ ...p, texto_base: e.target.value }))}
                 placeholder="Ex: João 3:16, Filipenses 4:13..."
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 outline-none"
-                style={{ borderColor: form.texto_base ? '#7C3AED' : '#E5E7EB' }}
+                className="w-full border border-borda rounded-xl px-4 py-3 text-sm text-conteudo outline-none"
+                style={{ borderColor: form.texto_base ? 'var(--accent)' : 'var(--border)' }}
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-conteudo-muted uppercase tracking-wider mb-1.5">
                 Público (opcional)
               </label>
               <input
@@ -177,12 +177,12 @@ export default function PregacaoIAPage() {
                 value={form.publico}
                 onChange={e => setForm(p => ({ ...p, publico: e.target.value }))}
                 placeholder="Ex: Jovens, casais, toda a congregação..."
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 outline-none"
+                className="w-full border border-borda rounded-xl px-4 py-3 text-sm text-conteudo outline-none"
               />
             </div>
 
             {erro && (
-              <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">
+              <div className="bg-perigo-soft border border-perigo rounded-xl px-4 py-3 text-sm text-perigo">
                 {erro}
               </div>
             )}
@@ -191,7 +191,7 @@ export default function PregacaoIAPage() {
               onClick={handleGerar}
               disabled={!form.tema.trim() || !form.texto_base.trim() || gerando}
               className="w-full py-4 rounded-xl font-extrabold text-white flex items-center justify-center gap-2 disabled:opacity-50 text-sm"
-              style={{ backgroundColor: '#7C3AED' }}
+              style={{ backgroundColor: 'var(--accent)' }}
             >
               {gerando ? (
                 <>
@@ -207,7 +207,7 @@ export default function PregacaoIAPage() {
             </button>
 
             {gerando && (
-              <p className="text-xs text-center text-gray-400">
+              <p className="text-xs text-center text-conteudo-faint">
                 A IA está elaborando sua pregação completa. Isso pode levar alguns segundos...
               </p>
             )}
@@ -243,7 +243,7 @@ export default function PregacaoIAPage() {
                 onClick={handleSalvar}
                 disabled={salvando}
                 className="flex-1 py-3 rounded-xl font-bold text-white text-sm flex items-center justify-center gap-2 disabled:opacity-60"
-                style={{ backgroundColor: '#7C3AED' }}
+                style={{ backgroundColor: 'var(--accent)' }}
               >
                 {salvando ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
                 {salvando ? 'Salvando...' : 'Salvar'}

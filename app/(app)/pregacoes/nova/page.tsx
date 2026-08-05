@@ -137,11 +137,11 @@ export default function NovaPregacaoPage() {
     router.replace(`/pregacoes/${data.id}`)
   }
 
-  if (fetchLoading) return <div className="flex items-center justify-center py-20 text-gray-400">Carregando...</div>
+  if (fetchLoading) return <div className="flex items-center justify-center py-20 text-conteudo-faint">Carregando...</div>
 
   return (
     <div className="flex flex-col min-h-full">
-      <div className="flex items-center justify-between px-4 py-4 text-white" style={{ backgroundColor: '#3730A3' }}>
+      <div className="flex items-center justify-between px-4 py-4 text-white" style={{ backgroundColor: 'var(--accent-hover)' }}>
         <button onClick={() => step === 0 ? router.back() : setStep(s => s - 1)} className="p-2 rounded-xl hover:bg-white/10">
           <ArrowLeft size={22} />
         </button>
@@ -154,19 +154,19 @@ export default function NovaPregacaoPage() {
       </div>
 
       <div className="flex-1 flex flex-col p-5 gap-5 overflow-auto pb-10">
-        <div className="bg-white rounded-2xl p-6 shadow-sm flex flex-col items-center text-center">
+        <div className="bg-surface rounded-2xl p-6 shadow-sm flex flex-col items-center text-center">
           <span className="text-4xl mb-4">{currentStep.icon}</span>
-          <h2 className="text-lg font-bold text-gray-800 mb-2 leading-snug">{currentStep.question}</h2>
-          <p className="text-sm text-gray-400 leading-relaxed">{currentStep.hint}</p>
+          <h2 className="text-lg font-bold text-conteudo mb-2 leading-snug">{currentStep.question}</h2>
+          <p className="text-sm text-conteudo-faint leading-relaxed">{currentStep.hint}</p>
         </div>
 
-        <div className="bg-white rounded-2xl p-1 shadow-sm border-2 border-indigo-200">
+        <div className="bg-surface rounded-2xl p-1 shadow-sm border-2 border-indigo-200">
           {currentStep.multiline ? (
             <textarea
               value={currentValue}
               onChange={e => setValue(e.target.value)}
               placeholder="Digite sua resposta aqui..."
-              className="w-full px-4 py-4 text-sm text-gray-800 outline-none resize-none min-h-[140px] rounded-xl"
+              className="w-full px-4 py-4 text-sm text-conteudo outline-none resize-none min-h-[140px] rounded-xl"
               autoFocus
             />
           ) : (
@@ -175,7 +175,7 @@ export default function NovaPregacaoPage() {
               value={currentValue}
               onChange={e => setValue(e.target.value)}
               placeholder="Digite sua resposta aqui..."
-              className="w-full px-4 py-4 text-sm text-gray-800 outline-none rounded-xl"
+              className="w-full px-4 py-4 text-sm text-conteudo outline-none rounded-xl"
               autoFocus
             />
           )}
@@ -190,7 +190,7 @@ export default function NovaPregacaoPage() {
           )}
           <button onClick={handleNext} disabled={saving}
             className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-white text-sm disabled:opacity-60"
-            style={{ backgroundColor: '#4F46E5' }}>
+            style={{ backgroundColor: 'var(--accent)' }}>
             {saving ? 'Gerando...' : isLast ? '✨ Gerar Pregacao' : 'Proximo'}
             {!saving && !isLast && <ArrowRight size={17} />}
           </button>
@@ -201,7 +201,7 @@ export default function NovaPregacaoPage() {
             <div key={i} className="h-2 rounded-full transition-all duration-300"
               style={{
                 width: i === step ? 20 : 8,
-                backgroundColor: i < step ? '#10B981' : i === step ? '#4F46E5' : '#E5E7EB',
+                backgroundColor: i < step ? 'var(--success)' : i === step ? 'var(--accent)' : 'var(--border)',
               }} />
           ))}
         </div>

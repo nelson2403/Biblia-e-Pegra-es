@@ -9,7 +9,8 @@ Da configuração das novas funcionalidades até o app na Google Play.
 No **SQL Editor** do Supabase, execute nesta ordem:
 
 1. `supabase/schema.sql` (se ainda não rodou)
-2. `supabase/schema_v2.sql` ← **novo**
+2. `supabase/schema_v2.sql`
+3. `supabase/schema_v3.sql` ← **novo** (colunas do vídeo do estudo)
 
 O `schema_v2.sql` cria:
 
@@ -224,7 +225,58 @@ https://digitalassetlinks.googleapis.com/v1/statements:list?source.web.site=http
 
 ---
 
-## 7. Observações técnicas
+## 7. Vídeo do estudo (YouTube)
+
+O estudo do dia pode trazer um vídeo sobre o tema, buscado automaticamente.
+
+**Obter a chave:**
+1. [console.cloud.google.com](https://console.cloud.google.com) → criar um projeto
+2. **APIs e serviços → Biblioteca** → ativar **YouTube Data API v3**
+3. **Credenciais → Criar credenciais → Chave de API**
+
+```bash
+YOUTUBE_API_KEY=AIza...
+YOUTUBE_CANAIS=UCxxxxxxxx,UCyyyyyyyy
+```
+
+### ⚠️ Preencha `YOUTUBE_CANAIS`
+
+Com a lista vazia, o app busca no **YouTube inteiro** — e passa a exibir, dentro da sua marca,
+conteúdo de qualquer origem, com qualquer linha teológica. A busca é automática: ninguém revisa
+antes de aparecer para os seus usuários.
+
+Com a lista preenchida, a busca acontece **só dentro dos canais que você endossa**.
+
+Para descobrir o ID de um canal: abra o canal no YouTube → botão direito → *Exibir código-fonte*
+→ procure por `"channelId"`. Ou use um site tipo "youtube channel id finder". O ID começa com `UC`.
+
+**Cota:** 10.000 unidades/dia no plano gratuito. Cada busca custa 100 e fazemos no máximo uma por
+canal, uma vez ao dia — bem dentro do limite.
+
+**Se algo impróprio aparecer:** rode no SQL Editor do Supabase para esconder o vídeo daquele dia
+sem apagar o estudo:
+
+```sql
+UPDATE public.conteudo_diario SET video_oculto = true WHERE data = '2026-08-05';
+```
+
+Sem a chave configurada, o app simplesmente não mostra vídeo — nada quebra.
+
+---
+
+## 8. Aparência e acessibilidade
+
+- **Tema**: claro, escuro ou automático (segue o celular). Em *Perfil → Aparência*.
+  Um script inline aplica o tema antes da primeira pintura, então o app não pisca branco ao abrir.
+- **Paleta**: todas as cores saem de tokens em `app/globals.css`. Para mudar a identidade do app
+  inteiro, basta editar os valores de `:root` e `:root[data-tema='escuro']`.
+- **Fundos**: `public/fundos/*.jpg` são gerados por `npm run fundos` (procedurais, ~9 KB cada,
+  sem dependência de banco de imagens). O fundo do dia é escolhido pela data.
+- **Alto contraste** e **texto maior** ficam em *Perfil → Acessibilidade*.
+
+---
+
+## 9. Observações técnicas
 
 **Vozes do leitor de áudio** — vêm do próprio aparelho (Web Speech API): funciona offline,
 sem custo e sem limite. Se o celular tiver poucas vozes em português, dá para instalar mais em

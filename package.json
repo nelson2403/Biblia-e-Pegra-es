@@ -8,6 +8,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "icones": "node scripts/gerar-icones.js",
+    "fundos": "node scripts/gerar-fundos.js",
     "vapid": "node -e \"const k=require('web-push').generateVAPIDKeys();console.log('NEXT_PUBLIC_VAPID_PUBLIC_KEY='+k.publicKey+'\\nVAPID_PRIVATE_KEY='+k.privateKey)\""
   },
   "dependencies": {

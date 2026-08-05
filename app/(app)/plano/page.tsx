@@ -99,23 +99,23 @@ export default function PlanoPage() {
   return (
     <div className="flex flex-col min-h-full">
       <div className="px-6 pt-6 pb-4">
-        <h1 className="text-2xl font-extrabold text-gray-800">Plano de Leitura</h1>
-        <p className="text-sm text-gray-400 mt-0.5">Leia a Bíblia completa</p>
+        <h1 className="text-2xl font-extrabold text-conteudo">Plano de Leitura</h1>
+        <p className="text-sm text-conteudo-faint mt-0.5">Leia a Bíblia completa</p>
       </div>
 
       {/* Streak + overall stats */}
       <div className="px-6 mb-4 grid grid-cols-3 gap-2">
-        <div className="rounded-2xl p-3 text-center" style={{ backgroundColor: '#FFF7ED' }}>
+        <div className="rounded-2xl p-3 text-center" style={{ backgroundColor: 'var(--gold-soft)' }}>
           <p className="text-2xl font-extrabold text-orange-500">🔥{streak}</p>
-          <p className="text-xs font-semibold text-gray-500">Dias seguidos</p>
+          <p className="text-xs font-semibold text-conteudo-muted">Dias seguidos</p>
         </div>
-        <div className="rounded-2xl p-3 text-center" style={{ backgroundColor: '#EEF2FF' }}>
-          <p className="text-2xl font-extrabold" style={{ color: '#4F46E5' }}>{readSet.size}</p>
-          <p className="text-xs font-semibold text-gray-500">Caps lidos</p>
+        <div className="rounded-2xl p-3 text-center" style={{ backgroundColor: 'var(--accent-soft)' }}>
+          <p className="text-2xl font-extrabold" style={{ color: 'var(--accent)' }}>{readSet.size}</p>
+          <p className="text-xs font-semibold text-conteudo-muted">Caps lidos</p>
         </div>
-        <div className="rounded-2xl p-3 text-center" style={{ backgroundColor: '#ECFDF5' }}>
-          <p className="text-2xl font-extrabold text-green-600">{pct.toFixed(0)}%</p>
-          <p className="text-xs font-semibold text-gray-500">Concluído</p>
+        <div className="rounded-2xl p-3 text-center" style={{ backgroundColor: 'var(--success-soft)' }}>
+          <p className="text-2xl font-extrabold text-sucesso">{pct.toFixed(0)}%</p>
+          <p className="text-xs font-semibold text-conteudo-muted">Concluído</p>
         </div>
       </div>
 
@@ -126,8 +126,8 @@ export default function PlanoPage() {
             <button key={t} onClick={() => setTestament(t)}
               className="flex-1 py-2 rounded-xl text-sm font-bold transition-all"
               style={{
-                backgroundColor: testament === t ? '#4F46E5' : '#F3F4F6',
-                color: testament === t ? '#fff' : '#6B7280',
+                backgroundColor: testament === t ? 'var(--accent)' : 'var(--surface-2)',
+                color: testament === t ? '#fff' : 'var(--text-muted)',
               }}>
               {t === 'todos' ? 'Toda a Bíblia' : t === 'AT' ? 'A. Testamento' : 'N. Testamento'}
             </button>
@@ -135,24 +135,24 @@ export default function PlanoPage() {
         </div>
 
         {/* Progress bar */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
+        <div className="bg-surface rounded-2xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-bold text-gray-700">Progresso</span>
-            <span className="text-sm font-bold" style={{ color: '#4F46E5' }}>{readFiltered}/{totalFiltered} capítulos</span>
+            <span className="text-sm font-bold text-conteudo">Progresso</span>
+            <span className="text-sm font-bold" style={{ color: 'var(--accent)' }}>{readFiltered}/{totalFiltered} capítulos</span>
           </div>
-          <div className="h-3 bg-gray-100 rounded-full overflow-hidden mb-1">
+          <div className="h-3 bg-surface-2 rounded-full overflow-hidden mb-1">
             <div className="h-3 rounded-full transition-all duration-700"
               style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #4F46E5, #7C3AED)' }} />
           </div>
-          <p className="text-xs text-gray-400 text-right">{totalFiltered - readFiltered} capítulos restantes</p>
+          <p className="text-xs text-conteudo-faint text-right">{totalFiltered - readFiltered} capítulos restantes</p>
         </div>
 
         {/* Next reading suggestion */}
         {nextUnread && (
           <div className="rounded-2xl p-4 text-white" style={{ background: 'linear-gradient(135deg, #1E1B4B, #4F46E5)' }}>
             <div className="flex items-center gap-2 mb-2">
-              <Target size={16} color="#F59E0B" />
-              <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">Próxima leitura sugerida</span>
+              <Target size={16} color="var(--gold)" />
+              <span className="text-xs font-bold text-gold uppercase tracking-wider">Próxima leitura sugerida</span>
             </div>
             <p className="text-lg font-extrabold">{nextUnread.book.pt} {nextUnread.ch}</p>
             <p className="text-xs text-white/60 mb-3">{nextUnread.book.testament === 'AT' ? 'Antigo Testamento' : 'Novo Testamento'}</p>
@@ -172,8 +172,8 @@ export default function PlanoPage() {
         )}
 
         {/* Book-by-book progress */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <p className="text-sm font-bold text-gray-700 mb-3">Por livro</p>
+        <div className="bg-surface rounded-2xl p-4 shadow-sm">
+          <p className="text-sm font-bold text-conteudo mb-3">Por livro</p>
           <div className="flex flex-col gap-2.5" style={{ maxHeight: 400, overflowY: 'auto' }}>
             {booksFiltered.map(book => {
               const read = Array.from({ length: book.chapters }, (_, i) => i + 1)
@@ -187,24 +187,24 @@ export default function PlanoPage() {
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-2">
                         {done
-                          ? <CheckCircle2 size={14} color="#059669" />
-                          : <BookOpen size={14} color="#9CA3AF" />}
+                          ? <CheckCircle2 size={14} color="var(--success)" />
+                          : <BookOpen size={14} color="var(--text-faint)" />}
                         <span className="text-xs font-semibold truncate"
-                          style={{ color: done ? '#059669' : '#374151' }}>{book.pt}</span>
+                          style={{ color: done ? 'var(--success)' : 'var(--text)' }}>{book.pt}</span>
                       </div>
-                      <span className="text-xs text-gray-400 flex-shrink-0 ml-2">{read}/{book.chapters}</span>
+                      <span className="text-xs text-conteudo-faint flex-shrink-0 ml-2">{read}/{book.chapters}</span>
                     </div>
-                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-surface-2 rounded-full overflow-hidden">
                       <div className="h-1.5 rounded-full transition-all"
-                        style={{ width: `${bookPct}%`, backgroundColor: done ? '#059669' : '#4F46E5' }} />
+                        style={{ width: `${bookPct}%`, backgroundColor: done ? 'var(--success)' : 'var(--accent)' }} />
                     </div>
                   </Link>
                   {hasRead && (
                     <button
                       onClick={() => deleteBook(book.en)}
-                      className="p-1.5 rounded-lg hover:bg-red-50 flex-shrink-0"
+                      className="p-1.5 rounded-lg hover:bg-perigo-soft flex-shrink-0"
                       title="Remover histórico deste livro">
-                      <Trash2 size={13} color="#EF4444" />
+                      <Trash2 size={13} color="var(--danger)" />
                     </button>
                   )}
                 </div>
@@ -215,25 +215,25 @@ export default function PlanoPage() {
 
         {/* Recent readings */}
         {recentBooks.length > 0 && (
-          <div className="bg-white rounded-2xl p-4 shadow-sm">
-            <p className="text-sm font-bold text-gray-700 mb-3">Lidos recentemente</p>
+          <div className="bg-surface rounded-2xl p-4 shadow-sm">
+            <p className="text-sm font-bold text-conteudo mb-3">Lidos recentemente</p>
             <div className="flex flex-col gap-1">
               {recentBooks.map(({ book, ch, lido_em, id }) => (
                 <div key={`${book.en}-${ch}`} className="flex items-center gap-3 py-1.5">
                   <Link href={`/biblia/${book.id}/${ch}?plano=1`} className="flex items-center gap-3 flex-1 min-w-0">
                     <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: '#EEF2FF' }}>
-                      <BookOpen size={16} color="#4F46E5" />
+                      style={{ backgroundColor: 'var(--accent-soft)' }}>
+                      <BookOpen size={16} color="var(--accent)" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-800 truncate">{book.pt} {ch}</p>
-                      <p className="text-xs text-gray-400">{new Date(lido_em + 'T12:00:00').toLocaleDateString('pt-BR')}</p>
+                      <p className="text-sm font-semibold text-conteudo truncate">{book.pt} {ch}</p>
+                      <p className="text-xs text-conteudo-faint">{new Date(lido_em + 'T12:00:00').toLocaleDateString('pt-BR')}</p>
                     </div>
                   </Link>
                   <button
                     onClick={() => deleteChapter(id)}
-                    className="p-2 rounded-xl hover:bg-red-50 flex-shrink-0">
-                    <Trash2 size={15} color="#EF4444" />
+                    className="p-2 rounded-xl hover:bg-perigo-soft flex-shrink-0">
+                    <Trash2 size={15} color="var(--danger)" />
                   </button>
                 </div>
               ))}

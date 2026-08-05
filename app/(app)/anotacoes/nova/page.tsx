@@ -103,15 +103,15 @@ export default function NovaAnotacaoPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-white">
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
-        <button onClick={() => router.back()} aria-label="Voltar" className="p-2 rounded-xl hover:bg-gray-100">
-          <ArrowLeft size={22} color="#1F2937" />
+    <div className="flex flex-col min-h-full bg-surface">
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-borda">
+        <button onClick={() => router.back()} aria-label="Voltar" className="p-2 rounded-xl hover:bg-surface-2">
+          <ArrowLeft size={22} color="var(--text)" />
         </button>
-        <h1 className="flex-1 text-center text-base font-bold text-gray-800">Nova Anotacao</h1>
+        <h1 className="flex-1 text-center text-base font-bold text-conteudo">Nova Anotacao</h1>
         <button onClick={handleSave} disabled={saving}
           className="px-4 py-1.5 rounded-xl text-sm font-bold text-white disabled:opacity-50"
-          style={{ backgroundColor: '#4F46E5' }}>
+          style={{ backgroundColor: 'var(--accent)' }}>
           {saving ? 'Salvando...' : 'Salvar'}
         </button>
       </div>
@@ -123,15 +123,15 @@ export default function NovaAnotacaoPage() {
           value={titulo}
           onChange={e => setTitulo(e.target.value)}
           aria-label="Titulo da anotacao"
-          className="w-full text-2xl font-bold text-gray-800 outline-none placeholder:text-gray-300 mb-3"
+          className="w-full text-2xl font-bold text-conteudo outline-none placeholder:text-conteudo-faint mb-3"
         />
-        <div className="h-px bg-gray-100 mb-3" />
+        <div className="h-px bg-surface-2 mb-3" />
 
         {/* Tags input */}
         <div className="flex flex-wrap gap-1.5 mb-3 min-h-[28px]">
           {tags.map(t => (
             <span key={t} className="flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold"
-              style={{ backgroundColor: '#EEF2FF', color: '#4F46E5' }}>
+              style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent)' }}>
               #{t}
               <button onClick={() => setTags(prev => prev.filter(x => x !== t))} aria-label={`Remover tag ${t}`}>
                 <X size={10} />
@@ -146,10 +146,10 @@ export default function NovaAnotacaoPage() {
             onKeyDown={handleTagKey}
             onBlur={() => { if (tagInput.trim()) addTag(tagInput) }}
             aria-label="Adicionar tag"
-            className="text-xs text-gray-600 outline-none placeholder:text-gray-300 min-w-[120px] flex-1"
+            className="text-xs text-conteudo-muted outline-none placeholder:text-conteudo-faint min-w-[120px] flex-1"
           />
         </div>
-        <div className="h-px bg-gray-100 mb-4" />
+        <div className="h-px bg-surface-2 mb-4" />
 
         {/* Ferramentas de voz e IA */}
         <div className="flex flex-wrap items-center gap-2 mb-4">
@@ -159,7 +159,7 @@ export default function NovaAnotacaoPage() {
             onClick={organizarComIA}
             disabled={organizando}
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold disabled:opacity-50 transition-colors"
-            style={{ backgroundColor: '#F5F3FF', color: '#7C3AED' }}
+            style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent)' }}
           >
             {organizando ? <Loader2 size={17} className="animate-spin" /> : <Wand2 size={17} />}
             {organizando ? 'Organizando...' : 'Organizar com IA'}
@@ -168,7 +168,7 @@ export default function NovaAnotacaoPage() {
 
         {aviso && (
           <p role="status" className="mb-3 text-xs font-semibold px-3 py-2 rounded-xl"
-            style={{ backgroundColor: '#EEF2FF', color: '#4338CA' }}>
+            style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent-hover)' }}>
             {aviso}
           </p>
         )}
@@ -179,7 +179,7 @@ export default function NovaAnotacaoPage() {
           value={conteudo}
           onChange={e => setConteudo(e.target.value)}
           aria-label="Conteudo da anotacao"
-          className="flex-1 w-full text-base text-gray-700 outline-none resize-none leading-relaxed placeholder:text-gray-300 min-h-[45vh]"
+          className="flex-1 w-full text-base text-conteudo outline-none resize-none leading-relaxed placeholder:text-conteudo-faint min-h-[45vh]"
           autoFocus={!conteudo}
         />
       </div>

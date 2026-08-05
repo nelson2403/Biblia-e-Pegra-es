@@ -21,13 +21,13 @@ export default function OfflinePage() {
         <p className="text-sm italic leading-relaxed">
           &ldquo;Aquietai-vos e sabei que eu sou Deus.&rdquo;
         </p>
-        <cite className="text-xs font-bold not-italic" style={{ color: '#F59E0B' }}>Salmos 46:10</cite>
+        <cite className="text-xs font-bold not-italic" style={{ color: 'var(--gold)' }}>Salmos 46:10</cite>
       </blockquote>
 
       <Link
         href="/dashboard"
-        className="mt-4 px-6 py-3 rounded-xl bg-white text-sm font-bold"
-        style={{ color: '#4F46E5' }}
+        className="mt-4 px-6 py-3 rounded-xl bg-surface text-sm font-bold"
+        style={{ color: 'var(--accent)' }}
       >
         Tentar novamente
       </Link>

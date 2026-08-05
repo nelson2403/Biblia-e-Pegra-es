@@ -95,8 +95,8 @@ export function ConviteInstalar() {
       ) : (
         <button
           onClick={instalar}
-          className="w-full flex items-center justify-center gap-2 mt-3 py-2.5 rounded-xl bg-white text-sm font-bold"
-          style={{ color: '#4F46E5' }}
+          className="w-full flex items-center justify-center gap-2 mt-3 py-2.5 rounded-xl bg-surface text-sm font-bold"
+          style={{ color: 'var(--accent)' }}
         >
           <Download size={16} aria-hidden="true" /> Instalar agora
         </button>

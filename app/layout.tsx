@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
+import { TemaProvider, SCRIPT_ANTI_FLASH } from '@/contexts/TemaContext'
 
 const URL_BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://biblia-pregacoes.vercel.app'
 
@@ -45,7 +46,10 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#1E1B4B',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f6f6f8' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0d' },
+  ],
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
@@ -55,11 +59,17 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        {/* Define o tema antes da primeira pintura, senão o app pisca branco ao abrir no escuro. */}
+        <script dangerouslySetInnerHTML={{ __html: SCRIPT_ANTI_FLASH }} />
+      </head>
       <body>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <TemaProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </TemaProvider>
       </body>
     </html>
   )

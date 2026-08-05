@@ -52,51 +52,51 @@ export default function PregacoesPage() {
   return (
     <div className="flex flex-col min-h-full">
       <div className="flex items-center justify-between px-6 pt-6 pb-3">
-        <h1 className="text-2xl font-extrabold text-gray-800">Pregacoes</h1>
+        <h1 className="text-2xl font-extrabold text-conteudo">Pregacoes</h1>
         <Link href="/pregacoes/nova"
           className="w-10 h-10 rounded-full flex items-center justify-center text-white"
-          style={{ backgroundColor: '#059669' }}>
+          style={{ backgroundColor: 'var(--success)' }}>
           <Plus size={22} />
         </Link>
       </div>
 
       <div className="px-6 mb-3">
-        <div className="flex items-center gap-2 border border-gray-200 bg-white rounded-xl px-3 py-2.5">
-          <Search size={17} color="#9CA3AF" />
+        <div className="flex items-center gap-2 border border-borda bg-surface rounded-xl px-3 py-2.5">
+          <Search size={17} color="var(--text-faint)" />
           <input type="text" placeholder="Buscar pregacoes..." value={search} onChange={e => onSearch(e.target.value)}
-            className="flex-1 text-sm text-gray-700 outline-none" />
-          {search && <button onClick={() => onSearch('')}><X size={16} color="#9CA3AF" /></button>}
+            className="flex-1 text-sm text-conteudo outline-none" />
+          {search && <button onClick={() => onSearch('')}><X size={16} color="var(--text-faint)" /></button>}
         </div>
       </div>
 
       <div className="px-6 pb-6 flex flex-col gap-3">
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center py-20 gap-3">
-            <Mic size={48} color="#D1D5DB" />
-            <p className="text-lg font-bold text-gray-400">Nenhuma pregacao ainda</p>
-            <p className="text-sm text-gray-400 text-center">Clique no + para criar sua primeira pregacao guiada</p>
+            <Mic size={48} color="var(--border-strong)" />
+            <p className="text-lg font-bold text-conteudo-faint">Nenhuma pregacao ainda</p>
+            <p className="text-sm text-conteudo-faint text-center">Clique no + para criar sua primeira pregacao guiada</p>
           </div>
         ) : filtered.map(item => (
-          <div key={item.id} className="bg-white rounded-2xl p-4 shadow-sm">
+          <div key={item.id} className="bg-surface rounded-2xl p-4 shadow-sm">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: '#3730A3' }}>
+                style={{ backgroundColor: 'var(--accent-hover)' }}>
                 <Mic size={20} color="#fff" />
               </div>
               <Link href={`/pregacoes/${item.id}`} className="flex-1 min-w-0">
-                <p className="font-bold text-gray-800 text-sm truncate">{item.tema}</p>
-                <p className="text-xs font-semibold truncate" style={{ color: '#4F46E5' }}>{item.texto_base}</p>
+                <p className="font-bold text-conteudo text-sm truncate">{item.tema}</p>
+                <p className="text-xs font-semibold truncate" style={{ color: 'var(--accent)' }}>{item.texto_base}</p>
               </Link>
-              <button onClick={() => handleDelete(item.id)} className="p-2 rounded-xl hover:bg-red-50 text-red-500">
+              <button onClick={() => handleDelete(item.id)} className="p-2 rounded-xl hover:bg-perigo-soft text-perigo">
                 <Trash2 size={17} />
               </button>
             </div>
-            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-              <div className="flex items-center gap-1.5 text-xs text-gray-500">
+            <div className="flex items-center justify-between pt-3 border-t border-borda">
+              <div className="flex items-center gap-1.5 text-xs text-conteudo-muted">
                 <Users size={12} />
                 <span className="truncate max-w-[120px]">{item.publico}</span>
               </div>
-              <span className="text-xs text-gray-400">{new Date(item.created_at).toLocaleDateString('pt-BR')}</span>
+              <span className="text-xs text-conteudo-faint">{new Date(item.created_at).toLocaleDateString('pt-BR')}</span>
             </div>
           </div>
         ))}

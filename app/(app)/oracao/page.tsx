@@ -111,7 +111,7 @@ export default function OracaoPage() {
   if (loading) return <LoadingSpinner fullScreen={false} />
 
   return (
-    <div className="flex flex-col min-h-full bg-gray-50">
+    <div className="flex flex-col min-h-full bg-bg">
       {/* Header */}
       <div
         className="px-5 pt-6 pb-5"
@@ -138,27 +138,27 @@ export default function OracaoPage() {
         {pedidos.length === 0 ? (
           <div className="flex flex-col items-center py-20 gap-3">
             <span className="text-5xl">🙏</span>
-            <p className="text-lg font-bold text-gray-400">Nenhum pedido ainda</p>
-            <p className="text-sm text-gray-400 text-center">
+            <p className="text-lg font-bold text-conteudo-faint">Nenhum pedido ainda</p>
+            <p className="text-sm text-conteudo-faint text-center">
               Seja o primeiro a compartilhar um pedido de oração com a comunidade
             </p>
           </div>
         ) : (
           pedidos.map(p => (
-            <div key={p.id} className="bg-white rounded-2xl p-4 shadow-sm">
+            <div key={p.id} className="bg-surface rounded-2xl p-4 shadow-sm">
               <div className="flex items-start justify-between gap-2 mb-3">
                 <div className="flex items-center gap-2">
                   <div
                     className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold text-white"
-                    style={{ backgroundColor: '#7C3AED' }}
+                    style={{ backgroundColor: 'var(--accent)' }}
                   >
                     {p.anonimo ? '?' : p.autor_nome.slice(0, 2).toUpperCase()}
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-gray-700">
+                    <p className="text-xs font-bold text-conteudo">
                       {p.anonimo ? 'Anônimo' : p.autor_nome}
                     </p>
-                    <p className="text-[10px] text-gray-400">
+                    <p className="text-[10px] text-conteudo-faint">
                       {new Date(p.created_at).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
@@ -166,28 +166,28 @@ export default function OracaoPage() {
                 {p.user_id === user?.id && (
                   <button
                     onClick={() => handleDelete(p.id)}
-                    className="text-gray-300 hover:text-red-400 transition-colors p-1"
+                    className="text-conteudo-faint hover:text-red-400 transition-colors p-1"
                   >
                     <X size={14} />
                   </button>
                 )}
               </div>
 
-              <p className="text-sm text-gray-700 leading-relaxed mb-3">{p.texto}</p>
+              <p className="text-sm text-conteudo leading-relaxed mb-3">{p.texto}</p>
 
               <button
                 onClick={() => handleOrar(p.id)}
                 disabled={!!praying}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
                 style={{
-                  backgroundColor: p.eu_orei ? '#EDE9FE' : '#F3F4F6',
-                  color: p.eu_orei ? '#7C3AED' : '#6B7280',
+                  backgroundColor: p.eu_orei ? 'var(--accent-soft)' : 'var(--surface-2)',
+                  color: p.eu_orei ? 'var(--accent)' : 'var(--text-muted)',
                 }}
               >
                 {praying === p.id ? (
                   <Loader2 size={13} className="animate-spin" />
                 ) : (
-                  <Heart size={13} fill={p.eu_orei ? '#7C3AED' : 'none'} />
+                  <Heart size={13} fill={p.eu_orei ? 'var(--accent)' : 'none'} />
                 )}
                 {p.eu_orei ? 'Orei por isso' : 'Orar por isso'} · {p.oradores_count}
               </button>
@@ -203,13 +203,13 @@ export default function OracaoPage() {
           style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
           onClick={e => { if (e.target === e.currentTarget) setShowForm(false) }}
         >
-          <div className="w-full max-w-lg rounded-t-3xl bg-white px-5 pt-4 pb-8 flex flex-col gap-4">
+          <div className="w-full max-w-lg rounded-t-3xl bg-surface px-5 pt-4 pb-8 flex flex-col gap-4">
             <div className="flex justify-center mb-1">
-              <div className="w-10 h-1 rounded-full bg-gray-200" />
+              <div className="w-10 h-1 rounded-full bg-surface-3" />
             </div>
             <div className="flex items-center justify-between">
-              <h3 className="font-extrabold text-gray-800 text-lg">Compartilhar pedido</h3>
-              <button onClick={() => setShowForm(false)} className="p-1 text-gray-400">
+              <h3 className="font-extrabold text-conteudo text-lg">Compartilhar pedido</h3>
+              <button onClick={() => setShowForm(false)} className="p-1 text-conteudo-faint">
                 <X size={20} />
               </button>
             </div>
@@ -217,8 +217,8 @@ export default function OracaoPage() {
               value={texto}
               onChange={e => setTexto(e.target.value)}
               placeholder="Compartilhe seu pedido de oração com a comunidade cristã..."
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 outline-none resize-none min-h-[120px]"
-              style={{ borderColor: texto ? '#7C3AED' : '#E5E7EB' }}
+              className="w-full border border-borda rounded-xl px-4 py-3 text-sm text-conteudo outline-none resize-none min-h-[120px]"
+              style={{ borderColor: texto ? 'var(--accent)' : 'var(--border)' }}
               autoFocus
             />
             <div
@@ -227,14 +227,14 @@ export default function OracaoPage() {
             >
               <div
                 className="w-10 h-6 rounded-full relative flex-shrink-0 transition-all"
-                style={{ backgroundColor: anonimo ? '#7C3AED' : '#D1D5DB' }}
+                style={{ backgroundColor: anonimo ? 'var(--accent)' : 'var(--border-strong)' }}
               >
                 <div
-                  className="w-4 h-4 bg-white rounded-full absolute top-1 transition-all shadow"
+                  className="w-4 h-4 bg-surface rounded-full absolute top-1 transition-all shadow"
                   style={{ left: anonimo ? '22px' : '4px' }}
                 />
               </div>
-              <span className="text-sm text-gray-600 font-medium select-none">
+              <span className="text-sm text-conteudo-muted font-medium select-none">
                 Publicar como anônimo
               </span>
             </div>
@@ -242,7 +242,7 @@ export default function OracaoPage() {
               onClick={handleSubmit}
               disabled={!texto.trim() || submitting}
               className="w-full py-3 rounded-xl font-bold text-white text-sm disabled:opacity-50"
-              style={{ backgroundColor: '#7C3AED' }}
+              style={{ backgroundColor: 'var(--accent)' }}
             >
               {submitting ? 'Publicando...' : '🙏 Publicar pedido'}
             </button>

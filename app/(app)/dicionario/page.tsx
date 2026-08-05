@@ -30,8 +30,8 @@ function Badge({ lang }: { lang: 'H' | 'G' }) {
     <span
       className="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-extrabold flex-shrink-0"
       style={{
-        backgroundColor: isH ? '#EEF2FF' : '#FEF3C7',
-        color: isH ? '#4F46E5' : '#92400E',
+        backgroundColor: isH ? 'var(--accent-soft)' : 'var(--gold-soft)',
+        color: isH ? 'var(--accent)' : 'var(--gold)',
       }}
     >
       {lang}
@@ -44,31 +44,31 @@ function EntryCard({ entry, onClick }: { entry: DictEntry; onClick: () => void }
   return (
     <button
       onClick={onClick}
-      className="w-full text-left bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3 active:scale-[0.98] transition-transform"
+      className="w-full text-left bg-surface rounded-2xl p-4 shadow-sm flex items-center gap-3 active:scale-[0.98] transition-transform"
     >
       <Badge lang={entry.lang} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <span
             className="text-lg font-bold leading-tight"
-            style={{ color: '#1E1B4B', fontFamily: 'serif', direction: isH ? 'rtl' : 'ltr' }}
+            style={{ color: 'var(--text)', fontFamily: 'serif', direction: isH ? 'rtl' : 'ltr' }}
           >
             {entry.word}
           </span>
-          <span className="text-xs font-semibold text-gray-400 italic">{entry.translit}</span>
+          <span className="text-xs font-semibold text-conteudo-faint italic">{entry.translit}</span>
           <span
             className="text-[10px] font-bold px-1.5 py-0.5 rounded-full"
-            style={{ backgroundColor: '#F3F4F6', color: '#6B7280' }}
+            style={{ backgroundColor: 'var(--surface-2)', color: 'var(--text-muted)' }}
           >
             {entry.id}
           </span>
         </div>
-        <p className="text-sm font-semibold mt-0.5" style={{ color: '#4F46E5' }}>
+        <p className="text-sm font-semibold mt-0.5" style={{ color: 'var(--accent)' }}>
           {entry.ptGloss}
         </p>
-        <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{entry.definition}</p>
+        <p className="text-xs text-conteudo-muted mt-0.5 line-clamp-2">{entry.definition}</p>
       </div>
-      <ChevronRight size={16} color="#D1D5DB" className="flex-shrink-0" />
+      <ChevronRight size={16} color="var(--border-strong)" className="flex-shrink-0" />
     </button>
   )
 }
@@ -106,7 +106,7 @@ function ModalBottomSheet({
       >
         {/* Handle */}
         <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
-          <div className="w-10 h-1 rounded-full" style={{ backgroundColor: '#D1D5DB' }} />
+          <div className="w-10 h-1 rounded-full" style={{ backgroundColor: 'var(--border-strong)' }} />
         </div>
 
         {/* Header */}
@@ -150,24 +150,24 @@ function ModalBottomSheet({
           <div className="flex items-center gap-3">
             <Badge lang={entry.lang} />
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-conteudo-faint">
                 {isH ? 'Hebraico' : 'Grego'}
               </p>
-              <p className="text-base font-extrabold" style={{ color: '#1E1B4B' }}>
+              <p className="text-base font-extrabold" style={{ color: 'var(--text)' }}>
                 {entry.ptGloss}
               </p>
             </div>
           </div>
 
           {/* Definition */}
-          <div className="rounded-2xl p-4" style={{ backgroundColor: '#EEF2FF' }}>
+          <div className="rounded-2xl p-4" style={{ backgroundColor: 'var(--accent-soft)' }}>
             <p
               className="text-[11px] font-bold uppercase tracking-wider mb-2"
-              style={{ color: '#4F46E5' }}
+              style={{ color: 'var(--accent)' }}
             >
               Definição
             </p>
-            <p className="text-sm text-gray-700 leading-relaxed">{entry.definition}</p>
+            <p className="text-sm text-conteudo leading-relaxed">{entry.definition}</p>
           </div>
 
           {/* Verses */}
@@ -175,7 +175,7 @@ function ModalBottomSheet({
             <div>
               <p
                 className="text-[11px] font-bold uppercase tracking-wider mb-2"
-                style={{ color: '#4F46E5' }}
+                style={{ color: 'var(--accent)' }}
               >
                 Versículos de Referência
               </p>
@@ -188,20 +188,20 @@ function ModalBottomSheet({
                       href={link}
                       onClick={onClose}
                       className="flex items-center gap-2 rounded-xl px-3 py-2 active:opacity-60 transition-opacity"
-                      style={{ backgroundColor: '#EEF2FF', borderLeft: '3px solid #4F46E5' }}
+                      style={{ backgroundColor: 'var(--accent-soft)', borderLeft: '3px solid #4F46E5' }}
                     >
-                      <BookOpen size={14} color="#4F46E5" className="flex-shrink-0" />
-                      <p className="text-sm font-bold flex-1" style={{ color: '#4F46E5' }}>{v}</p>
-                      <ChevronRight size={14} color="#4F46E5" className="flex-shrink-0" />
+                      <BookOpen size={14} color="var(--accent)" className="flex-shrink-0" />
+                      <p className="text-sm font-bold flex-1" style={{ color: 'var(--accent)' }}>{v}</p>
+                      <ChevronRight size={14} color="var(--accent)" className="flex-shrink-0" />
                     </Link>
                   ) : (
                     <div
                       key={i}
                       className="flex items-center gap-2 rounded-xl px-3 py-2"
-                      style={{ backgroundColor: '#F9FAFB', borderLeft: '3px solid #4F46E5' }}
+                      style={{ backgroundColor: 'var(--surface-2)', borderLeft: '3px solid #4F46E5' }}
                     >
-                      <BookOpen size={14} color="#4F46E5" className="flex-shrink-0" />
-                      <p className="text-sm font-semibold text-gray-700">{v}</p>
+                      <BookOpen size={14} color="var(--accent)" className="flex-shrink-0" />
+                      <p className="text-sm font-semibold text-conteudo">{v}</p>
                     </div>
                   )
                 })}
@@ -261,7 +261,7 @@ export default function DicionarioPage() {
   const greekCount = DICTIONARY.filter((e) => e.lang === 'G').length
 
   return (
-    <div className="flex flex-col min-h-full bg-gray-50">
+    <div className="flex flex-col min-h-full bg-bg">
       {/* Header */}
       <div
         className="px-5 pt-6 pb-5"
@@ -291,15 +291,15 @@ export default function DicionarioPage() {
       </div>
 
       {/* Tabs */}
-      <div className="px-5 py-3 flex gap-2 bg-white shadow-sm">
+      <div className="px-5 py-3 flex gap-2 bg-surface shadow-sm">
         {TABS.map((tab) => (
           <button
             key={tab.value}
             onClick={() => setLangFilter(tab.value)}
             className="flex-1 py-2 rounded-xl text-sm font-bold transition-all"
             style={{
-              backgroundColor: langFilter === tab.value ? '#4F46E5' : '#F3F4F6',
-              color: langFilter === tab.value ? '#fff' : '#6B7280',
+              backgroundColor: langFilter === tab.value ? 'var(--accent)' : 'var(--surface-2)',
+              color: langFilter === tab.value ? '#fff' : 'var(--text-muted)',
             }}
           >
             {tab.label}
@@ -309,7 +309,7 @@ export default function DicionarioPage() {
 
       {/* Results count */}
       <div className="px-5 py-2">
-        <p className="text-xs text-gray-400 font-semibold">
+        <p className="text-xs text-conteudo-faint font-semibold">
           {results.length} {results.length === 1 ? 'palavra encontrada' : 'palavras encontradas'}
           {search ? ` para "${search}"` : ''}
         </p>
@@ -319,9 +319,9 @@ export default function DicionarioPage() {
       <div className="px-4 pb-10 flex flex-col gap-2">
         {results.length === 0 ? (
           <div className="flex flex-col items-center py-20 gap-3">
-            <BookOpen size={48} color="#D1D5DB" />
-            <p className="text-lg font-bold text-gray-400">Nenhum resultado encontrado</p>
-            <p className="text-sm text-gray-400 text-center">
+            <BookOpen size={48} color="var(--border-strong)" />
+            <p className="text-lg font-bold text-conteudo-faint">Nenhum resultado encontrado</p>
+            <p className="text-sm text-conteudo-faint text-center">
               Tente buscar por palavra, transliteração ou código Strong's (ex: H7965)
             </p>
             <button
@@ -330,7 +330,7 @@ export default function DicionarioPage() {
                 setLangFilter('todos')
               }}
               className="mt-2 px-4 py-2 rounded-xl text-sm font-bold text-white"
-              style={{ backgroundColor: '#4F46E5' }}
+              style={{ backgroundColor: 'var(--accent)' }}
             >
               Limpar filtros
             </button>

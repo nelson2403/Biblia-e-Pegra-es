@@ -2,56 +2,70 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { BookOpen, PenLine, Mic, Layers, Sparkles, Heart, Map, Search, Flame, Sun, ChevronRight } from 'lucide-react'
+import {
+  BookOpen, PenLine, Mic, Layers, Heart, Map, Search, Flame, Sun,
+  ChevronRight, Headphones, HeartHandshake, Bot,
+} from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { BIBLE_BOOKS } from '@/data/bibleBooks'
 import { versiculoDoDia } from '@/data/versiculosDiarios'
+import { CartaoVersiculo } from '@/components/CartaoVersiculo'
 import type { ConteudoDiario } from '@/types'
 
-const TOTAL_CHAPTERS = BIBLE_BOOKS.reduce((sum, b) => sum + b.chapters, 0)
+const TOTAL_CAPITULOS = BIBLE_BOOKS.reduce((s, b) => s + b.chapters, 0)
 
-function calcStreak(dates: string[]): number {
-  if (!dates.length) return 0
-  const unique = Array.from(new Set(dates)).sort().reverse()
-  const today = new Date().toISOString().split('T')[0]
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0]
-  if (unique[0] !== today && unique[0] !== yesterday) return 0
-  let streak = 1
-  for (let i = 1; i < unique.length; i++) {
-    const diff = (new Date(unique[i - 1]).getTime() - new Date(unique[i]).getTime()) / 86400000
-    if (diff === 1) streak++
+function calcularSequencia(datas: string[]): number {
+  if (!datas.length) return 0
+  const unicas = Array.from(new Set(datas)).sort().reverse()
+  const hoje = new Date().toISOString().split('T')[0]
+  const ontem = new Date(Date.now() - 86400000).toISOString().split('T')[0]
+  if (unicas[0] !== hoje && unicas[0] !== ontem) return 0
+  let seq = 1
+  for (let i = 1; i < unicas.length; i++) {
+    const dif = (new Date(unicas[i - 1]).getTime() - new Date(unicas[i]).getTime()) / 86400000
+    if (dif === 1) seq++
     else break
   }
-  return streak
+  return seq
 }
+
+const ATALHOS = [
+  { href: '/biblia', rotulo: 'Ler a Bíblia', Icone: BookOpen },
+  { href: '/plano', rotulo: 'Plano de leitura', Icone: Map },
+  { href: '/anotacoes/nova', rotulo: 'Anotar por voz', Icone: PenLine },
+  { href: '/pregacoes/ia', rotulo: 'Pregação com IA', Icone: Mic },
+  { href: '/oracao', rotulo: 'Mural de oração', Icone: HeartHandshake },
+  { href: '/conselheiro', rotulo: 'Conselheiro', Icone: Bot },
+]
 
 export default function DashboardPage() {
   const { user, session } = useAuth()
   const router = useRouter()
   const [stats, setStats] = useState({ estudos: 0, anotacoes: 0, pregacoes: 0, favoritos: 0 })
-  const [readCount, setReadCount] = useState(0)
-  const [streak, setStreak] = useState(0)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [loading, setLoading] = useState(true)
+  const [lidos, setLidos] = useState(0)
+  const [sequencia, setSequencia] = useState(0)
+  const [busca, setBusca] = useState('')
+  const [carregando, setCarregando] = useState(true)
   const [diario, setDiario] = useState<ConteudoDiario | null>(null)
 
   const hoje = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' })
   // Mostra o versículo da lista local na hora e troca pelo do servidor quando ele chega.
-  const fallback = versiculoDoDia(hoje)
-  const verse = diario
-    ? { text: diario.versiculo_texto, ref: diario.versiculo_ref }
-    : { text: fallback.texto, ref: fallback.ref }
-  const userName = (user?.user_metadata?.name || user?.email?.split('@')[0] || 'Servo').split(' ')[0]
+  const reserva = versiculoDoDia(hoje)
+  const versiculo = diario
+    ? { texto: diario.versiculo_texto, ref: diario.versiculo_ref }
+    : { texto: reserva.texto, ref: reserva.ref }
 
-  const greeting = () => {
+  const nome = (user?.user_metadata?.name || user?.email?.split('@')[0] || 'Servo').split(' ')[0]
+
+  const saudacao = () => {
     const h = new Date().getHours()
     if (h < 12) return 'Bom dia'
     if (h < 18) return 'Boa tarde'
     return 'Boa noite'
   }
 
-  const fetchAll = useCallback(async () => {
+  const buscarTudo = useCallback(async () => {
     if (!user) return
     const [e, a, p, f, hist] = await Promise.all([
       supabase.from('estudos_biblicos').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
@@ -61,13 +75,13 @@ export default function DashboardPage() {
       supabase.from('historico_leitura').select('lido_em').eq('user_id', user.id),
     ])
     setStats({ estudos: e.count ?? 0, anotacoes: a.count ?? 0, pregacoes: p.count ?? 0, favoritos: f.count ?? 0 })
-    const dates = (hist.data ?? []).map((h: any) => h.lido_em)
-    setReadCount(dates.length)
-    setStreak(calcStreak(dates))
-    setLoading(false)
+    const datas = (hist.data ?? []).map((h: any) => h.lido_em)
+    setLidos(datas.length)
+    setSequencia(calcularSequencia(datas))
+    setCarregando(false)
   }, [user])
 
-  useEffect(() => { fetchAll() }, [fetchAll])
+  useEffect(() => { buscarTudo() }, [buscarTudo])
 
   // O devocional do dia chega em segundo plano — a tela nunca fica esperando por ele.
   useEffect(() => {
@@ -81,152 +95,142 @@ export default function DashboardPage() {
     return () => { cancelado = true }
   }, [session])
 
-  const handleSearch = (e: React.FormEvent) => {
+  const pesquisar = (e: React.FormEvent) => {
     e.preventDefault()
-    if (searchQuery.trim()) router.push(`/busca?q=${encodeURIComponent(searchQuery)}`)
+    if (busca.trim()) router.push(`/busca?q=${encodeURIComponent(busca)}`)
   }
 
-  const readPct = Math.round((readCount / TOTAL_CHAPTERS) * 100)
+  const pctLido = Math.round((lidos / TOTAL_CAPITULOS) * 100)
 
   return (
-    <div className="flex flex-col min-h-full">
-      {/* Header */}
-      <div className="px-6 pt-6 pb-6 text-white"
-        style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #3730A3 50%, #4F46E5 100%)' }}>
-        <div className="flex justify-between items-start mb-4">
+    <div className="flex flex-col min-h-full bg-bg">
+      {/* Cabeçalho */}
+      <header className="px-5 pt-6 pb-2">
+        <div className="flex items-start justify-between mb-4">
           <div>
-            <h1 className="text-2xl font-extrabold">{greeting()}, {userName}</h1>
-            <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>Que Deus abencoe sua jornada</p>
+            <p className="text-sm text-conteudo-muted">{saudacao()},</p>
+            <h1 className="text-2xl font-extrabold text-conteudo leading-tight">{nome}</h1>
           </div>
+
           <div className="flex items-center gap-2">
-            {streak > 0 && (
-              <div className="flex items-center gap-1 bg-white/20 px-2.5 py-1.5 rounded-xl">
-                <Flame size={14} color="#F59E0B" />
-                <span className="text-xs font-bold text-amber-300">{streak}</span>
+            {sequencia > 0 && (
+              <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-surface-2">
+                <Flame size={14} className="text-gold" />
+                <span className="text-xs font-bold text-conteudo">{sequencia}</span>
               </div>
             )}
-            <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
-              style={{ background: 'rgba(255,255,255,0.2)', border: '1.5px solid rgba(255,255,255,0.3)' }}>
-              {userName.slice(0, 2).toUpperCase()}
-            </div>
+            <Link
+              href="/perfil"
+              aria-label="Abrir perfil"
+              className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-surface-2 text-conteudo"
+            >
+              {nome.slice(0, 2).toUpperCase()}
+            </Link>
           </div>
         </div>
 
-        {/* Search bar */}
-        <form onSubmit={handleSearch}
-          className="flex items-center gap-2 bg-white/15 border border-white/25 rounded-xl px-3 py-2.5 mb-4">
-          <Search size={16} color="rgba(255,255,255,0.7)" />
+        <form onSubmit={pesquisar} className="flex items-center gap-2 rounded-2xl px-4 py-3 bg-surface-2">
+          <Search size={17} className="text-conteudo-faint" />
           <input
             type="text"
-            placeholder="Buscar em estudos, anotacoes..."
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            className="flex-1 text-sm text-white placeholder:text-white/50 outline-none bg-transparent"
+            placeholder="Buscar em estudos, anotações..."
+            value={busca}
+            onChange={e => setBusca(e.target.value)}
+            aria-label="Buscar"
+            className="flex-1 text-sm bg-transparent outline-none text-conteudo placeholder:text-conteudo-faint"
           />
         </form>
+      </header>
 
-        {/* Verse card */}
-        <Link href="/diario" className="block rounded-2xl p-4 active:scale-[0.99] transition-transform"
-          style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)' }}>
-          <div className="flex items-center gap-1.5 mb-2">
-            <Sparkles size={12} color="#F59E0B" />
-            <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#F59E0B' }}>Versiculo do dia</span>
-            <ChevronRight size={14} color="rgba(255,255,255,0.5)" className="ml-auto" />
-          </div>
-          <p className="text-sm italic text-white leading-relaxed mb-1">"{verse.text}"</p>
-          <p className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.55)' }}>{verse.ref}</p>
-        </Link>
-      </div>
+      <div className="px-5 py-4 flex flex-col gap-7">
+        {/* Versículo do dia */}
+        <CartaoVersiculo
+          texto={versiculo.texto}
+          referencia={versiculo.ref}
+          href="/diario"
+          data={hoje}
+          limite={150}
+        />
 
-      <div className="px-6 py-5 flex flex-col gap-5">
         {/* Estudo do dia */}
         {diario && (
-          <Link href="/diario?estudo=1"
-            className="flex items-center gap-3 rounded-2xl p-4 shadow-sm active:scale-[0.99] transition-transform"
-            style={{ background: 'linear-gradient(135deg, #7C3AED, #4F46E5)' }}>
-            <div className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0"
-              style={{ background: 'rgba(255,255,255,0.2)' }}>
-              <Sun size={22} color="#FDE68A" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                Estudo de hoje
-              </p>
-              <p className="text-sm font-extrabold text-white leading-tight truncate">{diario.estudo_titulo}</p>
-              {diario.estudo_subtitulo && (
-                <p className="text-xs truncate" style={{ color: 'rgba(255,255,255,0.6)' }}>{diario.estudo_subtitulo}</p>
-              )}
-            </div>
-            <ChevronRight size={18} color="rgba(255,255,255,0.7)" />
-          </Link>
+          <section>
+            <h2 className="text-base font-extrabold text-conteudo mb-3">Para hoje</h2>
+
+            <Link
+              href="/diario?estudo=1"
+              className="cartao flex items-center gap-4 p-4 active:scale-[0.995] transition-transform"
+            >
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 bg-primary-soft">
+                <Sun size={22} className="text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-conteudo-faint">Estudo do dia</p>
+                <p className="text-[15px] font-bold text-conteudo leading-tight">{diario.estudo_titulo}</p>
+                <p className="text-xs text-conteudo-muted mt-0.5 flex items-center gap-1">
+                  <Headphones size={11} /> {diario.estudo_pontos.length} pontos · pode ouvir
+                </p>
+              </div>
+              <ChevronRight size={18} className="text-conteudo-faint flex-shrink-0" />
+            </Link>
+          </section>
         )}
 
-        {/* Reading progress */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <div className="flex items-center justify-between mb-2">
+        {/* Progresso de leitura */}
+        <section className="cartao p-4">
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <p className="text-sm font-bold text-gray-800">Leitura da Biblia</p>
-              <p className="text-xs text-gray-400">{readCount} de {TOTAL_CHAPTERS} capitulos</p>
+              <p className="text-sm font-bold text-conteudo">Leitura da Bíblia</p>
+              <p className="text-xs text-conteudo-muted">{lidos} de {TOTAL_CAPITULOS} capítulos</p>
             </div>
-            <Link href="/plano" className="text-xs font-bold text-primary">Ver plano &rarr;</Link>
+            <Link href="/plano" className="text-xs font-bold text-primary">Ver plano</Link>
           </div>
-          <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
-            <div className="h-2.5 rounded-full transition-all"
-              style={{ width: `${readPct}%`, background: 'linear-gradient(90deg, #4F46E5, #7C3AED)' }} />
+          <div className="h-2 rounded-full overflow-hidden bg-surface-3">
+            <div
+              className="h-2 rounded-full transition-all"
+              style={{ width: `${pctLido}%`, backgroundColor: 'var(--accent)' }}
+            />
           </div>
-          <p className="text-xs text-gray-400 mt-1 text-right">{readPct}% concluido</p>
-        </div>
+          <p className="text-xs text-conteudo-faint mt-1.5 text-right">{pctLido}% concluído</p>
+        </section>
 
-        {/* Stats */}
-        <div>
-          <h2 className="text-base font-bold text-gray-800 mb-3">Meu Ministerio</h2>
+        {/* Números do ministério */}
+        <section>
+          <h2 className="text-base font-extrabold text-conteudo mb-3">Meu ministério</h2>
           <div className="grid grid-cols-4 gap-2">
             {[
-              { value: stats.estudos, label: 'Estudos', Icon: Layers, color: '#4F46E5', bg: '#EEF2FF', href: '/estudos' },
-              { value: stats.anotacoes, label: 'Anotacoes', Icon: PenLine, color: '#D97706', bg: '#FFFBEB', href: '/anotacoes' },
-              { value: stats.pregacoes, label: 'Pregacoes', Icon: Mic, color: '#059669', bg: '#ECFDF5', href: '/pregacoes' },
-              { value: stats.favoritos, label: 'Favoritos', Icon: Heart, color: '#EF4444', bg: '#FEF2F2', href: '/favoritos' },
-            ].map(({ value, label, Icon, color, bg, href }) => (
-              <Link key={label} href={href} className="bg-white rounded-2xl p-3 flex flex-col items-center shadow-sm">
-                <div className="w-9 h-9 rounded-full flex items-center justify-center mb-1.5" style={{ backgroundColor: bg }}>
-                  <Icon size={17} color={color} />
-                </div>
-                <span className="text-xl font-extrabold" style={{ color }}>{loading ? '—' : value}</span>
-                <span className="text-[10px] text-gray-500 font-medium mt-0.5 text-center leading-tight">{label}</span>
+              { valor: stats.estudos, rotulo: 'Estudos', Icone: Layers, href: '/estudos' },
+              { valor: stats.anotacoes, rotulo: 'Anotações', Icone: PenLine, href: '/anotacoes' },
+              { valor: stats.pregacoes, rotulo: 'Pregações', Icone: Mic, href: '/pregacoes' },
+              { valor: stats.favoritos, rotulo: 'Favoritos', Icone: Heart, href: '/favoritos' },
+            ].map(({ valor, rotulo, Icone, href }) => (
+              <Link key={rotulo} href={href} className="cartao flex flex-col items-center py-3.5 px-1">
+                <Icone size={17} className="text-conteudo-muted mb-1.5" />
+                <span className="text-xl font-extrabold text-conteudo">{carregando ? '—' : valor}</span>
+                <span className="text-[10px] text-conteudo-muted font-medium mt-0.5 text-center leading-tight">
+                  {rotulo}
+                </span>
               </Link>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* Quick actions */}
-        <div>
-          <h2 className="text-base font-bold text-gray-800 mb-3">Acesso Rapido</h2>
+        {/* Atalhos */}
+        <section>
+          <h2 className="text-base font-extrabold text-conteudo mb-3">Acesso rápido</h2>
           <div className="grid grid-cols-2 gap-3">
-            {[
-              { href: '/biblia', label: 'Ler a Biblia', Icon: BookOpen, color: '#4F46E5', bg: '#EEF2FF' },
-              { href: '/plano', label: 'Plano de Leitura', Icon: Map, color: '#7C3AED', bg: '#F5F3FF' },
-              { href: '/anotacoes/nova', label: 'Nova Anotacao', Icon: PenLine, color: '#D97706', bg: '#FFFBEB' },
-              { href: '/pregacoes/nova', label: 'Nova Pregacao', Icon: Mic, color: '#059669', bg: '#ECFDF5' },
-            ].map(({ href, label, Icon, color, bg }) => (
-              <Link key={href} href={href}
-                className="bg-white rounded-2xl p-5 flex flex-col items-center shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center mb-2.5" style={{ backgroundColor: bg }}>
-                  <Icon size={24} color={color} />
-                </div>
-                <span className="text-sm font-semibold text-gray-800 text-center">{label}</span>
+            {ATALHOS.map(({ href, rotulo, Icone }) => (
+              <Link key={href} href={href} className="cartao flex items-center gap-3 p-4">
+                <Icone size={19} className="text-primary flex-shrink-0" />
+                <span className="text-sm font-semibold text-conteudo leading-tight">{rotulo}</span>
               </Link>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* Banner */}
-        <div className="rounded-2xl p-5 flex flex-col items-center gap-2 text-center"
-          style={{ background: 'linear-gradient(135deg, #7C3AED, #4F46E5)' }}>
-          <p className="text-sm italic text-white leading-relaxed">
-            "Prega a palavra, insiste, quer seja oportuno quer nao."
-          </p>
-          <p className="text-xs font-bold" style={{ color: 'rgba(255,255,255,0.65)' }}>2 Timoteo 4:2</p>
-        </div>
+        <p className="text-center text-xs text-conteudo-faint pb-2">
+          &ldquo;Prega a palavra, insta, quer seja oportuno, quer não.&rdquo; — 2 Timóteo 4:2
+        </p>
       </div>
     </div>
   )

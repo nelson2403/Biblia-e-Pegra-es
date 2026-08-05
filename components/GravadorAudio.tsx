@@ -219,7 +219,7 @@ export function GravadorAudio({ onTranscrito }: Props) {
         onClick={() => setAberto(true)}
         aria-label="Ditar anotação por voz"
         className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors"
-        style={{ backgroundColor: '#EEF2FF', color: '#4F46E5' }}
+        style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent)' }}
       >
         <Mic size={17} aria-hidden="true" />
         Ditar por voz
@@ -231,25 +231,25 @@ export function GravadorAudio({ onTranscrito }: Props) {
   const transcrevendo = fase === 'transcrevendo'
 
   return (
-    <div className="rounded-2xl p-4 border-2" style={{ borderColor: '#C7D2FE', backgroundColor: '#F8FAFF' }}>
+    <div className="rounded-2xl p-4 border-2" style={{ borderColor: 'var(--accent-soft)', backgroundColor: 'var(--surface-2)' }}>
       <div className="flex items-center justify-between mb-3">
-        <p className="text-sm font-extrabold text-gray-800">
+        <p className="text-sm font-extrabold text-conteudo">
           {transcrevendo ? 'Transcrevendo com IA...' : gravando ? 'Gravando' : fase === 'pausado' ? 'Pausado' : 'Ditar anotação'}
         </p>
-        <button type="button" onClick={fechar} aria-label="Fechar gravador" className="p-1 text-gray-400">
+        <button type="button" onClick={fechar} aria-label="Fechar gravador" className="p-1 text-conteudo-faint">
           <X size={18} />
         </button>
       </div>
 
       {transcrevendo ? (
         <div className="flex flex-col items-center gap-2 py-5">
-          <Loader2 size={30} className="animate-spin" color="#4F46E5" aria-hidden="true" />
-          <p className="text-sm text-gray-500">Convertendo a sua voz em texto…</p>
-          <p className="text-xs text-gray-400">Pode levar alguns segundos.</p>
+          <Loader2 size={30} className="animate-spin" color="var(--accent)" aria-hidden="true" />
+          <p className="text-sm text-conteudo-muted">Convertendo a sua voz em texto…</p>
+          <p className="text-xs text-conteudo-faint">Pode levar alguns segundos.</p>
         </div>
       ) : fase === 'ocioso' ? (
         <div className="flex flex-col gap-3">
-          <p className="text-xs text-gray-500 leading-relaxed">
+          <p className="text-xs text-conteudo-muted leading-relaxed">
             Fale à vontade — a IA transcreve em português e o texto entra direto na anotação.
             Gravações de até 10 minutos.
           </p>
@@ -264,7 +264,7 @@ export function GravadorAudio({ onTranscrito }: Props) {
             </button>
             <label
               className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm cursor-pointer"
-              style={{ backgroundColor: '#EEF2FF', color: '#4F46E5' }}
+              style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent)' }}
             >
               <Upload size={17} aria-hidden="true" />
               <span className="sr-only">Enviar arquivo de áudio</span>
@@ -283,16 +283,16 @@ export function GravadorAudio({ onTranscrito }: Props) {
                 <span
                   key={i}
                   className="w-1.5 rounded-full transition-all duration-75"
-                  style={{ height: altura, backgroundColor: gravando ? '#4F46E5' : '#C7D2FE' }}
+                  style={{ height: altura, backgroundColor: gravando ? 'var(--accent)' : 'var(--accent-soft)' }}
                 />
               )
             })}
           </div>
 
-          <p className="text-center text-2xl font-extrabold tabular-nums text-gray-800" role="timer" aria-live="off">
+          <p className="text-center text-2xl font-extrabold tabular-nums text-conteudo" role="timer" aria-live="off">
             {formatarTempo(segundos)}
           </p>
-          <p className="text-center text-xs text-gray-400">
+          <p className="text-center text-xs text-conteudo-faint">
             máximo {formatarTempo(MAX_SEGUNDOS)}
           </p>
 
@@ -302,7 +302,7 @@ export function GravadorAudio({ onTranscrito }: Props) {
               onClick={() => pararGravacao(true)}
               aria-label="Descartar gravação"
               className="px-4 py-3 rounded-xl font-bold text-sm"
-              style={{ backgroundColor: '#FEF2F2', color: '#EF4444' }}
+              style={{ backgroundColor: 'var(--danger-soft)', color: 'var(--danger)' }}
             >
               <Trash2 size={18} aria-hidden="true" />
             </button>
@@ -311,7 +311,7 @@ export function GravadorAudio({ onTranscrito }: Props) {
               onClick={alternarPausa}
               aria-label={gravando ? 'Pausar gravação' : 'Continuar gravação'}
               className="px-4 py-3 rounded-xl font-bold text-sm"
-              style={{ backgroundColor: '#F3F4F6', color: '#4B5563' }}
+              style={{ backgroundColor: 'var(--surface-2)', color: 'var(--text-muted)' }}
             >
               {gravando ? <Pause size={18} aria-hidden="true" /> : <Play size={18} aria-hidden="true" />}
             </button>
@@ -329,7 +329,7 @@ export function GravadorAudio({ onTranscrito }: Props) {
 
       {erro && (
         <p role="alert" className="mt-3 text-xs font-semibold px-3 py-2 rounded-xl"
-          style={{ backgroundColor: '#FEF2F2', color: '#B91C1C' }}>
+          style={{ backgroundColor: 'var(--danger-soft)', color: 'var(--danger)' }}>
           {erro}
         </p>
       )}

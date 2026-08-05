@@ -27,3 +27,5 @@ public/fallback-*.js
 
 # Cache incremental do TypeScript
 tsconfig.tsbuildinfo
+
+.env.vercel

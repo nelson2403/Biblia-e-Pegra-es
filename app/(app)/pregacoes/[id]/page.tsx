@@ -12,10 +12,10 @@ import type { BlocoLeitura } from '@/hooks/useLeitor'
 function InfoSection({ label, value, destacado }: { label: string; value?: string; destacado?: boolean }) {
   if (!value?.trim()) return null
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm"
-      style={destacado ? { backgroundColor: '#FEF9C3', boxShadow: 'inset 3px 0 0 #4F46E5' } : undefined}>
+    <div className="bg-surface rounded-2xl p-4 shadow-sm"
+      style={destacado ? { backgroundColor: 'var(--gold-soft)', boxShadow: 'inset 3px 0 0 #4F46E5' } : undefined}>
       <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">{label}</p>
-      <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{value}</p>
+      <p className="text-sm text-conteudo leading-relaxed whitespace-pre-wrap">{value}</p>
     </div>
   )
 }
@@ -103,7 +103,7 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
   }
 
   if (loading) return <LoadingSpinner fullScreen={false} />
-  if (!pregacao) return <div className="p-6 text-gray-500">Pregacao nao encontrada.</div>
+  if (!pregacao) return <div className="p-6 text-conteudo-muted">Pregacao nao encontrada.</div>
 
   let pontos: string[] = []
   try { pontos = JSON.parse(pregacao.pontos_principais) } catch {}
@@ -111,7 +111,7 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
   return (
     <div className="flex flex-col min-h-full">
       {/* Header */}
-      <div className="flex items-center gap-2 px-4 py-4 text-white" style={{ backgroundColor: '#3730A3' }}>
+      <div className="flex items-center gap-2 px-4 py-4 text-white" style={{ backgroundColor: 'var(--accent-hover)' }}>
         <button onClick={() => router.back()} className="p-2 rounded-xl hover:bg-white/10">
           <ArrowLeft size={22} />
         </button>
@@ -133,12 +133,12 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
       </div>
 
       {/* Tab switcher */}
-      <div className="flex bg-white border-b border-gray-200">
+      <div className="flex bg-surface border-b border-borda">
         {(['esboco', 'completa'] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
             className="flex-1 py-3 text-sm font-semibold transition-colors"
             style={{
-              color: tab === t ? '#4F46E5' : '#6B7280',
+              color: tab === t ? 'var(--accent)' : 'var(--text-muted)',
               borderBottom: tab === t ? '3px solid #4F46E5' : '3px solid transparent',
             }}>
             {t === 'esboco' ? 'Esboco' : 'Pregacao Completa'}
@@ -149,15 +149,15 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
       <div className="flex-1 p-4 flex flex-col gap-3 pb-32">
         {tab === 'esboco' ? (
           <>
-            <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-2">
+            <div className="bg-surface rounded-2xl p-4 shadow-sm flex flex-col gap-2">
               {[
                 { Icon: BookOpen, text: pregacao.texto_base },
                 { Icon: Users, text: pregacao.publico },
                 { Icon: Calendar, text: new Date(pregacao.created_at).toLocaleDateString('pt-BR') },
               ].map(({ Icon, text }) => (
                 <div key={text} className="flex items-center gap-2">
-                  <Icon size={16} color="#4F46E5" />
-                  <span className="text-sm text-gray-700 font-medium">{text}</span>
+                  <Icon size={16} color="var(--accent)" />
+                  <span className="text-sm text-conteudo font-medium">{text}</span>
                 </div>
               ))}
             </div>
@@ -167,17 +167,17 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
             <InfoSection label="Mensagem Central" value={pregacao.mensagem_central} destacado={lendoBloco === 'Mensagem central'} />
 
             {pontos.length > 0 && (
-              <div className="bg-white rounded-2xl p-4 shadow-sm">
+              <div className="bg-surface rounded-2xl p-4 shadow-sm">
                 <p className="text-xs font-bold text-primary uppercase tracking-wider mb-3">3 Pontos Principais</p>
                 <div className="flex flex-col gap-3">
                   {pontos.map((p, i) => p.trim() && (
                     <div key={i} className="flex items-start gap-3 rounded-xl px-1 py-0.5"
-                      style={lendoBloco === `ponto-${i}` ? { backgroundColor: '#FEF9C3' } : undefined}>
+                      style={lendoBloco === `ponto-${i}` ? { backgroundColor: 'var(--gold-soft)' } : undefined}>
                       <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                        style={{ backgroundColor: '#EEF2FF' }}>
+                        style={{ backgroundColor: 'var(--accent-soft)' }}>
                         <span className="text-xs font-bold text-primary">{i + 1}</span>
                       </div>
-                      <p className="text-sm text-gray-700 leading-relaxed flex-1">{p}</p>
+                      <p className="text-sm text-conteudo leading-relaxed flex-1">{p}</p>
                     </div>
                   ))}
                 </div>
@@ -191,18 +191,18 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
           </>
         ) : (
           <>
-            <div className="bg-white rounded-2xl p-5 shadow-sm flex flex-col gap-3">
+            <div className="bg-surface rounded-2xl p-5 shadow-sm flex flex-col gap-3">
               {pregacao.pregacao_completa.split(/\n{2,}/).map(p => p.trim()).filter(Boolean).map((p, i) => (
                 <p key={i}
-                  className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap rounded-xl px-1 py-0.5"
-                  style={lendoBloco === `c-${i}` ? { backgroundColor: '#FEF9C3' } : undefined}>
+                  className="text-sm text-conteudo leading-relaxed whitespace-pre-wrap rounded-xl px-1 py-0.5"
+                  style={lendoBloco === `c-${i}` ? { backgroundColor: 'var(--gold-soft)' } : undefined}>
                   {p}
                 </p>
               ))}
             </div>
             <button onClick={handleDownload}
               className="w-full py-3.5 rounded-2xl font-bold text-white text-sm flex items-center justify-center gap-2"
-              style={{ backgroundColor: '#4F46E5' }}>
+              style={{ backgroundColor: 'var(--accent)' }}>
               <Download size={18} /> Baixar como .txt
             </button>
           </>

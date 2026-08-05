@@ -2,125 +2,108 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { BookOpen, Eye, EyeOff } from 'lucide-react'
+import { Loader2, AlertCircle } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import { MolduraAuth } from '@/components/auth/MolduraAuth'
+import { CampoTexto } from '@/components/auth/CampoTexto'
 
 export default function LoginPage() {
   const { signIn } = useAuth()
   const router = useRouter()
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [errors, setErrors] = useState<{ email?: string; password?: string; general?: string }>({})
+  const [senha, setSenha] = useState('')
+  const [carregando, setCarregando] = useState(false)
+  const [erros, setErros] = useState<{ email?: string; senha?: string; geral?: string }>({})
 
-  const validate = () => {
-    const e: typeof errors = {}
-    if (!email.trim()) e.email = 'E-mail é obrigatório'
+  const validar = () => {
+    const e: typeof erros = {}
+    if (!email.trim()) e.email = 'Informe seu e-mail'
     else if (!/\S+@\S+\.\S+/.test(email)) e.email = 'E-mail inválido'
-    if (!password) e.password = 'Senha é obrigatória'
-    setErrors(e)
+    if (!senha) e.senha = 'Informe sua senha'
+    setErros(e)
     return Object.keys(e).length === 0
   }
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!validate()) return
-    setLoading(true)
-    const { error } = await signIn(email.trim(), password)
-    setLoading(false)
-    if (error) {
-      setErrors({ general: 'E-mail ou senha incorretos. Verifique seus dados e tente novamente.' })
-    } else {
+  const entrar = async (ev: React.FormEvent) => {
+    ev.preventDefault()
+    if (!validar()) return
+    setCarregando(true)
+    const { error } = await signIn(email.trim(), senha)
+    setCarregando(false)
+
+    if (!error) {
       router.replace('/dashboard')
+      return
     }
+
+    // A mensagem do Supabase vem em inglês e é técnica demais para o usuário final.
+    const bruto = error.toLowerCase()
+    setErros({
+      geral: bruto.includes('not confirmed')
+        ? 'Confirme seu e-mail antes de entrar. Procure a mensagem na sua caixa de entrada.'
+        : 'E-mail ou senha incorretos. Confira e tente novamente.',
+    })
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8"
-      style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #3730A3 50%, #4F46E5 100%)' }}>
+    <MolduraAuth
+      titulo="Bem-vindo de volta"
+      subtitulo="Continue de onde você parou"
+      rodape="✝ Que a Palavra ilumine seu caminho"
+    >
+      <form onSubmit={entrar} className="flex flex-col gap-4" noValidate>
+        <CampoTexto
+          rotulo="E-mail"
+          tipo="email"
+          valor={email}
+          aoMudar={v => { setEmail(v); setErros({}) }}
+          erro={erros.email}
+          placeholder="seu@email.com"
+          autoComplete="email"
+        />
 
-      {/* Logo */}
-      <div className="flex flex-col items-center mb-8">
-        <div className="w-20 h-20 rounded-full flex items-center justify-center mb-4"
-          style={{ background: 'rgba(255,255,255,0.18)', border: '1.5px solid rgba(255,255,255,0.3)' }}>
-          <BookOpen size={38} color="#fff" />
+        <CampoTexto
+          rotulo="Senha"
+          tipo="password"
+          valor={senha}
+          aoMudar={v => { setSenha(v); setErros({}) }}
+          erro={erros.senha}
+          placeholder="Sua senha"
+          autoComplete="current-password"
+        />
+
+        <div className="flex justify-end -mt-1">
+          <Link href="/esqueceu-senha" className="text-sm font-bold text-primary">
+            Esqueci minha senha
+          </Link>
         </div>
-        <h1 className="text-3xl font-extrabold text-white tracking-tight">Bíblia & Pregações</h1>
-        <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>Palavra, estudo e ministério</p>
+
+        {erros.geral && (
+          <div
+            role="alert"
+            className="flex items-start gap-2 rounded-2xl px-4 py-3 text-sm font-medium"
+            style={{ backgroundColor: 'var(--danger-soft)', color: 'var(--danger)' }}
+          >
+            <AlertCircle size={17} className="mt-0.5 flex-shrink-0" />
+            <span>{erros.geral}</span>
+          </div>
+        )}
+
+        <button type="submit" disabled={carregando} className="btn-primario mt-1">
+          {carregando && <Loader2 size={17} className="animate-spin" />}
+          {carregando ? 'Entrando...' : 'Entrar'}
+        </button>
+      </form>
+
+      <div className="flex items-center gap-3 my-6">
+        <div className="flex-1 h-px bg-borda" />
+        <span className="text-xs text-conteudo-faint">ainda não tem conta?</span>
+        <div className="flex-1 h-px bg-borda" />
       </div>
 
-      {/* Card */}
-      <div className="w-full max-w-sm bg-white rounded-3xl p-7 shadow-2xl">
-        <h2 className="text-xl font-bold text-gray-800 text-center mb-6">Entrar na conta</h2>
-
-        <form onSubmit={handleLogin} className="flex flex-col gap-4">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">E-mail</label>
-            <input
-              type="email"
-              placeholder="seu@email.com"
-              value={email}
-              onChange={e => { setEmail(e.target.value); setErrors({}) }}
-              className="w-full border rounded-xl px-4 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              style={{ borderColor: errors.email ? '#EF4444' : '#E5E7EB' }}
-              autoComplete="email"
-            />
-            {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Senha</label>
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Sua senha"
-                value={password}
-                onChange={e => { setPassword(e.target.value); setErrors({}) }}
-                className="w-full border rounded-xl px-4 py-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-primary focus:border-transparent pr-11"
-                style={{ borderColor: errors.password ? '#EF4444' : '#E5E7EB' }}
-                autoComplete="current-password"
-              />
-              <button type="button" onClick={() => setShowPassword(v => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-            {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password}</p>}
-          </div>
-
-          <div className="flex justify-end -mt-1">
-            <Link href="/esqueceu-senha" className="text-sm font-semibold text-primary">Esqueceu a senha?</Link>
-          </div>
-
-          {errors.general && (
-            <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">
-              {errors.general}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-xl font-bold text-white text-sm transition-opacity disabled:opacity-60"
-            style={{ background: loading ? '#818CF8' : '#4F46E5' }}>
-            {loading ? 'Entrando...' : 'Entrar'}
-          </button>
-
-          <div className="flex items-center gap-3 my-1">
-            <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-xs text-gray-400">ou</span>
-            <div className="flex-1 h-px bg-gray-200" />
-          </div>
-
-          <p className="text-center text-sm text-gray-500">
-            Não tem conta?{' '}
-            <Link href="/cadastro" className="text-primary font-bold">Criar conta grátis</Link>
-          </p>
-        </form>
-      </div>
-
-      <p className="mt-8 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>✝ Que a Palavra ilumine seu caminho</p>
-    </div>
+      <Link href="/cadastro" className="btn-secundario w-full">
+        Criar conta grátis
+      </Link>
+    </MolduraAuth>
   )
 }
