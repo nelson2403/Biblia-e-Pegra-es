@@ -1,19 +1,24 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, X } from 'lucide-react'
+import { ArrowLeft, X, Wand2, Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
+import { GravadorAudio } from '@/components/GravadorAudio'
 
 export default function NovaAnotacaoPage() {
-  const { user } = useAuth()
+  const { user, session } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [titulo, setTitulo] = useState('')
   const [conteudo, setConteudo] = useState('')
   const [tags, setTags] = useState<string[]>([])
   const [tagInput, setTagInput] = useState('')
   const [saving, setSaving] = useState(false)
+  const [organizando, setOrganizando] = useState(false)
+  const [aviso, setAviso] = useState<string | null>(null)
+  const [ditado, setDitado] = useState(false)
 
   useEffect(() => {
     const ref = searchParams.get('ref')
@@ -33,22 +38,65 @@ export default function NovaAnotacaoPage() {
     if (e.key === 'Backspace' && !tagInput && tags.length) setTags(prev => prev.slice(0, -1))
   }
 
+  /** O texto ditado entra na posição do cursor, sem apagar o que já foi escrito. */
+  const inserirTranscricao = (texto: string) => {
+    setDitado(true)
+    setConteudo(atual => {
+      const pos = textareaRef.current?.selectionStart ?? atual.length
+      const antes = atual.slice(0, pos)
+      const depois = atual.slice(pos)
+      const separador = antes && !antes.endsWith('\n') && !antes.endsWith(' ') ? ' ' : ''
+      return `${antes}${separador}${texto}${depois}`
+    })
+    setAviso('Áudio transcrito. Revise o texto antes de salvar.')
+  }
+
+  const organizarComIA = async () => {
+    const token = session?.access_token
+    if (!token) { setAviso('Sessão expirada. Entre novamente.'); return }
+    if (conteudo.trim().length < 20) { setAviso('Escreva ou dite um pouco mais primeiro.'); return }
+
+    setOrganizando(true)
+    setAviso(null)
+    try {
+      const res = await fetch('/api/organizar-anotacao', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ texto: conteudo }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data?.error ?? 'Erro ao organizar.')
+
+      setConteudo(data.conteudo)
+      if (!titulo.trim() && data.titulo) setTitulo(data.titulo)
+      if (data.tags?.length) {
+        setTags(prev => Array.from(new Set([...prev, ...data.tags])).slice(0, 6))
+      }
+      setAviso('Texto organizado pela IA. Confira antes de salvar.')
+    } catch (e: any) {
+      setAviso(e?.message ?? 'Não foi possível organizar o texto.')
+    } finally {
+      setOrganizando(false)
+    }
+  }
+
   const handleSave = async () => {
-    if (!titulo.trim()) { alert('Digite um titulo para a anotacao.'); return }
-    if (!conteudo.trim()) { alert('Digite o conteudo da anotacao.'); return }
+    if (!titulo.trim()) { setAviso('Digite um titulo para a anotacao.'); return }
+    if (!conteudo.trim()) { setAviso('Digite o conteudo da anotacao.'); return }
     setSaving(true)
     const now = new Date().toISOString()
     const { error } = await supabase.from('anotacoes').insert({
       titulo: titulo.trim(),
       conteudo: conteudo.trim(),
       tags: tags.join(',') || null,
+      origem: ditado ? 'voz' : 'texto',
       user_id: user!.id,
       created_at: now,
       updated_at: now,
     })
     setSaving(false)
     if (error) {
-      alert(`Erro ao salvar: ${error.message}`)
+      setAviso(`Erro ao salvar: ${error.message}`)
       return
     }
     router.push('/anotacoes')
@@ -57,7 +105,7 @@ export default function NovaAnotacaoPage() {
   return (
     <div className="flex flex-col min-h-full bg-white">
       <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
-        <button onClick={() => router.back()} className="p-2 rounded-xl hover:bg-gray-100">
+        <button onClick={() => router.back()} aria-label="Voltar" className="p-2 rounded-xl hover:bg-gray-100">
           <ArrowLeft size={22} color="#1F2937" />
         </button>
         <h1 className="flex-1 text-center text-base font-bold text-gray-800">Nova Anotacao</h1>
@@ -74,6 +122,7 @@ export default function NovaAnotacaoPage() {
           placeholder="Titulo da anotacao..."
           value={titulo}
           onChange={e => setTitulo(e.target.value)}
+          aria-label="Titulo da anotacao"
           className="w-full text-2xl font-bold text-gray-800 outline-none placeholder:text-gray-300 mb-3"
         />
         <div className="h-px bg-gray-100 mb-3" />
@@ -84,7 +133,7 @@ export default function NovaAnotacaoPage() {
             <span key={t} className="flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold"
               style={{ backgroundColor: '#EEF2FF', color: '#4F46E5' }}>
               #{t}
-              <button onClick={() => setTags(prev => prev.filter(x => x !== t))}>
+              <button onClick={() => setTags(prev => prev.filter(x => x !== t))} aria-label={`Remover tag ${t}`}>
                 <X size={10} />
               </button>
             </span>
@@ -96,16 +145,41 @@ export default function NovaAnotacaoPage() {
             onChange={e => setTagInput(e.target.value)}
             onKeyDown={handleTagKey}
             onBlur={() => { if (tagInput.trim()) addTag(tagInput) }}
+            aria-label="Adicionar tag"
             className="text-xs text-gray-600 outline-none placeholder:text-gray-300 min-w-[120px] flex-1"
           />
         </div>
         <div className="h-px bg-gray-100 mb-4" />
 
+        {/* Ferramentas de voz e IA */}
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <GravadorAudio onTranscrito={inserirTranscricao} />
+          <button
+            type="button"
+            onClick={organizarComIA}
+            disabled={organizando}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold disabled:opacity-50 transition-colors"
+            style={{ backgroundColor: '#F5F3FF', color: '#7C3AED' }}
+          >
+            {organizando ? <Loader2 size={17} className="animate-spin" /> : <Wand2 size={17} />}
+            {organizando ? 'Organizando...' : 'Organizar com IA'}
+          </button>
+        </div>
+
+        {aviso && (
+          <p role="status" className="mb-3 text-xs font-semibold px-3 py-2 rounded-xl"
+            style={{ backgroundColor: '#EEF2FF', color: '#4338CA' }}>
+            {aviso}
+          </p>
+        )}
+
         <textarea
-          placeholder="Escreva sua anotacao aqui..."
+          ref={textareaRef}
+          placeholder="Escreva sua anotacao aqui... ou toque em Ditar por voz."
           value={conteudo}
           onChange={e => setConteudo(e.target.value)}
-          className="flex-1 w-full text-base text-gray-700 outline-none resize-none leading-relaxed placeholder:text-gray-300 min-h-[60vh]"
+          aria-label="Conteudo da anotacao"
+          className="flex-1 w-full text-base text-gray-700 outline-none resize-none leading-relaxed placeholder:text-gray-300 min-h-[45vh]"
           autoFocus={!conteudo}
         />
       </div>

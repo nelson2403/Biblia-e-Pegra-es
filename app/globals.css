@@ -35,3 +35,64 @@ a {
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* ============================================
+   Acessibilidade
+   Ativadas em Perfil → Acessibilidade.
+   ============================================ */
+
+/* Texto maior em todo o app, sem quebrar o layout (tudo usa rem/em). */
+html[data-fonte='grande'] {
+  font-size: 19px;
+}
+
+/* Alto contraste: reforça a cor do texto e as bordas para quem enxerga pouco. */
+html[data-contraste='alto'] body {
+  color: #000;
+  background-color: #fff;
+}
+html[data-contraste='alto'] .text-gray-400,
+html[data-contraste='alto'] .text-gray-500,
+html[data-contraste='alto'] .text-gray-600 {
+  color: #1f2937 !important;
+}
+html[data-contraste='alto'] .text-gray-700,
+html[data-contraste='alto'] .text-gray-800 {
+  color: #000 !important;
+}
+html[data-contraste='alto'] .shadow-sm,
+html[data-contraste='alto'] .shadow-md {
+  box-shadow: none !important;
+  border: 2px solid #1f2937;
+}
+
+/* Foco sempre visível — navegação por teclado e leitores de tela. */
+:focus-visible {
+  outline: 3px solid #4f46e5;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Conteúdo visível apenas para leitores de tela. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Respeita quem pediu menos animação no sistema. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

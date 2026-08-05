@@ -1,10 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, BookOpen, Share2, CheckCircle2, Save } from 'lucide-react'
 import { ESTUDOS_PRONTOS } from '@/data/estudosProntos'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/contexts/AuthContext'
+import { LeitorAudio } from '@/components/LeitorAudio'
+import type { BlocoLeitura } from '@/hooks/useLeitor'
 
 const CAT: Record<string, { bg: string; color: string }> = {
   'Salvação':       { bg: '#DCFCE7', color: '#15803D' },
@@ -25,6 +27,22 @@ export default function EstudoProntoPage({ params }: { params: { id: string } })
   const estudo = ESTUDOS_PRONTOS.find(e => e.id === params.id)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [lendoBloco, setLendoBloco] = useState<string | null>(null)
+
+  const blocos: BlocoLeitura[] = useMemo(() => {
+    if (!estudo) return []
+    return [
+      { id: 'titulo', texto: `${estudo.titulo}. ${estudo.subtitulo}. Texto base: ${estudo.textoBase}.` },
+      { id: 'introducao', texto: estudo.introducao, prefixo: 'Introdução' },
+      ...estudo.pontos.map((p, i) => ({
+        id: `ponto-${i}`,
+        texto: `${p.titulo}. ${p.versiculo} ${p.referencia}. ${p.conteudo}`,
+        prefixo: `Ponto ${i + 1}`,
+      })),
+      { id: 'conclusao', texto: estudo.conclusao, prefixo: 'Conclusão' },
+      { id: 'aplicacao', texto: estudo.aplicacao, prefixo: 'Aplicação prática' },
+    ]
+  }, [estudo])
 
   if (!estudo) return (
     <div className="p-6 flex flex-col items-center py-20 gap-3">
@@ -63,7 +81,7 @@ export default function EstudoProntoPage({ params }: { params: { id: string } })
   }
 
   return (
-    <div className="flex flex-col min-h-full pb-10">
+    <div className="flex flex-col min-h-full pb-32">
       <div className="px-4 pt-4 pb-6 text-white"
         style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #4F46E5 100%)' }}>
         <div className="flex items-center justify-between mb-4">
@@ -104,7 +122,8 @@ export default function EstudoProntoPage({ params }: { params: { id: string } })
         )}
 
         {/* Introdução */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
+        <div className="bg-white rounded-2xl p-4 shadow-sm"
+          style={lendoBloco === 'introducao' ? { backgroundColor: '#FEF9C3' } : undefined}>
           <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Introdução</p>
           <p className="text-sm text-gray-700 leading-relaxed">{estudo.introducao}</p>
         </div>
@@ -112,7 +131,8 @@ export default function EstudoProntoPage({ params }: { params: { id: string } })
         {/* Pontos */}
         <p className="text-sm font-bold text-gray-700 px-1">Pontos do Estudo</p>
         {estudo.pontos.map((ponto, i) => (
-          <div key={i} className="bg-white rounded-2xl shadow-sm overflow-hidden">
+          <div key={i} className="bg-white rounded-2xl shadow-sm overflow-hidden"
+            style={lendoBloco === `ponto-${i}` ? { backgroundColor: '#FEF9C3', boxShadow: 'inset 3px 0 0 #4F46E5' } : undefined}>
             <div className="px-4 pt-4 pb-2 flex items-center gap-2">
               <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-extrabold"
                 style={{ backgroundColor: '#4F46E5' }}>{i + 1}</div>
@@ -127,13 +147,18 @@ export default function EstudoProntoPage({ params }: { params: { id: string } })
         ))}
 
         {/* Conclusão */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
+        <div className="bg-white rounded-2xl p-4 shadow-sm"
+          style={lendoBloco === 'conclusao' ? { backgroundColor: '#FEF9C3' } : undefined}>
           <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Conclusão</p>
           <p className="text-sm text-gray-700 leading-relaxed">{estudo.conclusao}</p>
         </div>
 
         {/* Aplicação */}
-        <div className="rounded-2xl p-4" style={{ backgroundColor: '#F0FDF4', border: '1px solid #BBF7D0' }}>
+        <div className="rounded-2xl p-4"
+          style={{
+            backgroundColor: lendoBloco === 'aplicacao' ? '#FEF9C3' : '#F0FDF4',
+            border: '1px solid #BBF7D0',
+          }}>
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle2 size={16} color="#16A34A" />
             <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#16A34A' }}>Aplicação Prática</p>
@@ -158,6 +183,8 @@ export default function EstudoProntoPage({ params }: { params: { id: string } })
           </button>
         )}
       </div>
+
+      <LeitorAudio blocos={blocos} titulo={estudo.titulo} onBlocoAtual={setLendoBloco} />
     </div>
   )
 }

@@ -13,3 +13,17 @@ web-build/
 .expo/
 android/
 ios/
+
+# Service worker e afins — gerados pelo next-pwa a cada build.
+# O hash no nome muda toda vez; a Vercel recria tudo no deploy.
+public/sw.js
+public/sw.js.map
+public/workbox-*.js
+public/workbox-*.js.map
+public/worker-*.js
+public/worker-*.js.map
+public/swe-worker-*.js
+public/fallback-*.js
+
+# Cache incremental do TypeScript
+tsconfig.tsbuildinfo

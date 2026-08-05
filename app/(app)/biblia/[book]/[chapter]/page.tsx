@@ -1,9 +1,11 @@
 'use client'
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, ChevronLeft, ChevronRight, Share2, Heart, Copy, BookmarkPlus, BookOpen } from 'lucide-react'
 import { BIBLE_BOOKS } from '@/data/bibleBooks'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { LeitorAudio } from '@/components/LeitorAudio'
+import type { BlocoLeitura } from '@/hooks/useLeitor'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -45,6 +47,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
   const [translation, setTranslation] = useState('aa')
   const [favorites, setFavorites] = useState<Set<number>>(new Set())
   const [copied, setCopied] = useState(false)
+  const [lendoBloco, setLendoBloco] = useState<string | null>(null)
 
   useEffect(() => {
     const saved = localStorage.getItem('bible_translation')
@@ -104,6 +107,22 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
       if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200)
     }
   }, [highlightVerse, verses])
+
+  // O que o leitor de áudio narra: o capítulo inteiro, versículo por versículo.
+  const blocosLeitura: BlocoLeitura[] = useMemo(() => {
+    if (!bookData) return []
+    return [
+      { id: 'cabecalho', texto: `${bookData.pt}, capítulo ${currentChapter}.` },
+      ...verses.map(v => ({ id: `v-${v.verse}`, texto: v.text, prefixo: `Versículo ${v.verse}` })),
+    ]
+  }, [bookData, currentChapter, verses])
+
+  // Acompanha a leitura rolando a tela — essencial para quem lê junto com o áudio.
+  useEffect(() => {
+    if (!lendoBloco?.startsWith('v-')) return
+    const numero = parseInt(lendoBloco.slice(2), 10)
+    verseRefs.current[numero]?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }, [lendoBloco])
 
   const changeTranslation = (code: string) => {
     setTranslation(code)
@@ -213,18 +232,27 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
             const isSelected = selected?.verse === v.verse
             const isHighlighted = highlightVerse === v.verse
             const isFav = favorites.has(v.verse)
+            const isLendo = lendoBloco === `v-${v.verse}`
             return (
               <button key={v.verse}
                 ref={el => { verseRefs.current[v.verse] = el }}
                 onClick={() => setSelected(prev => prev?.verse === v.verse ? null : v)}
+                aria-current={isLendo ? 'true' : undefined}
                 className="flex gap-3 w-full text-left px-3 py-2.5 rounded-xl transition-colors"
-                style={{ backgroundColor: isSelected ? '#EEF2FF' : isHighlighted ? '#FEF9C3' : 'transparent' }}>
+                style={{
+                  backgroundColor: isLendo ? '#DBEAFE' : isSelected ? '#EEF2FF' : isHighlighted ? '#FEF9C3' : 'transparent',
+                  boxShadow: isLendo ? 'inset 3px 0 0 #4F46E5' : undefined,
+                }}>
                 <span className="text-xs font-bold w-5 pt-1 flex-shrink-0"
-                  style={{ color: isFav ? '#EF4444' : isSelected ? '#4F46E5' : '#9CA3AF' }}>
+                  style={{ color: isFav ? '#EF4444' : isSelected || isLendo ? '#4F46E5' : '#9CA3AF' }}>
                   {isFav ? '♥' : v.verse}
                 </span>
                 <span className="leading-relaxed flex-1"
-                  style={{ fontSize, color: isSelected ? '#3730A3' : '#1F2937', fontWeight: isSelected ? 500 : 400 }}>
+                  style={{
+                    fontSize,
+                    color: isSelected || isLendo ? '#3730A3' : '#1F2937',
+                    fontWeight: isSelected || isLendo ? 500 : 400,
+                  }}>
                   {v.text}
                 </span>
               </button>
@@ -232,6 +260,15 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
           })}
         </div>
       )}
+
+      {/* Leitor de áudio — sobe quando a barra de ações do versículo está aberta */}
+      <LeitorAudio
+        blocos={blocosLeitura}
+        titulo={`${bookData.pt} ${currentChapter}`}
+        onBlocoAtual={setLendoBloco}
+        iniciarEm={selected ? `v-${selected.verse}` : undefined}
+        deslocamento={selected ? 116 : 0}
+      />
 
       {/* Selected verse action bar */}
       {selected && (

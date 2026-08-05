@@ -90,3 +90,40 @@ export interface HistoricoLeitura {
   capitulo: number
   lido_em: string
 }
+
+export interface PontoEstudo {
+  titulo: string
+  referencia: string
+  conteudo: string
+}
+
+/** Versículo + estudo do dia. Uma linha por data, partilhada por todos os usuários. */
+export interface ConteudoDiario {
+  data: string
+  versiculo_texto: string
+  versiculo_ref: string
+  reflexao: string
+  oracao: string | null
+  estudo_titulo: string
+  estudo_subtitulo: string | null
+  estudo_texto_base: string | null
+  estudo_introducao: string | null
+  estudo_pontos: PontoEstudo[]
+  estudo_aplicacao: string | null
+  estudo_conclusao: string | null
+  gerado_por: string
+  created_at?: string
+}
+
+export interface Preferencias {
+  user_id: string
+  notif_ativa: boolean
+  notif_versiculo: boolean
+  notif_estudo: boolean
+  notif_hora: number
+  tts_voz: string | null
+  tts_velocidade: number
+  fonte_grande: boolean
+  alto_contraste: boolean
+  updated_at?: string
+}

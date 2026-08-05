@@ -2,22 +2,14 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { BookOpen, PenLine, Mic, Layers, Sparkles, Heart, Map, Search, Flame } from 'lucide-react'
+import { BookOpen, PenLine, Mic, Layers, Sparkles, Heart, Map, Search, Flame, Sun, ChevronRight } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { BIBLE_BOOKS } from '@/data/bibleBooks'
+import { versiculoDoDia } from '@/data/versiculosDiarios'
+import type { ConteudoDiario } from '@/types'
 
 const TOTAL_CHAPTERS = BIBLE_BOOKS.reduce((sum, b) => sum + b.chapters, 0)
-
-const VERSES = [
-  { text: 'Lampada para os meus pes e a tua palavra, e luz para o meu caminho.', ref: 'Salmos 119:105' },
-  { text: 'Porque Deus amou o mundo de tal maneira que deu o seu Filho unigenito.', ref: 'Joao 3:16' },
-  { text: 'Posso tudo naquele que me fortalece.', ref: 'Filipenses 4:13' },
-  { text: 'O Senhor e o meu pastor, e nada me faltara.', ref: 'Salmos 23:1' },
-  { text: 'Mas os que esperam no Senhor renovarao as forcas.', ref: 'Isaias 40:31' },
-  { text: 'Confiai no Senhor com todo o vosso coracao.', ref: 'Proverbios 3:5' },
-  { text: 'Sede fortes e corajosos. Nao temais nem vos assusteis.', ref: 'Josue 1:9' },
-]
 
 function calcStreak(dates: string[]): number {
   if (!dates.length) return 0
@@ -35,15 +27,21 @@ function calcStreak(dates: string[]): number {
 }
 
 export default function DashboardPage() {
-  const { user } = useAuth()
+  const { user, session } = useAuth()
   const router = useRouter()
   const [stats, setStats] = useState({ estudos: 0, anotacoes: 0, pregacoes: 0, favoritos: 0 })
   const [readCount, setReadCount] = useState(0)
   const [streak, setStreak] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
+  const [diario, setDiario] = useState<ConteudoDiario | null>(null)
 
-  const verse = VERSES[new Date().getDay() % VERSES.length]
+  const hoje = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' })
+  // Mostra o versículo da lista local na hora e troca pelo do servidor quando ele chega.
+  const fallback = versiculoDoDia(hoje)
+  const verse = diario
+    ? { text: diario.versiculo_texto, ref: diario.versiculo_ref }
+    : { text: fallback.texto, ref: fallback.ref }
   const userName = (user?.user_metadata?.name || user?.email?.split('@')[0] || 'Servo').split(' ')[0]
 
   const greeting = () => {
@@ -70,6 +68,18 @@ export default function DashboardPage() {
   }, [user])
 
   useEffect(() => { fetchAll() }, [fetchAll])
+
+  // O devocional do dia chega em segundo plano — a tela nunca fica esperando por ele.
+  useEffect(() => {
+    const token = session?.access_token
+    if (!token) return
+    let cancelado = false
+    fetch('/api/conteudo-diario', { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (!cancelado && d?.conteudo) setDiario(d.conteudo) })
+      .catch(() => {})
+    return () => { cancelado = true }
+  }, [session])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -116,17 +126,41 @@ export default function DashboardPage() {
         </form>
 
         {/* Verse card */}
-        <div className="rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)' }}>
+        <Link href="/diario" className="block rounded-2xl p-4 active:scale-[0.99] transition-transform"
+          style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)' }}>
           <div className="flex items-center gap-1.5 mb-2">
             <Sparkles size={12} color="#F59E0B" />
             <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#F59E0B' }}>Versiculo do dia</span>
+            <ChevronRight size={14} color="rgba(255,255,255,0.5)" className="ml-auto" />
           </div>
           <p className="text-sm italic text-white leading-relaxed mb-1">"{verse.text}"</p>
           <p className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.55)' }}>{verse.ref}</p>
-        </div>
+        </Link>
       </div>
 
       <div className="px-6 py-5 flex flex-col gap-5">
+        {/* Estudo do dia */}
+        {diario && (
+          <Link href="/diario?estudo=1"
+            className="flex items-center gap-3 rounded-2xl p-4 shadow-sm active:scale-[0.99] transition-transform"
+            style={{ background: 'linear-gradient(135deg, #7C3AED, #4F46E5)' }}>
+            <div className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0"
+              style={{ background: 'rgba(255,255,255,0.2)' }}>
+              <Sun size={22} color="#FDE68A" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                Estudo de hoje
+              </p>
+              <p className="text-sm font-extrabold text-white leading-tight truncate">{diario.estudo_titulo}</p>
+              {diario.estudo_subtitulo && (
+                <p className="text-xs truncate" style={{ color: 'rgba(255,255,255,0.6)' }}>{diario.estudo_subtitulo}</p>
+              )}
+            </div>
+            <ChevronRight size={18} color="rgba(255,255,255,0.7)" />
+          </Link>
+        )}
+
         {/* Reading progress */}
         <div className="bg-white rounded-2xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-2">

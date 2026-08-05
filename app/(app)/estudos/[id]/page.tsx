@@ -1,16 +1,19 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Pencil, Trash2, BookOpen, Share2, CheckCircle2, Circle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { EstudoBiblico } from '@/types'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { LeitorAudio } from '@/components/LeitorAudio'
+import type { BlocoLeitura } from '@/hooks/useLeitor'
 
-function Section({ title, content, icon }: { title: string; content?: string; icon: string }) {
+function Section({ title, content, icon, destacado }: { title: string; content?: string; icon: string; destacado?: boolean }) {
   if (!content?.trim()) return null
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm">
+    <div className="bg-white rounded-2xl p-4 shadow-sm"
+      style={destacado ? { backgroundColor: '#FEF9C3', boxShadow: 'inset 3px 0 0 #4F46E5' } : undefined}>
       <div className="flex items-center gap-2 mb-2">
         <span className="text-base">{icon}</span>
         <p className="text-xs font-bold text-primary uppercase tracking-wider">{title}</p>
@@ -31,6 +34,20 @@ export default function EstudoDetalhePage({ params }: { params: { id: string } }
   const router = useRouter()
   const [estudo, setEstudo] = useState<EstudoBiblico | null>(null)
   const [loading, setLoading] = useState(true)
+  const [lendoBloco, setLendoBloco] = useState<string | null>(null)
+
+  const blocos: BlocoLeitura[] = useMemo(() => {
+    if (!estudo) return []
+    const lista: BlocoLeitura[] = [
+      { id: 'ref', texto: `${estudo.livro}, capítulo ${estudo.capitulo}, versículo ${estudo.versiculo}.` },
+      { id: 'texto', texto: estudo.texto_biblico, prefixo: 'Texto bíblico' },
+    ]
+    SECTIONS.forEach(s => {
+      const conteudo = estudo[s.key]
+      if (conteudo?.trim()) lista.push({ id: s.key, texto: conteudo, prefixo: s.label })
+    })
+    return lista
+  }, [estudo])
 
   useEffect(() => {
     supabase.from('estudos_biblicos').select('*').eq('id', params.id).single()
@@ -78,7 +95,7 @@ export default function EstudoDetalhePage({ params }: { params: { id: string } }
         </button>
       </div>
 
-      <div className="flex-1 p-5 flex flex-col gap-3 pb-10">
+      <div className="flex-1 p-5 flex flex-col gap-3 pb-32">
         {/* Reference card */}
         <div className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-4">
           <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#EEF2FF' }}>
@@ -91,7 +108,8 @@ export default function EstudoDetalhePage({ params }: { params: { id: string } }
         </div>
 
         {/* Verse */}
-        <div className="rounded-2xl p-5" style={{ backgroundColor: '#3730A3' }}>
+        <div className="rounded-2xl p-5"
+          style={{ backgroundColor: lendoBloco === 'texto' ? '#4F46E5' : '#3730A3' }}>
           <p className="text-white italic text-sm leading-relaxed text-center">"{estudo.texto_biblico}"</p>
         </div>
 
@@ -122,10 +140,10 @@ export default function EstudoDetalhePage({ params }: { params: { id: string } }
           </div>
         </div>
 
-        <Section title="Contexto Historico" icon="📜" content={estudo.contexto_historico} />
-        <Section title="Interpretacao" icon="🔍" content={estudo.interpretacao} />
-        <Section title="Aplicacao Pratica" icon="🙏" content={estudo.aplicacao} />
-        <Section title="Insights e Revelacoes" icon="💡" content={estudo.insights} />
+        <Section title="Contexto Historico" icon="📜" content={estudo.contexto_historico} destacado={lendoBloco === 'contexto_historico'} />
+        <Section title="Interpretacao" icon="🔍" content={estudo.interpretacao} destacado={lendoBloco === 'interpretacao'} />
+        <Section title="Aplicacao Pratica" icon="🙏" content={estudo.aplicacao} destacado={lendoBloco === 'aplicacao'} />
+        <Section title="Insights e Revelacoes" icon="💡" content={estudo.insights} destacado={lendoBloco === 'insights'} />
 
         {completeness < 4 && (
           <Link href={`/estudos/novo?id=${estudo.id}`}
@@ -135,6 +153,12 @@ export default function EstudoDetalhePage({ params }: { params: { id: string } }
           </Link>
         )}
       </div>
+
+      <LeitorAudio
+        blocos={blocos}
+        titulo={`${estudo.livro} ${estudo.capitulo}:${estudo.versiculo}`}
+        onBlocoAtual={setLendoBloco}
+      />
     </div>
   )
 }

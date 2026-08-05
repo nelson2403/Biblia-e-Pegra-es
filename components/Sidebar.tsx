@@ -5,12 +5,13 @@ import { usePathname, useRouter } from 'next/navigation'
 import {
   BookOpen, Home, Layers, Mic, User, LogOut, BookMarked,
   Heart, Map, Search, BookA, HeartHandshake, Bot, Sparkles,
-  Grid2x2, X,
+  Grid2x2, X, Sun,
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
 const NAV = [
   { href: '/dashboard', label: 'Inicio', Icon: Home },
+  { href: '/diario', label: 'Palavra do Dia', Icon: Sun },
   { href: '/biblia', label: 'Biblia', Icon: BookOpen },
   { href: '/favoritos', label: 'Favoritos', Icon: Heart },
   { href: '/estudos', label: 'Estudos', Icon: Layers },
@@ -27,12 +28,13 @@ const NAV = [
 
 const BOTTOM_NAV = [
   { href: '/dashboard', label: 'Inicio', Icon: Home },
+  { href: '/diario', label: 'Hoje', Icon: Sun },
   { href: '/biblia', label: 'Biblia', Icon: BookOpen },
   { href: '/estudos', label: 'Estudos', Icon: Layers },
-  { href: '/oracao', label: 'Oracao', Icon: HeartHandshake },
 ]
 
 const MAIS_MENU = [
+  { href: '/oracao', label: 'Mural de Oracao', Icon: HeartHandshake },
   { href: '/conselheiro', label: 'Conselheiro IA', Icon: Bot },
   { href: '/pregacoes/ia', label: 'Gerar Pregacao IA', Icon: Sparkles },
   { href: '/pregacoes', label: 'Pregacoes', Icon: Mic },

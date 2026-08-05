@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
+import { ConfiguracoesApp } from '@/components/ConfiguracoesApp'
 
 export default function PerfilPage() {
   const { user, signOut } = useAuth()
@@ -248,6 +249,9 @@ export default function PerfilPage() {
             ))}
           </div>
         )}
+
+        {/* Notificações e acessibilidade */}
+        <ConfiguracoesApp />
 
         {/* Info menu */}
         <div className="bg-white rounded-2xl shadow-sm p-4">

@@ -1,16 +1,19 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Pencil, Trash2, Share2, Download, BookOpen, Users, Calendar } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Pregacao } from '@/types'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { LeitorAudio } from '@/components/LeitorAudio'
+import type { BlocoLeitura } from '@/hooks/useLeitor'
 
-function InfoSection({ label, value }: { label: string; value?: string }) {
+function InfoSection({ label, value, destacado }: { label: string; value?: string; destacado?: boolean }) {
   if (!value?.trim()) return null
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm">
+    <div className="bg-white rounded-2xl p-4 shadow-sm"
+      style={destacado ? { backgroundColor: '#FEF9C3', boxShadow: 'inset 3px 0 0 #4F46E5' } : undefined}>
       <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">{label}</p>
       <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{value}</p>
     </div>
@@ -22,6 +25,48 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
   const [pregacao, setPregacao] = useState<Pregacao | null>(null)
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<'esboco' | 'completa'>('esboco')
+  const [lendoBloco, setLendoBloco] = useState<string | null>(null)
+
+  // Ouvir a pregação inteira ajuda a ensaiar e a cronometrar antes de pregar.
+  const blocos: BlocoLeitura[] = useMemo(() => {
+    if (!pregacao) return []
+
+    if (tab === 'completa') {
+      return pregacao.pregacao_completa
+        .split(/\n{2,}/)
+        .map(p => p.trim())
+        .filter(Boolean)
+        .map((texto, i) => ({ id: `c-${i}`, texto }))
+    }
+
+    let listaPontos: string[] = []
+    try { listaPontos = JSON.parse(pregacao.pontos_principais) } catch {}
+
+    const secoes: [string, string | undefined][] = [
+      ['Objetivo', pregacao.objetivo],
+      ['Problema', pregacao.problema],
+      ['Mensagem central', pregacao.mensagem_central],
+    ]
+    const lista: BlocoLeitura[] = [{ id: 'tema', texto: `${pregacao.tema}. Texto base: ${pregacao.texto_base}.` }]
+
+    secoes.forEach(([rotulo, valor]) => {
+      if (valor?.trim()) lista.push({ id: rotulo, texto: valor, prefixo: rotulo })
+    })
+    listaPontos.forEach((p, i) => {
+      if (p?.trim()) lista.push({ id: `ponto-${i}`, texto: p, prefixo: `Ponto ${i + 1}` })
+    })
+    const finais: [string, string | undefined][] = [
+      ['Ilustração', pregacao.ilustracao],
+      ['Aplicação prática', pregacao.aplicacao_pratica],
+      ['Conclusão', pregacao.conclusao],
+      ['Apelo final', pregacao.apelo_final],
+    ]
+    finais.forEach(([rotulo, valor]) => {
+      if (valor?.trim()) lista.push({ id: rotulo, texto: valor, prefixo: rotulo })
+    })
+
+    return lista
+  }, [pregacao, tab])
 
   useEffect(() => {
     supabase.from('pregacoes').select('*').eq('id', params.id).single()
@@ -101,7 +146,7 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
         ))}
       </div>
 
-      <div className="flex-1 p-4 flex flex-col gap-3 pb-10">
+      <div className="flex-1 p-4 flex flex-col gap-3 pb-32">
         {tab === 'esboco' ? (
           <>
             <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-2">
@@ -117,16 +162,17 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
               ))}
             </div>
 
-            <InfoSection label="Objetivo" value={pregacao.objetivo} />
-            <InfoSection label="Problema / Necessidade" value={pregacao.problema} />
-            <InfoSection label="Mensagem Central" value={pregacao.mensagem_central} />
+            <InfoSection label="Objetivo" value={pregacao.objetivo} destacado={lendoBloco === 'Objetivo'} />
+            <InfoSection label="Problema / Necessidade" value={pregacao.problema} destacado={lendoBloco === 'Problema'} />
+            <InfoSection label="Mensagem Central" value={pregacao.mensagem_central} destacado={lendoBloco === 'Mensagem central'} />
 
             {pontos.length > 0 && (
               <div className="bg-white rounded-2xl p-4 shadow-sm">
                 <p className="text-xs font-bold text-primary uppercase tracking-wider mb-3">3 Pontos Principais</p>
                 <div className="flex flex-col gap-3">
                   {pontos.map((p, i) => p.trim() && (
-                    <div key={i} className="flex items-start gap-3">
+                    <div key={i} className="flex items-start gap-3 rounded-xl px-1 py-0.5"
+                      style={lendoBloco === `ponto-${i}` ? { backgroundColor: '#FEF9C3' } : undefined}>
                       <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
                         style={{ backgroundColor: '#EEF2FF' }}>
                         <span className="text-xs font-bold text-primary">{i + 1}</span>
@@ -138,17 +184,21 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
               </div>
             )}
 
-            <InfoSection label="Ilustracao / Exemplo" value={pregacao.ilustracao} />
-            <InfoSection label="Aplicacao Pratica" value={pregacao.aplicacao_pratica} />
-            <InfoSection label="Conclusao" value={pregacao.conclusao} />
-            <InfoSection label="Apelo Final" value={pregacao.apelo_final} />
+            <InfoSection label="Ilustracao / Exemplo" value={pregacao.ilustracao} destacado={lendoBloco === 'Ilustração'} />
+            <InfoSection label="Aplicacao Pratica" value={pregacao.aplicacao_pratica} destacado={lendoBloco === 'Aplicação prática'} />
+            <InfoSection label="Conclusao" value={pregacao.conclusao} destacado={lendoBloco === 'Conclusão'} />
+            <InfoSection label="Apelo Final" value={pregacao.apelo_final} destacado={lendoBloco === 'Apelo final'} />
           </>
         ) : (
           <>
-            <div className="bg-white rounded-2xl p-5 shadow-sm">
-              <pre className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap font-sans">
-                {pregacao.pregacao_completa}
-              </pre>
+            <div className="bg-white rounded-2xl p-5 shadow-sm flex flex-col gap-3">
+              {pregacao.pregacao_completa.split(/\n{2,}/).map(p => p.trim()).filter(Boolean).map((p, i) => (
+                <p key={i}
+                  className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap rounded-xl px-1 py-0.5"
+                  style={lendoBloco === `c-${i}` ? { backgroundColor: '#FEF9C3' } : undefined}>
+                  {p}
+                </p>
+              ))}
             </div>
             <button onClick={handleDownload}
               className="w-full py-3.5 rounded-2xl font-bold text-white text-sm flex items-center justify-center gap-2"
@@ -158,6 +208,8 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
           </>
         )}
       </div>
+
+      <LeitorAudio blocos={blocos} titulo={pregacao.tema} onBlocoAtual={setLendoBloco} />
     </div>
   )
 }
