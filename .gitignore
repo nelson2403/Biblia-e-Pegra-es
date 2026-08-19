@@ -29,3 +29,6 @@ public/fallback-*.js
 tsconfig.tsbuildinfo
 
 .env.vercel
+
+# Chave de assinatura Android — NUNCA versionar
+*.keystore
