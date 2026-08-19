@@ -203,6 +203,46 @@ https://digitalassetlinks.googleapis.com/v1/statements:list?source.web.site=http
 
 ### 5.5 Formulários obrigatórios
 
+> 📖 **Guia visual passo a passo, com as 26 etapas e marcação de progresso:**
+> https://claude.ai/code/artifact/77fca8b2-694d-42ad-bb73-391b869ec5b1
+
+**Acesso ao app — o erro que mais reprova.** O app exige cadastro para ver qualquer coisa.
+Em *Política → Conteúdo do app → Acesso ao app*, marque "restrito" e cadastre **login e senha
+de teste que funcionem**. Sem isso o revisor trava na tela de login e reprova sem avaliar nada.
+Crie uma conta só para esse fim, com dados fictícios, e mantenha ativa.
+
+**Segurança dos dados** — declare exatamente:
+
+| Dado | Coleta | Observação |
+|---|---|---|
+| Nome, e-mail | Obrigatório | Conta |
+| Foto | Opcional | Perfil |
+| Gravações de áudio | Opcional | **Não é armazenada** |
+| Outro conteúdo | Sim | Anotações, estudos, pregações |
+
+Marque também: criptografado em trânsito (sim), permite exclusão (sim), compartilha com
+terceiros (sim — o texto vai para a IA processar). Subdeclarar gera suspensão depois de
+publicado, que é pior que uma recusa antes.
+
+**Classificação de conteúdo** — categoria *Referência/educação*, tudo "não" para
+violência/sexo/drogas. Responda **sim** para *conteúdo gerado por usuários*: o mural de
+oração permite publicar texto visível a outros.
+
+**Conta pessoal criada após nov/2023** precisa de **12 testadores por 14 dias
+ininterruptos** antes de liberar produção. Convide 15 ou 16 — se alguém desinstalar, a
+contagem recomeça. Conta de organização (CNPJ + D-U-N-S) não tem essa exigência.
+
+### 5.6 Erros que reprovam
+
+| Sintoma | Causa | Conserto |
+|---|---|---|
+| Barra do Chrome no topo | assetlinks errado ou com uma impressão só | Refazer 5.3, desinstalar e reinstalar |
+| "Não conseguimos acessar" | Sem credenciais de teste | Acesso ao app |
+| "Funcionalidade mínima" | Entenderam como site empacotado | Destacar áudio, voz e offline nas capturas |
+| Segurança dos dados incompleta | Microfone ou IA não declarados | Refazer o formulário |
+
+
+
 - **Segurança dos dados**: declare que coleta e-mail e nome (conta), e que os dados são
   criptografados em trânsito. O microfone é usado apenas para a transcrição solicitada pelo usuário.
 - **Política de privacidade**: a Google exige uma URL pública. É o único item ainda pendente —
