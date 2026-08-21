@@ -69,6 +69,18 @@ export async function GET(req: NextRequest) {
     })
   } catch (e: any) {
     console.error('[cron/diario] erro:', e?.message)
-    return NextResponse.json({ error: e?.message ?? 'Erro desconhecido' }, { status: 500 })
+    return NextResponse.json(
+      {
+        error: e?.message ?? 'Erro desconhecido',
+        // Sem isto não dá para saber, de fora, qual dia o servidor tentou gerar
+        // — e diferença de fuso entre a Vercel (UTC) e o Brasil já causou confusão.
+        diagnostico: {
+          dataCalculada: hojeISO(),
+          dataUTC: new Date().toISOString().split('T')[0],
+          horaBrasilia: horaDeBrasilia(),
+        },
+      },
+      { status: 500 }
+    )
   }
 }

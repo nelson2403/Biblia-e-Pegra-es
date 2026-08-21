@@ -65,28 +65,44 @@ export async function groqChat({
   // apertado a resposta vem truncada no meio.
   const teto = esforco === 'low' ? maxTokens : Math.round(maxTokens * 1.6)
 
-  const res = await fetch(`${GROQ_BASE}/chat/completions`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${getGroqKey()}`,
-    },
-    body: JSON.stringify({
-      model,
-      messages,
-      temperature,
-      max_tokens: teto,
-      ...(esforco ? { reasoning_effort: esforco } : {}),
-    }),
-  })
+  async function tentar(limite: number, esforcoUsado?: 'low' | 'medium' | 'high') {
+    const res = await fetch(`${GROQ_BASE}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getGroqKey()}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        temperature,
+        max_tokens: limite,
+        ...(esforcoUsado ? { reasoning_effort: esforcoUsado } : {}),
+      }),
+    })
 
-  const data = await res.json().catch(() => null)
+    const dados = await res.json().catch(() => null)
 
-  if (!res.ok) {
-    throw new GroqError(data?.error?.message ?? `Erro HTTP ${res.status} da IA.`)
+    if (!res.ok) {
+      throw new GroqError(dados?.error?.message ?? `Erro HTTP ${res.status} da IA.`)
+    }
+
+    return {
+      texto: dados?.choices?.[0]?.message?.content as string | undefined,
+      motivo: dados?.choices?.[0]?.finish_reason as string | undefined,
+    }
   }
 
-  const texto: string | undefined = data?.choices?.[0]?.message?.content
+  let { texto, motivo } = await tentar(teto, esforco)
+
+  // Os modelos de raciocínio às vezes gastam todo o orçamento pensando e
+  // devolvem conteúdo vazio. Não é erro permanente: uma segunda tentativa com
+  // mais folga e menos raciocínio resolve.
+  if (!texto) {
+    console.warn(`[groq] resposta vazia (finish_reason=${motivo}); tentando de novo`)
+    ;({ texto } = await tentar(Math.round(teto * 1.8), 'low'))
+  }
+
   if (!texto) throw new GroqError('A IA não retornou resposta. Tente novamente.')
 
   return texto
