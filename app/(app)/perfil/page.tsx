@@ -8,6 +8,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { ConfiguracoesApp } from '@/components/ConfiguracoesApp'
+import { GerenciadorOffline } from '@/components/GerenciadorOffline'
 
 export default function PerfilPage() {
   const { user, signOut } = useAuth()
@@ -252,6 +253,8 @@ export default function PerfilPage() {
 
         {/* Notificações e acessibilidade */}
         <ConfiguracoesApp />
+
+        <GerenciadorOffline />
 
         {/* Info menu */}
         <div className="bg-surface rounded-2xl shadow-cartao p-4">

@@ -6,6 +6,7 @@ import { Sidebar, BottomNav } from '@/components/Sidebar'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { AcessibilidadeGlobal } from '@/components/AcessibilidadeGlobal'
 import { ConviteInstalar } from '@/components/ConviteInstalar'
+import { ConviteOffline } from '@/components/ConviteOffline'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
@@ -31,6 +32,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </main>
       <BottomNav />
       <ConviteInstalar />
+      <ConviteOffline />
     </div>
   )
 }

@@ -133,6 +133,8 @@ export interface Preferencias {
   tts_voz_nuvem: string | null
   /** Desligar cai para a voz do próprio aparelho. */
   voz_natural: boolean
+  /** Completar downloads offline sozinho ao abrir com internet. */
+  offline_auto: boolean
   fonte_grande: boolean
   alto_contraste: boolean
   updated_at?: string

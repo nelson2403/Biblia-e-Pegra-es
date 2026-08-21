@@ -8,6 +8,7 @@ import { LeitorAudio } from '@/components/LeitorAudio'
 import type { BlocoLeitura } from '@/hooks/useLeitor'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/contexts/AuthContext'
+import { doCache } from '@/lib/offline'
 
 interface Verse { verse: number; text: string }
 interface BibleJson { abbrev: string; chapters: string[][] }
@@ -24,7 +25,12 @@ const bibleCache: Record<string, BibleJson[]> = {}
 async function getBibleData(code: string): Promise<BibleJson[]> {
   if (bibleCache[code]) return bibleCache[code]
   const t = TRANSLATIONS.find(t => t.code === code) ?? TRANSLATIONS[0]
-  const res = await fetch(t.url)
+
+  // O que foi baixado para uso offline vem primeiro: abre na hora e funciona
+  // sem sinal. Só busca na rede o que ainda não está no aparelho.
+  const guardado = await doCache(t.url)
+  const res = guardado ?? (await fetch(t.url))
+
   bibleCache[code] = await res.json()
   return bibleCache[code]
 }

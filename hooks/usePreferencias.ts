@@ -13,6 +13,7 @@ const PADRAO: Omit<Preferencias, 'user_id'> = {
   tts_velocidade: 1.0,
   tts_voz_nuvem: 'pt-BR-Neural2-B',
   voz_natural: true,
+  offline_auto: true,
   fonte_grande: false,
   alto_contraste: false,
 }
