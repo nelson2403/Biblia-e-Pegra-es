@@ -49,7 +49,9 @@ async function gerarDevocional(
   return groqJson<Devocional>({
     model: GROQ_MODELS.texto,
     temperature: 0.8,
-    maxTokens: 2048,
+    // Cabe no limite de 8000 tokens por minuto do plano gratuito da Groq.
+    maxTokens: 1500,
+    esforco: 'low',
     messages: [
       { role: 'system', content: PAPEL },
       {
@@ -99,7 +101,8 @@ async function gerarEstudo(
   return groqJson<Estudo>({
     model: GROQ_MODELS.texto,
     temperature: 0.75,
-    maxTokens: 4096,
+    maxTokens: 3600,
+    esforco: 'low',
     messages: [
       { role: 'system', content: PAPEL },
       {
@@ -183,12 +186,16 @@ export async function obterConteudoDiario(data = hojeISO()): Promise<ConteudoDia
   const v = versiculoDoDia(data)
 
   // Duas chamadas focadas rendem muito mais profundidade que uma só pedindo tudo.
-  // O vídeo vai junto: se falhar, o dia simplesmente não tem vídeo.
-  let [devocional, estudo, video] = await Promise.all([
+  //
+  // Elas rodam EM SEQUÊNCIA, não em paralelo: o plano gratuito da Groq limita
+  // 8000 tokens por minuto, e disparar as duas juntas soma os orçamentos e
+  // estoura o teto. O vídeo pode ir junto porque não consome cota da Groq.
+  const [devocionalInicial, video] = await Promise.all([
     gerarDevocional(v.texto, v.ref, v.tema, data),
-    gerarEstudo(v.texto, v.ref, v.tema, data),
     buscarVideoDoEstudo(v.tema, v.ref),
   ])
+  let devocional = devocionalInicial
+  let estudo = await gerarEstudo(v.texto, v.ref, v.tema, data)
 
   if (devocionalRaso(devocional)) {
     devocional = await gerarDevocional(v.texto, v.ref, v.tema, data, true).catch(() => devocional)

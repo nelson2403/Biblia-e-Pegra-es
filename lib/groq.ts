@@ -84,6 +84,15 @@ export async function groqChat({
     const dados = await res.json().catch(() => null)
 
     if (!res.ok) {
+      // 429 = cota por minuto estourada. O cabeçalho diz quanto esperar;
+      // uma pausa curta resolve, em vez de perder o devocional do dia.
+      if (res.status === 429) {
+        const espera = Math.min(20, Math.ceil(Number(res.headers.get('retry-after') ?? 8)))
+        throw new GroqError(
+          `LIMITE:${espera}:${dados?.error?.message ?? 'Cota por minuto excedida.'}`,
+          429
+        )
+      }
       throw new GroqError(dados?.error?.message ?? `Erro HTTP ${res.status} da IA.`)
     }
 
@@ -93,14 +102,28 @@ export async function groqChat({
     }
   }
 
-  let { texto, motivo } = await tentar(teto, esforco)
+  async function tentarComEspera(limite: number, esforcoUsado?: 'low' | 'medium' | 'high') {
+    try {
+      return await tentar(limite, esforcoUsado)
+    } catch (e) {
+      if (e instanceof GroqError && e.status === 429) {
+        const segundos = Number(e.message.split(':')[1]) || 8
+        console.warn(`[groq] cota por minuto atingida; aguardando ${segundos}s`)
+        await new Promise(r => setTimeout(r, segundos * 1000))
+        return tentar(limite, esforcoUsado)
+      }
+      throw e
+    }
+  }
+
+  let { texto, motivo } = await tentarComEspera(teto, esforco)
 
   // Os modelos de raciocínio às vezes gastam todo o orçamento pensando e
-  // devolvem conteúdo vazio. Não é erro permanente: uma segunda tentativa com
-  // mais folga e menos raciocínio resolve.
+  // devolvem conteúdo vazio. Não é erro permanente: uma segunda tentativa
+  // com raciocínio baixo resolve. O teto não cresce, para não estourar a cota.
   if (!texto) {
     console.warn(`[groq] resposta vazia (finish_reason=${motivo}); tentando de novo`)
-    ;({ texto } = await tentar(Math.round(teto * 1.8), 'low'))
+    ;({ texto } = await tentarComEspera(teto, 'low'))
   }
 
   if (!texto) throw new GroqError('A IA não retornou resposta. Tente novamente.')
