@@ -5,8 +5,7 @@
       "namespace": "android_app",
       "package_name": "com.bibliaepregacoes.app",
       "sha256_cert_fingerprints": [
-        "SUBSTITUA:PELA:IMPRESSAO:SHA256:DA:SUA:CHAVE:DE:ASSINATURA",
-        "SUBSTITUA:PELA:IMPRESSAO:SHA256:DO:PLAY:APP:SIGNING"
+        "68:23:C4:75:10:6E:8D:E4:F3:A2:E5:EF:FE:69:2D:8C:3F:5F:68:80:CB:81:FF:F0:C2:EE:8C:A6:AC:2C:8A:59"
       ]
     }
   }
