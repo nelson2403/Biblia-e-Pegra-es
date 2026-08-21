@@ -41,11 +41,15 @@
   --deep: #171720;
   --deep-fg: #f7f7f9;
 
-  --shadow: 0 1px 2px rgba(20, 20, 26, 0.06), 0 4px 12px rgba(20, 20, 26, 0.04);
-  --shadow-lg: 0 8px 30px rgba(20, 20, 26, 0.12);
+  /* Elevação em duas camadas: um contato curto e nítido logo abaixo do
+     elemento, e uma sombra ampla e difusa mais longe. É isso que dá a
+     sensação de o cartão estar flutuando, sem precisar de borda. */
+  --shadow: 0 1px 2px rgba(20, 20, 26, 0.05), 0 6px 16px -4px rgba(20, 20, 26, 0.08);
+  --shadow-lg: 0 2px 4px rgba(20, 20, 26, 0.06), 0 16px 40px -8px rgba(20, 20, 26, 0.16);
 
-  --radius: 16px;
-  --radius-lg: 22px;
+  --radius: 20px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
 }
 
 :root[data-tema='escuro'] {
@@ -77,8 +81,11 @@
   --deep: #000000;
   --deep-fg: #f4f4f6;
 
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.6);
+  /* No escuro, sombra sozinha não separa o cartão do fundo — os dois são
+     escuros. A separação vem da própria superfície ser mais clara que o
+     fundo, reforçada por um brilho sutil na aresta de cima. */
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.045) inset, 0 4px 14px -4px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 18px 44px -10px rgba(0, 0, 0, 0.85);
 }
 
 * {
@@ -215,29 +222,34 @@ html[data-contraste='alto'] .cartao {
    ============================================ */
 
 @layer components {
+  /* Cartão flutuante: separado do fundo pela elevação, nunca por contorno. */
   .cartao {
     background-color: var(--surface);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
+    border: none;
   }
 
+  /* Campo preenchido, sem contorno em repouso. O foco é marcado por um anel
+     externo, que não empurra o layout como uma borda faria. */
   .campo {
     width: 100%;
     background-color: var(--surface-2);
-    border: 1.5px solid var(--border);
-    border-radius: 14px;
-    padding: 0.85rem 1rem;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.95rem 1.15rem;
     font-size: 0.95rem;
     color: var(--text);
     outline: none;
-    transition: border-color 0.15s, background-color 0.15s;
+    box-shadow: 0 0 0 0 transparent;
+    transition: box-shadow 0.18s, background-color 0.18s;
   }
   .campo:focus {
-    border-color: var(--accent);
     background-color: var(--surface);
+    box-shadow: 0 0 0 2.5px var(--accent), var(--shadow);
   }
   .campo[aria-invalid='true'] {
-    border-color: var(--danger);
+    box-shadow: 0 0 0 2.5px var(--danger);
   }
 
   .btn-primario {
@@ -246,22 +258,26 @@ html[data-contraste='alto'] .cartao {
     justify-content: center;
     gap: 0.5rem;
     width: 100%;
-    padding: 0.9rem 1rem;
-    border-radius: 14px;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-pill);
     background-color: var(--accent);
     color: var(--accent-fg);
     font-weight: 700;
-    font-size: 0.95rem;
-    transition: background-color 0.15s, transform 0.1s;
+    font-size: 0.97rem;
+    box-shadow: var(--shadow);
+    transition: background-color 0.15s, transform 0.12s, box-shadow 0.15s;
   }
   .btn-primario:hover:not(:disabled) {
     background-color: var(--accent-hover);
+    box-shadow: var(--shadow-lg);
   }
   .btn-primario:active:not(:disabled) {
-    transform: scale(0.985);
+    transform: scale(0.97);
   }
   .btn-primario:disabled {
-    opacity: 0.55;
+    opacity: 0.5;
+    box-shadow: none;
   }
 
   .btn-secundario {
@@ -269,16 +285,20 @@ html[data-contraste='alto'] .cartao {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    border-radius: 14px;
+    padding: 0.85rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-pill);
     background-color: var(--surface-2);
     color: var(--text);
     font-weight: 600;
-    font-size: 0.9rem;
-    transition: background-color 0.15s;
+    font-size: 0.92rem;
+    transition: background-color 0.15s, transform 0.12s;
   }
   .btn-secundario:hover {
     background-color: var(--surface-3);
+  }
+  .btn-secundario:active {
+    transform: scale(0.97);
   }
 
   /* Reserva o espaço da barra flutuante no celular; no desktop ela não existe. */
@@ -293,11 +313,11 @@ html[data-contraste='alto'] .cartao {
 
   /* Vidro fosco da barra de navegação e de cabeçalhos fixos. */
   .barra-vidro {
-    background-color: color-mix(in srgb, var(--surface) 82%, transparent);
-    border: 1px solid var(--border);
+    background-color: color-mix(in srgb, var(--surface) 86%, transparent);
+    border: none;
     box-shadow: var(--shadow-lg);
-    backdrop-filter: blur(18px) saturate(140%);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
   }
 
   /* Navegadores sem backdrop-filter recebem fundo sólido, para o texto não sumir. */

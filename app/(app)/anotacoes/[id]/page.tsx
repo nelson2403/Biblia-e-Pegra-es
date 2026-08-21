@@ -73,8 +73,8 @@ export default function AnotacaoDetalhePage({ params }: { params: { id: string }
 
   return (
     <div className="flex flex-col min-h-full bg-surface pb-28">
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-borda">
-        <button onClick={() => router.back()} aria-label="Voltar" className="p-2 rounded-xl hover:bg-surface-2">
+      <div className="flex items-center gap-3 px-4 py-3">
+        <button onClick={() => router.back()} aria-label="Voltar" className="p-2 rounded-2xl hover:bg-surface-2">
           <ArrowLeft size={22} color="var(--text)" />
         </button>
         <h1 className="flex-1 text-center text-base font-bold text-conteudo">
@@ -84,17 +84,17 @@ export default function AnotacaoDetalhePage({ params }: { params: { id: string }
           {!editing ? (
             <>
               <button onClick={() => setEditing(true)} aria-label="Editar anotação"
-                className="p-2 rounded-xl hover:bg-surface-2 text-primary">
+                className="p-2 rounded-2xl hover:bg-surface-2 text-primary">
                 <Pencil size={19} />
               </button>
               <button onClick={handleDelete} aria-label="Excluir anotação"
-                className="p-2 rounded-xl hover:bg-perigo-soft text-perigo">
+                className="p-2 rounded-2xl hover:bg-perigo-soft text-perigo">
                 <Trash2 size={19} />
               </button>
             </>
           ) : (
             <button onClick={handleSave} disabled={saving}
-              className="px-4 py-1.5 rounded-xl text-sm font-bold text-white disabled:opacity-50"
+              className="px-4 py-1.5 rounded-2xl text-sm font-bold text-white disabled:opacity-50"
               style={{ backgroundColor: 'var(--accent)' }}>
               {saving ? 'Salvando...' : 'Salvar'}
             </button>
@@ -104,7 +104,7 @@ export default function AnotacaoDetalhePage({ params }: { params: { id: string }
 
       <div className="flex-1 p-5 flex flex-col gap-0">
         {aviso && (
-          <p role="status" className="mb-3 text-xs font-semibold px-3 py-2 rounded-xl"
+          <p role="status" className="mb-3 text-xs font-semibold px-3 py-2 rounded-2xl"
             style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent-hover)' }}>
             {aviso}
           </p>
@@ -125,7 +125,7 @@ export default function AnotacaoDetalhePage({ params }: { params: { id: string }
           </>
         ) : (
           <>
-            <h2 className="text-2xl font-bold text-conteudo mb-3 px-1 rounded-xl"
+            <h2 className="text-2xl font-bold text-conteudo mb-3 px-1 rounded-2xl"
               style={lendoBloco === 'titulo' ? { backgroundColor: 'var(--gold-soft)' } : undefined}>
               {titulo}
             </h2>
@@ -133,7 +133,7 @@ export default function AnotacaoDetalhePage({ params }: { params: { id: string }
             <div className="flex flex-col gap-3">
               {paragrafos.map((p, i) => (
                 <p key={i}
-                  className="text-base text-conteudo leading-relaxed whitespace-pre-wrap px-1 py-0.5 rounded-xl"
+                  className="text-base text-conteudo leading-relaxed whitespace-pre-wrap px-1 py-0.5 rounded-2xl"
                   style={lendoBloco === `p-${i}` ? { backgroundColor: 'var(--gold-soft)' } : undefined}>
                   {p}
                 </p>

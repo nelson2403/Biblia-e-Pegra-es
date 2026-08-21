@@ -151,7 +151,7 @@ export default function DiarioPage() {
         <p className="text-sm text-conteudo-faint">{erro}</p>
         <button
           onClick={carregar}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white font-bold text-sm"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-2xl text-white font-bold text-sm"
           style={{ backgroundColor: 'var(--accent)' }}
         >
           <RefreshCw size={16} /> Tentar de novo
@@ -195,7 +195,7 @@ export default function DiarioPage() {
 
       <div className="px-5 py-5 flex flex-col gap-4">
         {/* Reflexão */}
-        <section className="bg-surface rounded-2xl p-5 shadow-sm" style={destaque('reflexao')}>
+        <section className="bg-surface rounded-2xl p-5 shadow-cartao" style={destaque('reflexao')}>
           <h2 className="text-base font-extrabold text-conteudo mb-3">Reflexão de hoje</h2>
           <p className="text-[15px] text-conteudo leading-relaxed whitespace-pre-wrap">{conteudo.reflexao}</p>
         </section>
@@ -215,7 +215,7 @@ export default function DiarioPage() {
         )}
 
         {/* Estudo do dia */}
-        <section className="bg-surface rounded-2xl shadow-sm overflow-hidden">
+        <section className="bg-surface rounded-2xl shadow-cartao overflow-hidden">
           <button
             onClick={() => setEstudoAberto(v => !v)}
             aria-expanded={estudoAberto}
@@ -243,7 +243,7 @@ export default function DiarioPage() {
           </button>
 
           {estudoAberto && (
-            <div className="px-5 pb-5 flex flex-col gap-4 border-t border-borda pt-4">
+            <div className="px-5 pb-5 flex flex-col gap-4 pt-4">
               {conteudo.estudo_texto_base && (
                 <span
                   className="self-start px-3 py-1 rounded-full text-xs font-bold"
@@ -293,7 +293,7 @@ export default function DiarioPage() {
 
               <Link
                 href={`/anotacoes/nova?ref=${encodeURIComponent(conteudo.estudo_titulo)}&texto=${encodeURIComponent(conteudo.versiculo_texto)}`}
-                className="self-start text-sm font-bold px-4 py-2.5 rounded-xl"
+                className="self-start text-sm font-bold px-4 py-2.5 rounded-2xl"
                 style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent)' }}
               >
                 Anotar o que Deus falou comigo
@@ -304,7 +304,7 @@ export default function DiarioPage() {
 
         <Link
           href="/perfil#notificacoes"
-          className="flex items-center gap-3 bg-surface rounded-2xl p-4 shadow-sm"
+          className="flex items-center gap-3 bg-surface rounded-2xl p-4 shadow-cartao"
         >
           <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--gold-soft)' }}>
             <Bell size={18} color="var(--gold)" aria-hidden="true" />

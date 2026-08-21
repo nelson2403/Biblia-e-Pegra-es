@@ -104,13 +104,13 @@ export default function NovaAnotacaoPage() {
 
   return (
     <div className="flex flex-col min-h-full bg-surface">
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-borda">
-        <button onClick={() => router.back()} aria-label="Voltar" className="p-2 rounded-xl hover:bg-surface-2">
+      <div className="flex items-center gap-3 px-4 py-3">
+        <button onClick={() => router.back()} aria-label="Voltar" className="p-2 rounded-2xl hover:bg-surface-2">
           <ArrowLeft size={22} color="var(--text)" />
         </button>
         <h1 className="flex-1 text-center text-base font-bold text-conteudo">Nova Anotacao</h1>
         <button onClick={handleSave} disabled={saving}
-          className="px-4 py-1.5 rounded-xl text-sm font-bold text-white disabled:opacity-50"
+          className="px-4 py-1.5 rounded-2xl text-sm font-bold text-white disabled:opacity-50"
           style={{ backgroundColor: 'var(--accent)' }}>
           {saving ? 'Salvando...' : 'Salvar'}
         </button>
@@ -158,7 +158,7 @@ export default function NovaAnotacaoPage() {
             type="button"
             onClick={organizarComIA}
             disabled={organizando}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-2xl text-sm font-bold disabled:opacity-50 transition-colors"
             style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent)' }}
           >
             {organizando ? <Loader2 size={17} className="animate-spin" /> : <Wand2 size={17} />}
@@ -167,7 +167,7 @@ export default function NovaAnotacaoPage() {
         </div>
 
         {aviso && (
-          <p role="status" className="mb-3 text-xs font-semibold px-3 py-2 rounded-xl"
+          <p role="status" className="mb-3 text-xs font-semibold px-3 py-2 rounded-2xl"
             style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent-hover)' }}>
             {aviso}
           </p>

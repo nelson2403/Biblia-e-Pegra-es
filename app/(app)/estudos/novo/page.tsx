@@ -47,7 +47,7 @@ function BookSelector({ value, onChange, error }: { value: string; onChange: (v:
   return (
     <div ref={ref} className="relative">
       <button type="button" onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center justify-between border rounded-xl px-4 py-2.5 text-sm bg-surface text-left"
+        className="w-full flex items-center justify-between border rounded-2xl px-4 py-2.5 text-sm bg-surface text-left"
         style={{ borderColor: error ? 'var(--danger)' : 'var(--border)' }}>
         <span style={{ color: value ? 'var(--text)' : 'var(--text-faint)' }}>{value || 'Selecione o livro...'}</span>
         {value ? (
@@ -57,10 +57,10 @@ function BookSelector({ value, onChange, error }: { value: string; onChange: (v:
         ) : <ChevronDown size={15} color="var(--text-faint)" />}
       </button>
       {open && (
-        <div className="absolute left-0 right-0 top-full mt-1 bg-surface border border-borda rounded-xl shadow-xl z-20 overflow-hidden">
-          <div className="p-2 border-b border-borda">
+        <div className="absolute left-0 right-0 top-full mt-1 bg-surface rounded-2xl shadow-alto z-20 overflow-hidden">
+          <div className="p-2">
             <input autoFocus type="text" placeholder="Buscar livro..." value={query} onChange={e => setQuery(e.target.value)}
-              className="w-full px-3 py-2 text-sm rounded-lg bg-bg outline-none text-conteudo" />
+              className="w-full px-3 py-2 text-sm rounded-xl bg-bg outline-none text-conteudo" />
           </div>
           <div className="overflow-y-auto" style={{ maxHeight: 260 }}>
             {AT.length > 0 && (
@@ -153,15 +153,15 @@ export default function NovoEstudoPage() {
 
   if (fetchLoading) return <div className="flex items-center justify-center py-20 text-conteudo-faint">Carregando...</div>
 
-  const inputCls = "w-full border border-borda rounded-xl px-4 py-2.5 text-sm text-conteudo outline-none focus:ring-2 focus:border-transparent"
+  const inputCls = "w-full  rounded-2xl px-4 py-2.5 text-sm text-conteudo outline-none focus:ring-2 focus:border-transparent"
   const textareaCls = inputCls + " min-h-[110px] resize-none"
 
   const filled = [form.contexto_historico, form.interpretacao, form.aplicacao, form.insights].filter(v => v.trim()).length
 
   return (
     <div className="flex flex-col min-h-full">
-      <div className="flex items-center gap-3 px-4 py-4 bg-surface border-b border-borda">
-        <button onClick={() => router.back()} className="p-2 rounded-xl hover:bg-surface-2">
+      <div className="flex items-center gap-3 px-4 py-4 bg-surface">
+        <button onClick={() => router.back()} className="p-2 rounded-2xl hover:bg-surface-2">
           <ArrowLeft size={22} color="var(--text)" />
         </button>
         <h1 className="text-lg font-bold text-conteudo flex-1 text-center">{isEdit ? 'Editar Estudo' : 'Novo Estudo'}</h1>
@@ -169,7 +169,7 @@ export default function NovoEstudoPage() {
       </div>
 
       {!isEdit && (
-        <div className="mx-5 mt-4 rounded-xl p-3 flex items-center gap-2" style={{ backgroundColor: 'var(--accent-soft)' }}>
+        <div className="mx-5 mt-4 rounded-2xl p-3 flex items-center gap-2" style={{ backgroundColor: 'var(--accent-soft)' }}>
           <span className="text-lg">📖</span>
           <p className="text-xs text-primary font-semibold flex-1">Preencha a referencia e o texto. Os demais campos enriquecem seu estudo!</p>
         </div>
@@ -190,7 +190,7 @@ export default function NovoEstudoPage() {
 
       <form onSubmit={handleSave} className="flex-1 overflow-auto p-5 flex flex-col gap-5 pb-10">
         {/* Reference */}
-        <div className="bg-surface rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+        <div className="bg-surface rounded-2xl p-4 shadow-cartao flex flex-col gap-3">
           <p className="text-sm font-bold text-conteudo flex items-center gap-2">📍 Referencia Biblica</p>
           <Field label="Livro" required error={errors.livro}>
             <BookSelector value={form.livro} onChange={v => setForm(p => ({ ...p, livro: v, capitulo: '', versiculo: '' }))} error={errors.livro} />
@@ -211,7 +211,7 @@ export default function NovoEstudoPage() {
         </div>
 
         {/* Verse text */}
-        <div className="bg-surface rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+        <div className="bg-surface rounded-2xl p-4 shadow-cartao flex flex-col gap-3">
           <p className="text-sm font-bold text-conteudo flex items-center gap-2">✍️ Texto Biblico</p>
           <Field label="Versiculo ou Passagem" required error={errors.texto_biblico}
             hint={form.texto_biblico ? `${form.texto_biblico.length} char` : undefined}>
@@ -222,7 +222,7 @@ export default function NovoEstudoPage() {
         </div>
 
         {/* Analysis */}
-        <div className="bg-surface rounded-2xl p-4 shadow-sm flex flex-col gap-4">
+        <div className="bg-surface rounded-2xl p-4 shadow-cartao flex flex-col gap-4">
           <p className="text-sm font-bold text-conteudo flex items-center gap-2">🔬 Analise</p>
           <Field label="Contexto Historico" hint={form.contexto_historico ? `${form.contexto_historico.length} char` : 'Opcional'}>
             <textarea placeholder="Contexto historico, cultural e geografico do texto..." value={form.contexto_historico}
@@ -235,7 +235,7 @@ export default function NovoEstudoPage() {
         </div>
 
         {/* Application */}
-        <div className="bg-surface rounded-2xl p-4 shadow-sm flex flex-col gap-4">
+        <div className="bg-surface rounded-2xl p-4 shadow-cartao flex flex-col gap-4">
           <p className="text-sm font-bold text-conteudo flex items-center gap-2">🙏 Aplicacao Pratica</p>
           <Field label="Como Aplicar" hint={form.aplicacao ? `${form.aplicacao.length} char` : 'Opcional'}>
             <textarea placeholder="Como aplicar esta verdade na vida cotidiana..." value={form.aplicacao}
@@ -248,7 +248,7 @@ export default function NovoEstudoPage() {
         </div>
 
         {/* Tags */}
-        <div className="bg-surface rounded-2xl p-4 shadow-sm">
+        <div className="bg-surface rounded-2xl p-4 shadow-cartao">
           <p className="text-sm font-bold text-conteudo mb-2">🏷️ Tags</p>
           <input type="text" placeholder="Ex: fe, oracao, promessa (separar por virgula)"
             value={form.tags ?? ''}
@@ -258,7 +258,7 @@ export default function NovoEstudoPage() {
         </div>
 
         <button type="submit" disabled={loading}
-          className="w-full py-3.5 rounded-xl font-bold text-white text-sm disabled:opacity-60"
+          className="w-full py-3.5 rounded-2xl font-bold text-white text-sm disabled:opacity-60"
           style={{ backgroundColor: 'var(--accent)' }}>
           {loading ? 'Salvando...' : isEdit ? 'Salvar alteracoes' : 'Salvar estudo'}
         </button>

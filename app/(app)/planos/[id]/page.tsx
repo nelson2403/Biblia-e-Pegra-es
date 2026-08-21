@@ -178,7 +178,7 @@ export default function PlanoDetalhePage({ params }: { params: { id: string } })
                   className="flex items-center gap-3 p-3 rounded-2xl text-left transition-colors"
                   style={{
                     backgroundColor: ehHoje ? 'var(--accent-soft)' : 'var(--surface)',
-                    border: ehHoje ? '1.5px solid var(--accent)' : '1px solid var(--border)',
+                    boxShadow: ehHoje ? '0 0 0 2px var(--accent)' : 'var(--shadow)',
                   }}>
                   <span className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold"
                     style={{

@@ -24,7 +24,7 @@ function Interruptor({
 }) {
   return (
     <div className="flex items-center gap-3 py-3">
-      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+      <div className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0"
         style={{ backgroundColor: ligado ? 'var(--accent-soft)' : 'var(--surface-2)' }}>
         <Icone size={18} color={ligado ? cor : 'var(--text-faint)'} aria-hidden="true" />
       </div>
@@ -107,7 +107,7 @@ export function ConfiguracoesApp() {
       {mensagem && (
         <div
           role="status"
-          className="rounded-xl px-4 py-3 text-sm font-semibold flex items-start gap-2"
+          className="rounded-2xl px-4 py-3 text-sm font-semibold flex items-start gap-2"
           style={{
             backgroundColor: mensagem.tipo === 'ok' ? 'var(--success-soft)' : 'var(--danger-soft)',
             color: mensagem.tipo === 'ok' ? 'var(--success)' : 'var(--danger)',
@@ -119,14 +119,14 @@ export function ConfiguracoesApp() {
       )}
 
       {/* ── Notificações ───────────────────────────── */}
-      <section id="notificacoes" className="bg-surface rounded-2xl shadow-sm p-4 scroll-mt-4">
+      <section id="notificacoes" className="bg-surface rounded-2xl shadow-cartao p-4 scroll-mt-4">
         <h2 className="text-xs font-bold text-conteudo-faint uppercase tracking-wider mb-1">Palavra do dia</h2>
         <p className="text-xs text-conteudo-faint mb-2">
           Receba um versículo e um estudo novo todos os dias, direto no seu celular.
         </p>
 
         {!push.suportado ? (
-          <div className="rounded-xl px-4 py-3 text-sm" style={{ backgroundColor: 'var(--gold-soft)', color: 'var(--gold)' }}>
+          <div className="rounded-2xl px-4 py-3 text-sm" style={{ backgroundColor: 'var(--gold-soft)', color: 'var(--gold)' }}>
             Este navegador não suporta notificações. Instale o app na tela inicial
             (menu do navegador → “Adicionar à tela inicial”) e volte aqui.
           </div>
@@ -150,7 +150,7 @@ export function ConfiguracoesApp() {
                 <div className="h-px bg-surface-2 my-1" />
 
                 <div className="flex items-center gap-3 py-3">
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                  <div className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: 'var(--accent-soft)' }}>
                     <Clock size={18} color="var(--accent)" aria-hidden="true" />
                   </div>
@@ -161,7 +161,7 @@ export function ConfiguracoesApp() {
                     id="hora-notificacao"
                     value={prefs.notif_hora}
                     onChange={e => salvar({ notif_hora: parseInt(e.target.value, 10) })}
-                    className="border border-borda rounded-xl px-3 py-2 text-sm font-bold text-conteudo outline-none focus:ring-2 focus:ring-primary"
+                    className="rounded-2xl px-3 py-2 text-sm font-bold text-conteudo outline-none focus:ring-2 focus:ring-primary"
                   >
                     {HORAS.map(h => (
                       <option key={h} value={h}>{String(h).padStart(2, '0')}:00</option>
@@ -189,7 +189,7 @@ export function ConfiguracoesApp() {
                 <button
                   onClick={testar}
                   disabled={enviandoTeste}
-                  className="mt-3 w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold disabled:opacity-50"
+                  className="mt-3 w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-bold disabled:opacity-50"
                   style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent)' }}
                 >
                   {enviandoTeste ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
@@ -202,7 +202,7 @@ export function ConfiguracoesApp() {
       </section>
 
       {/* ── Aparência ──────────────────────────────── */}
-      <section id="aparencia" className="bg-surface rounded-2xl shadow-sm p-4 scroll-mt-4">
+      <section id="aparencia" className="bg-surface rounded-2xl shadow-cartao p-4 scroll-mt-4">
         <h2 className="text-xs font-bold text-conteudo-faint uppercase tracking-wider mb-1">Aparência</h2>
         <p className="text-xs text-conteudo-faint mb-3">
           O modo escuro cansa menos a vista para ler à noite.
@@ -223,7 +223,7 @@ export function ConfiguracoesApp() {
                 className="flex flex-col items-center gap-2 py-3.5 rounded-2xl transition-colors"
                 style={{
                   backgroundColor: ativo ? 'var(--accent-soft)' : 'var(--surface-2)',
-                  border: ativo ? '2px solid var(--accent)' : '2px solid transparent',
+                  boxShadow: ativo ? '0 0 0 2px var(--accent)' : 'none',
                   color: ativo ? 'var(--accent)' : 'var(--text-muted)',
                 }}
               >
@@ -242,7 +242,7 @@ export function ConfiguracoesApp() {
       </section>
 
       {/* ── Acessibilidade ─────────────────────────── */}
-      <section id="acessibilidade" className="bg-surface rounded-2xl shadow-sm p-4 scroll-mt-4">
+      <section id="acessibilidade" className="bg-surface rounded-2xl shadow-cartao p-4 scroll-mt-4">
         <h2 className="text-xs font-bold text-conteudo-faint uppercase tracking-wider mb-1">Acessibilidade</h2>
         <p className="text-xs text-conteudo-faint mb-2">
           Deixe o app do jeito que é mais fácil para você ler e ouvir.
@@ -267,7 +267,7 @@ export function ConfiguracoesApp() {
         <div className="h-px bg-surface-2 my-3" />
 
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+          <div className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0"
             style={{ backgroundColor: 'var(--accent-soft)' }}>
             <Headphones size={18} color="var(--accent)" aria-hidden="true" />
           </div>
@@ -287,7 +287,7 @@ export function ConfiguracoesApp() {
                 key={v}
                 onClick={() => salvar({ tts_velocidade: v })}
                 aria-pressed={ativo}
-                className="py-2.5 rounded-xl text-sm font-bold transition-colors"
+                className="py-2.5 rounded-2xl text-sm font-bold transition-colors"
                 style={{ backgroundColor: ativo ? 'var(--accent)' : 'var(--surface-2)', color: ativo ? '#fff' : 'var(--text-muted)' }}
               >
                 {v}×
@@ -298,7 +298,7 @@ export function ConfiguracoesApp() {
 
         <button
           onClick={ouvirAmostra}
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold"
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-bold"
           style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent)' }}
         >
           <Volume2 size={16} aria-hidden="true" /> Ouvir uma amostra

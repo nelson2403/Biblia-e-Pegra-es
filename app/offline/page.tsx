@@ -26,7 +26,7 @@ export default function OfflinePage() {
 
       <Link
         href="/dashboard"
-        className="mt-4 px-6 py-3 rounded-xl bg-surface text-sm font-bold"
+        className="mt-4 px-6 py-3 rounded-2xl bg-surface text-sm font-bold"
         style={{ color: 'var(--accent)' }}
       >
         Tentar novamente

@@ -24,7 +24,7 @@ export default function BibliaPage() {
         <h1 className="text-2xl font-extrabold mb-0.5">Biblia Sagrada</h1>
         <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.65)' }}>Almeida Revisada - 66 livros</p>
 
-        <div className="flex items-center gap-2 rounded-xl px-3 py-2.5"
+        <div className="flex items-center gap-2 rounded-2xl px-3 py-2.5"
           style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)' }}>
           <Search size={16} color="rgba(255,255,255,0.7)" />
           <input
@@ -43,7 +43,7 @@ export default function BibliaPage() {
       </div>
 
       {!isSearching && (
-        <div className="flex border-b border-borda bg-surface">
+        <div className="flex bg-surface">
           {(['AT', 'NT'] as const).map(t => (
             <button key={t} onClick={() => setTab(t)}
               className="flex-1 py-3 text-sm font-semibold transition-colors"
@@ -75,9 +75,9 @@ function BookCard({ book }: { book: BibleBook }) {
 
   return (
     <Link href={`/biblia/${book.id}/1`}
-      className="bg-surface rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow border-l-4 flex flex-col"
+      className="bg-surface rounded-2xl p-4 shadow-cartao hover:shadow-cartao transition-shadow border-l-4 flex flex-col"
       style={{ borderLeftColor: accentColor }}>
-      <span className="self-start text-xs font-extrabold px-2 py-1 rounded-md mb-2"
+      <span className="self-start text-xs font-extrabold px-2 py-1 rounded-xl mb-2"
         style={{ backgroundColor: badgeBg, color: accentColor }}>
         {book.abbr}
       </span>

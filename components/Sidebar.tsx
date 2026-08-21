@@ -63,11 +63,11 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="hidden md:flex flex-col w-60 min-h-screen bg-surface border-r border-borda shadow-sm">
-      <div className="px-5 py-5 border-b border-borda"
+    <aside className="hidden md:flex flex-col w-60 min-h-screen bg-surface shadow-cartao">
+      <div className="px-5 py-5"
         style={{ background: 'linear-gradient(135deg, #1E1B4B, #4F46E5)' }}>
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
+          <div className="w-9 h-9 rounded-2xl bg-white/20 flex items-center justify-center">
             <BookOpen size={20} color="#fff" />
           </div>
           <div>
@@ -82,7 +82,7 @@ export function Sidebar() {
           const active = pathname === href || pathname.startsWith(href + '/')
           return (
             <Link key={href} href={href}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-semibold transition-all"
               style={{
                 backgroundColor: active ? 'var(--accent-soft)' : 'transparent',
                 color: active ? 'var(--accent)' : 'var(--text-muted)',
@@ -94,7 +94,7 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="px-3 py-4 border-t border-borda">
+      <div className="px-3 py-4">
         <div className="flex items-center gap-3 px-3 mb-3">
           <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
             style={{ backgroundColor: 'var(--accent-hover)' }}>
@@ -106,7 +106,7 @@ export function Sidebar() {
           </div>
         </div>
         <button onClick={handleSignOut}
-          className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-sm font-semibold text-perigo hover:bg-perigo-soft transition-colors">
+          className="flex items-center gap-2 w-full px-3 py-2 rounded-2xl text-sm font-semibold text-perigo hover:bg-perigo-soft transition-colors">
           <LogOut size={17} />
           Sair da conta
         </button>
@@ -168,7 +168,7 @@ export function BottomNav() {
           onClick={() => setShowMais(false)}
         >
           <div
-            className="w-full bg-surface rounded-t-3xl px-5 pt-4 pb-24"
+            className="w-full bg-surface rounded-t-[28px] px-5 pt-4 pb-24"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">

@@ -108,7 +108,7 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
           </div>
 
           <button onClick={leitor.anterior} disabled={parado} aria-label="Trecho anterior"
-            className="p-2.5 rounded-xl hover:bg-surface-2 disabled:opacity-30">
+            className="p-2.5 rounded-2xl hover:bg-surface-2 disabled:opacity-30">
             <SkipBack size={20} className="text-conteudo-muted" />
           </button>
 
@@ -126,17 +126,17 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
           </button>
 
           <button onClick={leitor.proximo} disabled={parado} aria-label="Próximo trecho"
-            className="p-2.5 rounded-xl hover:bg-surface-2 disabled:opacity-30">
+            className="p-2.5 rounded-2xl hover:bg-surface-2 disabled:opacity-30">
             <SkipForward size={20} className="text-conteudo-muted" />
           </button>
 
           <button onClick={() => setConfig(true)} aria-label="Ajustes de voz e velocidade"
-            className="p-2.5 rounded-xl hover:bg-surface-2">
+            className="p-2.5 rounded-2xl hover:bg-surface-2">
             <Settings2 size={19} className="text-conteudo-muted" />
           </button>
 
           <button onClick={() => { leitor.parar(); setAberto(false) }} aria-label="Fechar leitor de áudio"
-            className="p-2.5 rounded-xl hover:bg-perigo-soft">
+            className="p-2.5 rounded-2xl hover:bg-perigo-soft">
             <Square size={17} className="text-perigo" fill="currentColor" />
           </button>
         </div>
@@ -155,7 +155,7 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
           aria-modal="true"
           aria-label="Ajustes do leitor"
         >
-          <div className="bg-surface w-full max-w-lg rounded-t-3xl p-5 max-h-[82vh] overflow-y-auto"
+          <div className="bg-surface w-full max-w-lg rounded-t-[28px] p-5 max-h-[82vh] overflow-y-auto"
             onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-5">
               <h3 className="font-extrabold text-conteudo text-base">Ajustes de leitura</h3>
@@ -170,7 +170,7 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
                 const ativo = Math.abs(leitor.velocidade - v) < 0.01
                 return (
                   <button key={v} onClick={() => mudarVelocidade(v)} aria-pressed={ativo}
-                    className="py-2.5 rounded-xl text-sm font-bold transition-colors"
+                    className="py-2.5 rounded-2xl text-sm font-bold transition-colors"
                     style={{
                       backgroundColor: ativo ? 'var(--accent)' : 'var(--surface-2)',
                       color: ativo ? 'var(--accent-fg)' : 'var(--text-muted)',
@@ -221,7 +221,7 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
                         className="flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-all"
                         style={{
                           backgroundColor: ativo ? 'var(--accent-soft)' : 'var(--surface-2)',
-                          border: ativo ? '2px solid var(--accent)' : '2px solid transparent',
+                          boxShadow: ativo ? '0 0 0 2px var(--accent)' : 'none',
                         }}>
                         <div className="flex-1 min-w-0">
                           <p className="font-bold text-sm text-conteudo">{v.rotulo}</p>
@@ -252,7 +252,7 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
                         className="flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-all"
                         style={{
                           backgroundColor: ativo ? 'var(--accent-soft)' : 'var(--surface-2)',
-                          border: ativo ? '2px solid var(--accent)' : '2px solid transparent',
+                          boxShadow: ativo ? '0 0 0 2px var(--accent)' : 'none',
                         }}>
                         <div className="flex-1 min-w-0">
                           <p className="font-bold text-sm truncate text-conteudo">{v.name}</p>

@@ -112,7 +112,7 @@ export default function EstudosPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex px-4 mb-4 border-b border-borda">
+      <div className="flex px-4 mb-4">
         {([['meus', 'Meus Estudos'], ['prontos', 'Estudos Prontos']] as const).map(([key, label]) => (
           <button key={key} onClick={() => setTab(key)}
             className="flex-1 py-2.5 text-sm font-bold transition-colors"
@@ -129,7 +129,7 @@ export default function EstudosPage() {
       {/* ── Estudos Prontos Tab ── */}
       {tab === 'prontos' && (
         <div className="px-4 pb-6 flex flex-col gap-3">
-          <div className="flex items-center gap-2 border border-borda bg-surface rounded-xl px-3 py-2.5 mb-1">
+          <div className="flex items-center gap-2 bg-surface rounded-2xl px-3 py-2.5 mb-1">
             <Search size={17} color="var(--text-faint)" />
             <input type="text" placeholder="Buscar tema ou categoria..." value={searchProntos}
               onChange={e => setSearchProntos(e.target.value)}
@@ -143,7 +143,7 @@ export default function EstudosPage() {
             const catStyle = cat ? cat[1] : { bg: 'var(--accent-soft)', color: 'var(--accent)' }
             return (
               <Link key={estudo.id} href={`/estudos/prontos/${estudo.id}`}
-                className="bg-surface rounded-2xl p-4 shadow-sm flex items-start gap-3">
+                className="bg-surface rounded-2xl p-4 shadow-cartao flex items-start gap-3">
                 <div className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: catStyle.bg }}>
                   <Sparkles size={20} color={catStyle.color} />
@@ -207,7 +207,7 @@ export default function EstudosPage() {
       })()}
 
       {tab === 'meus' && <div className="px-4 mb-2 flex gap-2">
-        <div className="flex-1 min-w-0 flex items-center gap-2 border border-borda bg-surface rounded-xl px-3 py-2.5">
+        <div className="flex-1 min-w-0 flex items-center gap-2 bg-surface rounded-2xl px-3 py-2.5">
           <Search size={17} color="var(--text-faint)" className="flex-shrink-0" />
           <input
             type="text"
@@ -220,13 +220,13 @@ export default function EstudosPage() {
         </div>
         <div className="relative flex-shrink-0">
           <button onClick={() => setShowSort(v => !v)}
-            className="flex items-center gap-1.5 border border-borda bg-surface rounded-xl px-3 py-2.5 text-conteudo-muted font-semibold"
+            className="flex items-center gap-1.5 bg-surface rounded-2xl px-3 py-2.5 text-conteudo-muted font-semibold"
             style={{ color: sort !== 'recente' ? 'var(--accent)' : undefined }}>
             <SlidersHorizontal size={16} />
             <ChevronDown size={14} />
           </button>
           {showSort && (
-            <div className="absolute right-0 top-full mt-1 bg-surface border border-borda rounded-xl shadow-lg z-20 overflow-hidden w-44">
+            <div className="absolute right-0 top-full mt-1 bg-surface rounded-2xl shadow-alto z-20 overflow-hidden w-44">
               {(Object.keys(SORT_LABELS) as SortKey[]).map(k => (
                 <button key={k} onClick={() => onSort(k)}
                   className="w-full text-left px-4 py-2.5 text-sm hover:bg-bg font-medium"
@@ -254,7 +254,7 @@ export default function EstudosPage() {
           const done = completeness(item)
           const pct = (done / 4) * 100
           return (
-            <div key={item.id} className="bg-surface rounded-2xl p-4 shadow-sm">
+            <div key={item.id} className="bg-surface rounded-2xl p-4 shadow-cartao">
               <div className="flex items-start gap-3">
                 <div className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: 'var(--accent-soft)' }}>
@@ -274,15 +274,15 @@ export default function EstudosPage() {
                   <p className="text-xs text-conteudo-faint mt-1">{new Date(item.created_at).toLocaleDateString('pt-BR')}</p>
                 </Link>
                 <div className="flex gap-1 flex-shrink-0">
-                  <Link href={`/estudos/novo?id=${item.id}`} className="p-2 rounded-xl hover:bg-surface-2 text-primary">
+                  <Link href={`/estudos/novo?id=${item.id}`} className="p-2 rounded-2xl hover:bg-surface-2 text-primary">
                     <Pencil size={17} />
                   </Link>
-                  <button onClick={() => handleDelete(item.id)} className="p-2 rounded-xl hover:bg-perigo-soft text-perigo">
+                  <button onClick={() => handleDelete(item.id)} className="p-2 rounded-2xl hover:bg-perigo-soft text-perigo">
                     <Trash2 size={17} />
                   </button>
                 </div>
               </div>
-              <div className="mt-3 pt-3 border-t border-borda">
+              <div className="mt-3 pt-3">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs text-conteudo-faint">{done === 4 ? '✅ Completo' : `${done}/4 secoes preenchidas`}</span>
                   <span className="text-xs font-bold" style={{ color: done === 4 ? 'var(--success)' : 'var(--accent)' }}>{pct.toFixed(0)}%</span>

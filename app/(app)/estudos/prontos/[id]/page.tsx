@@ -85,10 +85,10 @@ export default function EstudoProntoPage({ params }: { params: { id: string } })
       <div className="px-4 pt-4 pb-6 text-white"
         style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #4F46E5 100%)' }}>
         <div className="flex items-center justify-between mb-4">
-          <button onClick={() => router.back()} className="p-2 rounded-xl hover:bg-white/10">
+          <button onClick={() => router.back()} className="p-2 rounded-2xl hover:bg-white/10">
             <ArrowLeft size={22} />
           </button>
-          <button onClick={handleShare} className="p-2 rounded-xl hover:bg-white/10">
+          <button onClick={handleShare} className="p-2 rounded-2xl hover:bg-white/10">
             <Share2 size={20} />
           </button>
         </div>
@@ -103,7 +103,7 @@ export default function EstudoProntoPage({ params }: { params: { id: string } })
       <div className="px-4 flex flex-col gap-4 mt-4">
         {/* Texto base */}
         <div className="rounded-2xl p-4 flex items-start gap-3"
-          style={{ backgroundColor: 'var(--gold-soft)', border: '1px solid #FDE68A' }}>
+          style={{ backgroundColor: 'var(--gold-soft)' }}>
           <BookOpen size={18} color="var(--gold)" />
           <div>
             <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: 'var(--gold)' }}>Texto Base</p>
@@ -122,7 +122,7 @@ export default function EstudoProntoPage({ params }: { params: { id: string } })
         )}
 
         {/* Introdução */}
-        <div className="bg-surface rounded-2xl p-4 shadow-sm"
+        <div className="bg-surface rounded-2xl p-4 shadow-cartao"
           style={lendoBloco === 'introducao' ? { backgroundColor: 'var(--gold-soft)' } : undefined}>
           <p className="text-xs font-bold uppercase tracking-wider text-conteudo-faint mb-2">Introdução</p>
           <p className="text-sm text-conteudo leading-relaxed">{estudo.introducao}</p>
@@ -131,14 +131,14 @@ export default function EstudoProntoPage({ params }: { params: { id: string } })
         {/* Pontos */}
         <p className="text-sm font-bold text-conteudo px-1">Pontos do Estudo</p>
         {estudo.pontos.map((ponto, i) => (
-          <div key={i} className="bg-surface rounded-2xl shadow-sm overflow-hidden"
+          <div key={i} className="bg-surface rounded-2xl shadow-cartao overflow-hidden"
             style={lendoBloco === `ponto-${i}` ? { backgroundColor: 'var(--gold-soft)', boxShadow: 'inset 3px 0 0 #4F46E5' } : undefined}>
             <div className="px-4 pt-4 pb-2 flex items-center gap-2">
               <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-extrabold"
                 style={{ backgroundColor: 'var(--accent)' }}>{i + 1}</div>
               <p className="font-bold text-conteudo text-sm flex-1">{ponto.titulo}</p>
             </div>
-            <div className="mx-4 mb-3 rounded-xl p-3" style={{ backgroundColor: 'var(--accent-soft)' }}>
+            <div className="mx-4 mb-3 rounded-2xl p-3" style={{ backgroundColor: 'var(--accent-soft)' }}>
               <p className="text-xs italic text-primary leading-relaxed">"{ponto.versiculo}"</p>
               <p className="text-xs font-bold mt-1" style={{ color: 'var(--accent)' }}>— {ponto.referencia}</p>
             </div>
@@ -147,7 +147,7 @@ export default function EstudoProntoPage({ params }: { params: { id: string } })
         ))}
 
         {/* Conclusão */}
-        <div className="bg-surface rounded-2xl p-4 shadow-sm"
+        <div className="bg-surface rounded-2xl p-4 shadow-cartao"
           style={lendoBloco === 'conclusao' ? { backgroundColor: 'var(--gold-soft)' } : undefined}>
           <p className="text-xs font-bold uppercase tracking-wider text-conteudo-faint mb-2">Conclusão</p>
           <p className="text-sm text-conteudo leading-relaxed">{estudo.conclusao}</p>
@@ -157,7 +157,6 @@ export default function EstudoProntoPage({ params }: { params: { id: string } })
         <div className="rounded-2xl p-4"
           style={{
             backgroundColor: lendoBloco === 'aplicacao' ? 'var(--gold-soft)' : 'var(--success-soft)',
-            border: '1px solid #BBF7D0',
           }}>
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle2 size={16} color="var(--success)" />

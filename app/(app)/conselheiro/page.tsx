@@ -87,7 +87,7 @@ export default function ConselheiroPage() {
       </div>
 
       {/* Disclaimer */}
-      <div className="mx-4 mt-3 px-3 py-2 rounded-xl bg-amber-50 border border-amber-200">
+      <div className="mx-4 mt-3 px-3 py-2 rounded-2xl bg-amber-50 border border-amber-200">
         <p className="text-[11px] text-amber-700 text-center font-medium">
           ⚠️ Este conselheiro complementa — não substitui — pastores e profissionais de saúde.
         </p>
@@ -125,7 +125,7 @@ export default function ConselheiroPage() {
             >
               <Bot size={13} color="#fff" />
             </div>
-            <div className="bg-surface px-4 py-3 rounded-2xl shadow-sm flex items-center gap-2">
+            <div className="bg-surface px-4 py-3 rounded-2xl shadow-cartao flex items-center gap-2">
               <Loader2 size={14} className="animate-spin" style={{ color: 'var(--accent)' }} />
               <span className="text-xs text-conteudo-faint">Consultando as Escrituras...</span>
             </div>
@@ -137,7 +137,7 @@ export default function ConselheiroPage() {
 
       {/* Input */}
       <div
-        className="sticky bottom-16 md:bottom-0 bg-surface border-t border-borda px-4 py-3 flex items-end gap-2"
+        className="sticky bottom-16 md:bottom-0 bg-surface px-4 py-3 flex items-end gap-2"
       >
         <textarea
           ref={textareaRef}
@@ -146,7 +146,7 @@ export default function ConselheiroPage() {
           onKeyDown={handleKey}
           placeholder="Compartilhe o que está em seu coração..."
           rows={1}
-          className="flex-1 border border-borda rounded-xl px-4 py-2.5 text-sm text-conteudo outline-none resize-none max-h-28"
+          className="flex-1 rounded-2xl px-4 py-2.5 text-sm text-conteudo outline-none resize-none max-h-28"
           style={{ borderColor: input ? 'var(--accent)' : 'var(--border)' }}
         />
         <button

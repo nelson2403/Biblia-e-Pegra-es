@@ -155,7 +155,7 @@ export default function SerieDevocionalPage({ params }: { params: { id: string }
 
             <Link
               href={`/anotacoes/nova?ref=${encodeURIComponent(`${serie.titulo} — dia ${dia}`)}&texto=${encodeURIComponent(conteudo.pergunta)}`}
-              className="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-xl text-sm font-bold"
+              className="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-2xl text-sm font-bold"
               style={{ backgroundColor: 'var(--surface-2)', color: 'var(--text)' }}
             >
               <PenLine size={15} /> Responder por escrito

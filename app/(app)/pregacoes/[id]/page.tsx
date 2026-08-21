@@ -12,7 +12,7 @@ import type { BlocoLeitura } from '@/hooks/useLeitor'
 function InfoSection({ label, value, destacado }: { label: string; value?: string; destacado?: boolean }) {
   if (!value?.trim()) return null
   return (
-    <div className="bg-surface rounded-2xl p-4 shadow-sm"
+    <div className="bg-surface rounded-2xl p-4 shadow-cartao"
       style={destacado ? { backgroundColor: 'var(--gold-soft)', boxShadow: 'inset 3px 0 0 #4F46E5' } : undefined}>
       <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">{label}</p>
       <p className="text-sm text-conteudo leading-relaxed whitespace-pre-wrap">{value}</p>
@@ -112,28 +112,28 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
     <div className="flex flex-col min-h-full">
       {/* Header */}
       <div className="flex items-center gap-2 px-4 py-4 text-white" style={{ backgroundColor: 'var(--accent-hover)' }}>
-        <button onClick={() => router.back()} className="p-2 rounded-xl hover:bg-white/10">
+        <button onClick={() => router.back()} className="p-2 rounded-2xl hover:bg-white/10">
           <ArrowLeft size={22} />
         </button>
         <p className="flex-1 text-center font-bold text-sm truncate">{pregacao.tema}</p>
         <div className="flex items-center">
-          <button onClick={handleDownload} className="p-2 rounded-xl hover:bg-white/10" title="Baixar .txt">
+          <button onClick={handleDownload} className="p-2 rounded-2xl hover:bg-white/10" title="Baixar .txt">
             <Download size={18} />
           </button>
-          <button onClick={handleShare} className="p-2 rounded-xl hover:bg-white/10">
+          <button onClick={handleShare} className="p-2 rounded-2xl hover:bg-white/10">
             <Share2 size={18} />
           </button>
-          <Link href={`/pregacoes/nova?id=${pregacao.id}`} className="p-2 rounded-xl hover:bg-white/10">
+          <Link href={`/pregacoes/nova?id=${pregacao.id}`} className="p-2 rounded-2xl hover:bg-white/10">
             <Pencil size={18} />
           </Link>
-          <button onClick={handleDelete} className="p-2 rounded-xl hover:bg-white/10">
+          <button onClick={handleDelete} className="p-2 rounded-2xl hover:bg-white/10">
             <Trash2 size={18} />
           </button>
         </div>
       </div>
 
       {/* Tab switcher */}
-      <div className="flex bg-surface border-b border-borda">
+      <div className="flex bg-surface">
         {(['esboco', 'completa'] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
             className="flex-1 py-3 text-sm font-semibold transition-colors"
@@ -149,7 +149,7 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
       <div className="flex-1 p-4 flex flex-col gap-3 pb-32">
         {tab === 'esboco' ? (
           <>
-            <div className="bg-surface rounded-2xl p-4 shadow-sm flex flex-col gap-2">
+            <div className="bg-surface rounded-2xl p-4 shadow-cartao flex flex-col gap-2">
               {[
                 { Icon: BookOpen, text: pregacao.texto_base },
                 { Icon: Users, text: pregacao.publico },
@@ -167,11 +167,11 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
             <InfoSection label="Mensagem Central" value={pregacao.mensagem_central} destacado={lendoBloco === 'Mensagem central'} />
 
             {pontos.length > 0 && (
-              <div className="bg-surface rounded-2xl p-4 shadow-sm">
+              <div className="bg-surface rounded-2xl p-4 shadow-cartao">
                 <p className="text-xs font-bold text-primary uppercase tracking-wider mb-3">3 Pontos Principais</p>
                 <div className="flex flex-col gap-3">
                   {pontos.map((p, i) => p.trim() && (
-                    <div key={i} className="flex items-start gap-3 rounded-xl px-1 py-0.5"
+                    <div key={i} className="flex items-start gap-3 rounded-2xl px-1 py-0.5"
                       style={lendoBloco === `ponto-${i}` ? { backgroundColor: 'var(--gold-soft)' } : undefined}>
                       <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
                         style={{ backgroundColor: 'var(--accent-soft)' }}>
@@ -191,10 +191,10 @@ export default function PregacaoDetalhePage({ params }: { params: { id: string }
           </>
         ) : (
           <>
-            <div className="bg-surface rounded-2xl p-5 shadow-sm flex flex-col gap-3">
+            <div className="bg-surface rounded-2xl p-5 shadow-cartao flex flex-col gap-3">
               {pregacao.pregacao_completa.split(/\n{2,}/).map(p => p.trim()).filter(Boolean).map((p, i) => (
                 <p key={i}
-                  className="text-sm text-conteudo leading-relaxed whitespace-pre-wrap rounded-xl px-1 py-0.5"
+                  className="text-sm text-conteudo leading-relaxed whitespace-pre-wrap rounded-2xl px-1 py-0.5"
                   style={lendoBloco === `c-${i}` ? { backgroundColor: 'var(--gold-soft)' } : undefined}>
                   {p}
                 </p>

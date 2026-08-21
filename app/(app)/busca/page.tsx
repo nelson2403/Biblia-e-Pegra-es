@@ -130,7 +130,7 @@ export default function BuscaPage() {
               return (
                 <div key={type}>
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: meta.bg }}>
+                    <div className="w-6 h-6 rounded-xl flex items-center justify-center" style={{ backgroundColor: meta.bg }}>
                       <meta.Icon size={14} color={meta.color} />
                     </div>
                     <span className="text-xs font-bold text-conteudo-muted uppercase tracking-wider">{meta.label}s ({items.length})</span>
@@ -138,7 +138,7 @@ export default function BuscaPage() {
                   <div className="flex flex-col gap-2">
                     {items.map(r => (
                       <Link key={r.id} href={r.href}
-                        className="bg-surface rounded-2xl p-4 shadow-sm flex items-start gap-3 hover:shadow-md transition-shadow">
+                        className="bg-surface rounded-2xl p-4 shadow-cartao flex items-start gap-3 hover:shadow-cartao transition-shadow">
                         <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: meta.bg }}>
                           <meta.Icon size={16} color={meta.color} />
                         </div>

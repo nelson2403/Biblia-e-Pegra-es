@@ -124,7 +124,7 @@ export default function PlanoPage() {
         <div className="flex gap-2">
           {(['todos', 'AT', 'NT'] as const).map(t => (
             <button key={t} onClick={() => setTestament(t)}
-              className="flex-1 py-2 rounded-xl text-sm font-bold transition-all"
+              className="flex-1 py-2 rounded-2xl text-sm font-bold transition-all"
               style={{
                 backgroundColor: testament === t ? 'var(--accent)' : 'var(--surface-2)',
                 color: testament === t ? '#fff' : 'var(--text-muted)',
@@ -135,7 +135,7 @@ export default function PlanoPage() {
         </div>
 
         {/* Progress bar */}
-        <div className="bg-surface rounded-2xl p-4 shadow-sm">
+        <div className="bg-surface rounded-2xl p-4 shadow-cartao">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-bold text-conteudo">Progresso</span>
             <span className="text-sm font-bold" style={{ color: 'var(--accent)' }}>{readFiltered}/{totalFiltered} capítulos</span>
@@ -157,7 +157,7 @@ export default function PlanoPage() {
             <p className="text-lg font-extrabold">{nextUnread.book.pt} {nextUnread.ch}</p>
             <p className="text-xs text-white/60 mb-3">{nextUnread.book.testament === 'AT' ? 'Antigo Testamento' : 'Novo Testamento'}</p>
             <Link href={`/biblia/${nextUnread.book.id}/${nextUnread.ch}?plano=1`}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/20 text-sm font-bold text-white hover:bg-white/30 transition-colors">
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/20 text-sm font-bold text-white hover:bg-white/30 transition-colors">
               <BookOpen size={16} /> Ler agora
             </Link>
           </div>
@@ -172,7 +172,7 @@ export default function PlanoPage() {
         )}
 
         {/* Book-by-book progress */}
-        <div className="bg-surface rounded-2xl p-4 shadow-sm">
+        <div className="bg-surface rounded-2xl p-4 shadow-cartao">
           <p className="text-sm font-bold text-conteudo mb-3">Por livro</p>
           <div className="flex flex-col gap-2.5" style={{ maxHeight: 400, overflowY: 'auto' }}>
             {booksFiltered.map(book => {
@@ -202,7 +202,7 @@ export default function PlanoPage() {
                   {hasRead && (
                     <button
                       onClick={() => deleteBook(book.en)}
-                      className="p-1.5 rounded-lg hover:bg-perigo-soft flex-shrink-0"
+                      className="p-1.5 rounded-xl hover:bg-perigo-soft flex-shrink-0"
                       title="Remover histórico deste livro">
                       <Trash2 size={13} color="var(--danger)" />
                     </button>
@@ -215,7 +215,7 @@ export default function PlanoPage() {
 
         {/* Recent readings */}
         {recentBooks.length > 0 && (
-          <div className="bg-surface rounded-2xl p-4 shadow-sm">
+          <div className="bg-surface rounded-2xl p-4 shadow-cartao">
             <p className="text-sm font-bold text-conteudo mb-3">Lidos recentemente</p>
             <div className="flex flex-col gap-1">
               {recentBooks.map(({ book, ch, lido_em, id }) => (
@@ -232,7 +232,7 @@ export default function PlanoPage() {
                   </Link>
                   <button
                     onClick={() => deleteChapter(id)}
-                    className="p-2 rounded-xl hover:bg-perigo-soft flex-shrink-0">
+                    className="p-2 rounded-2xl hover:bg-perigo-soft flex-shrink-0">
                     <Trash2 size={15} color="var(--danger)" />
                   </button>
                 </div>

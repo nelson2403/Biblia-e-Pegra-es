@@ -61,7 +61,7 @@ export default function PregacoesPage() {
       </div>
 
       <div className="px-6 mb-3">
-        <div className="flex items-center gap-2 border border-borda bg-surface rounded-xl px-3 py-2.5">
+        <div className="flex items-center gap-2 bg-surface rounded-2xl px-3 py-2.5">
           <Search size={17} color="var(--text-faint)" />
           <input type="text" placeholder="Buscar pregacoes..." value={search} onChange={e => onSearch(e.target.value)}
             className="flex-1 text-sm text-conteudo outline-none" />
@@ -77,7 +77,7 @@ export default function PregacoesPage() {
             <p className="text-sm text-conteudo-faint text-center">Clique no + para criar sua primeira pregacao guiada</p>
           </div>
         ) : filtered.map(item => (
-          <div key={item.id} className="bg-surface rounded-2xl p-4 shadow-sm">
+          <div key={item.id} className="bg-surface rounded-2xl p-4 shadow-cartao">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
                 style={{ backgroundColor: 'var(--accent-hover)' }}>
@@ -87,11 +87,11 @@ export default function PregacoesPage() {
                 <p className="font-bold text-conteudo text-sm truncate">{item.tema}</p>
                 <p className="text-xs font-semibold truncate" style={{ color: 'var(--accent)' }}>{item.texto_base}</p>
               </Link>
-              <button onClick={() => handleDelete(item.id)} className="p-2 rounded-xl hover:bg-perigo-soft text-perigo">
+              <button onClick={() => handleDelete(item.id)} className="p-2 rounded-2xl hover:bg-perigo-soft text-perigo">
                 <Trash2 size={17} />
               </button>
             </div>
-            <div className="flex items-center justify-between pt-3 border-t border-borda">
+            <div className="flex items-center justify-between pt-3">
               <div className="flex items-center gap-1.5 text-xs text-conteudo-muted">
                 <Users size={12} />
                 <span className="truncate max-w-[120px]">{item.publico}</span>

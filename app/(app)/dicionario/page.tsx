@@ -44,7 +44,7 @@ function EntryCard({ entry, onClick }: { entry: DictEntry; onClick: () => void }
   return (
     <button
       onClick={onClick}
-      className="w-full text-left bg-surface rounded-2xl p-4 shadow-sm flex items-center gap-3 active:scale-[0.98] transition-transform"
+      className="w-full text-left bg-surface rounded-2xl p-4 shadow-cartao flex items-center gap-3 active:scale-[0.98] transition-transform"
     >
       <Badge lang={entry.lang} />
       <div className="flex-1 min-w-0">
@@ -101,7 +101,7 @@ function ModalBottomSheet({
       }}
     >
       <div
-        className="w-full max-w-lg rounded-t-3xl overflow-hidden flex flex-col"
+        className="w-full max-w-lg rounded-t-[28px] overflow-hidden flex flex-col"
         style={{ backgroundColor: '#fff', maxHeight: '90vh' }}
       >
         {/* Handle */}
@@ -137,7 +137,7 @@ function ModalBottomSheet({
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl"
+            className="p-2 rounded-2xl"
             style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
           >
             <X size={18} color="#fff" />
@@ -187,7 +187,7 @@ function ModalBottomSheet({
                       key={i}
                       href={link}
                       onClick={onClose}
-                      className="flex items-center gap-2 rounded-xl px-3 py-2 active:opacity-60 transition-opacity"
+                      className="flex items-center gap-2 rounded-2xl px-3 py-2 active:opacity-60 transition-opacity"
                       style={{ backgroundColor: 'var(--accent-soft)', borderLeft: '3px solid #4F46E5' }}
                     >
                       <BookOpen size={14} color="var(--accent)" className="flex-shrink-0" />
@@ -197,7 +197,7 @@ function ModalBottomSheet({
                   ) : (
                     <div
                       key={i}
-                      className="flex items-center gap-2 rounded-xl px-3 py-2"
+                      className="flex items-center gap-2 rounded-2xl px-3 py-2"
                       style={{ backgroundColor: 'var(--surface-2)', borderLeft: '3px solid #4F46E5' }}
                     >
                       <BookOpen size={14} color="var(--accent)" className="flex-shrink-0" />
@@ -273,7 +273,7 @@ export default function DicionarioPage() {
         </p>
 
         {/* Search */}
-        <div className="mt-4 flex items-center gap-2 bg-white/15 rounded-xl px-3 py-2.5 border border-white/20">
+        <div className="mt-4 flex items-center gap-2 bg-white/15 rounded-2xl px-3 py-2.5 border border-white/20">
           <Search size={17} color="rgba(255,255,255,0.7)" />
           <input
             type="text"
@@ -291,12 +291,12 @@ export default function DicionarioPage() {
       </div>
 
       {/* Tabs */}
-      <div className="px-5 py-3 flex gap-2 bg-surface shadow-sm">
+      <div className="px-5 py-3 flex gap-2 bg-surface shadow-cartao">
         {TABS.map((tab) => (
           <button
             key={tab.value}
             onClick={() => setLangFilter(tab.value)}
-            className="flex-1 py-2 rounded-xl text-sm font-bold transition-all"
+            className="flex-1 py-2 rounded-2xl text-sm font-bold transition-all"
             style={{
               backgroundColor: langFilter === tab.value ? 'var(--accent)' : 'var(--surface-2)',
               color: langFilter === tab.value ? '#fff' : 'var(--text-muted)',
@@ -329,7 +329,7 @@ export default function DicionarioPage() {
                 setSearch('')
                 setLangFilter('todos')
               }}
-              className="mt-2 px-4 py-2 rounded-xl text-sm font-bold text-white"
+              className="mt-2 px-4 py-2 rounded-2xl text-sm font-bold text-white"
               style={{ backgroundColor: 'var(--accent)' }}
             >
               Limpar filtros

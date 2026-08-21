@@ -72,7 +72,7 @@ export default function AnotacoesPage() {
       </div>
 
       <div className="px-6 mb-2">
-        <div className="flex items-center gap-2 border border-borda bg-surface rounded-xl px-3 py-2.5">
+        <div className="flex items-center gap-2 bg-surface rounded-2xl px-3 py-2.5">
           <Search size={17} color="var(--text-faint)" />
           <input type="text" placeholder="Buscar anotacoes..." value={search}
             onChange={e => onSearch(e.target.value)}
@@ -117,7 +117,7 @@ export default function AnotacoesPage() {
           const ci = idx % COLORS.length
           const itemTags = (item.tags ?? '').split(',').map(t => t.trim()).filter(Boolean)
           return (
-            <div key={item.id} className="bg-surface rounded-2xl p-4 shadow-sm flex items-center gap-3">
+            <div key={item.id} className="bg-surface rounded-2xl p-4 shadow-cartao flex items-center gap-3">
               <div className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
                 style={{ backgroundColor: COLORS[ci] }}>
                 <FileText size={20} color={ICON_COLORS[ci]} />
@@ -137,7 +137,7 @@ export default function AnotacoesPage() {
                   {new Date(item.updated_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}
                 </p>
               </Link>
-              <button onClick={() => handleDelete(item.id)} className="p-2 rounded-xl hover:bg-perigo-soft text-perigo flex-shrink-0">
+              <button onClick={() => handleDelete(item.id)} className="p-2 rounded-2xl hover:bg-perigo-soft text-perigo flex-shrink-0">
                 <Trash2 size={17} />
               </button>
             </div>

@@ -23,7 +23,7 @@ function Secao({ titulo, children }: { titulo: string; children: React.ReactNode
 export default function PrivacidadePage() {
   return (
     <main className="min-h-screen bg-bg">
-      <header className="px-5 pt-6 pb-4 border-b border-borda">
+      <header className="px-5 pt-6 pb-4">
         <Link href="/login" className="inline-flex items-center gap-2 text-sm font-bold text-primary mb-4">
           <ArrowLeft size={16} /> Voltar
         </Link>

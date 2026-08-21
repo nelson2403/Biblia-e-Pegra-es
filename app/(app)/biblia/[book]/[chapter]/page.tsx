@@ -184,7 +184,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
       {/* Header */}
       <div className={`bg-gradient-to-br ${gradientColors} px-4 pt-4 pb-4 text-white`}>
         <div className="flex items-center gap-2 mb-3">
-          <button onClick={() => router.back()} className="p-2 rounded-xl hover:bg-white/10">
+          <button onClick={() => router.back()} className="p-2 rounded-2xl hover:bg-white/10">
             <ArrowLeft size={22} />
           </button>
           <button onClick={() => setShowPicker(true)} className="flex-1 text-center">
@@ -197,13 +197,13 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
             {/* Translation picker button */}
             <button
               onClick={() => setShowTranslations(true)}
-              className="px-2 py-1 rounded-lg bg-white/15 text-xs font-bold hover:bg-white/25 transition-colors">
+              className="px-2 py-1 rounded-xl bg-white/15 text-xs font-bold hover:bg-white/25 transition-colors">
               {currentTranslation.abbr} ▾
             </button>
             <button onClick={() => setFontSize(s => Math.min(s + 2, 24))}
-              className="p-1 text-sm font-bold bg-white/15 rounded-lg w-8 h-8 flex items-center justify-center">A+</button>
+              className="p-1 text-sm font-bold bg-white/15 rounded-xl w-8 h-8 flex items-center justify-center">A+</button>
             <button onClick={() => setFontSize(s => Math.max(s - 2, 12))}
-              className="p-1 text-xs font-bold bg-white/15 rounded-lg w-8 h-8 flex items-center justify-center">A-</button>
+              className="p-1 text-xs font-bold bg-white/15 rounded-xl w-8 h-8 flex items-center justify-center">A-</button>
           </div>
         </div>
 
@@ -238,7 +238,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
                 ref={el => { verseRefs.current[v.verse] = el }}
                 onClick={() => setSelected(prev => prev?.verse === v.verse ? null : v)}
                 aria-current={isLendo ? 'true' : undefined}
-                className="flex gap-3 w-full text-left px-3 py-2.5 rounded-xl transition-colors"
+                className="flex gap-3 w-full text-left px-3 py-2.5 rounded-2xl transition-colors"
                 style={{
                   backgroundColor: isLendo ? 'var(--accent-soft)' : isSelected ? 'var(--accent-soft)' : isHighlighted ? 'var(--gold-soft)' : 'transparent',
                   boxShadow: isLendo ? 'inset 3px 0 0 #4F46E5' : undefined,
@@ -272,22 +272,22 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
 
       {/* Selected verse action bar */}
       {selected && (
-        <div className="fixed bottom-16 md:bottom-0 left-0 right-0 md:left-60 bg-surface border-t border-borda shadow-xl z-40">
-          <div className="px-4 py-2 border-b border-borda">
+        <div className="fixed bottom-16 md:bottom-0 left-0 right-0 md:left-60 bg-surface shadow-alto z-40">
+          <div className="px-4 py-2">
             <p className="text-xs font-bold text-conteudo-muted text-center">
               {bookData.pt} {currentChapter}:{selected.verse} · {currentTranslation.abbr}
             </p>
           </div>
           <div className="px-4 py-3 grid grid-cols-4 gap-2">
             <button onClick={() => copyVerse(selected)}
-              className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-bg">
+              className="flex flex-col items-center gap-1 py-2 rounded-2xl hover:bg-bg">
               <Copy size={18} color={copied ? 'var(--success)' : 'var(--accent)'} />
               <span className="text-[11px] font-semibold" style={{ color: copied ? 'var(--success)' : 'var(--accent)' }}>
                 {copied ? 'Copiado!' : 'Copiar'}
               </span>
             </button>
             <button onClick={() => toggleFavorite(selected)}
-              className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-bg">
+              className="flex flex-col items-center gap-1 py-2 rounded-2xl hover:bg-bg">
               <Heart size={18}
                 fill={favorites.has(selected.verse) ? 'var(--danger)' : 'none'}
                 color={favorites.has(selected.verse) ? 'var(--danger)' : 'var(--text-muted)'} />
@@ -297,12 +297,12 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
               </span>
             </button>
             <button onClick={handleNoteVerse}
-              className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-bg">
+              className="flex flex-col items-center gap-1 py-2 rounded-2xl hover:bg-bg">
               <BookmarkPlus size={18} color="var(--gold)" />
               <span className="text-[11px] font-semibold text-gold">Anotar</span>
             </button>
             <button onClick={handleShare}
-              className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-bg">
+              className="flex flex-col items-center gap-1 py-2 rounded-2xl hover:bg-bg">
               <Share2 size={18} color="var(--success)" />
               <span className="text-[11px] font-semibold text-sucesso">Partilhar</span>
             </button>
@@ -314,7 +314,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
       {showPicker && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center"
           onClick={() => setShowPicker(false)}>
-          <div className="bg-surface w-full max-w-lg rounded-t-3xl p-5 max-h-[70vh] flex flex-col"
+          <div className="bg-surface w-full max-w-lg rounded-t-[28px] p-5 max-h-[70vh] flex flex-col"
             onClick={e => e.stopPropagation()}>
             <div className="w-10 h-1 bg-surface-3 rounded self-center mb-4" />
             <h3 className="text-lg font-bold text-conteudo text-center mb-4">Escolher Capítulo</h3>
@@ -322,7 +322,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
               {Array.from({ length: totalChapters }, (_, i) => i + 1).map(ch => (
                 <button key={ch}
                   onClick={() => { setCurrentChapter(ch); setShowPicker(false); router.replace(`/biblia/${params.book}/${ch}${isPlano ? '?plano=1' : ''}`, { scroll: false }) }}
-                  className="w-12 h-12 rounded-xl text-sm font-semibold transition-colors"
+                  className="w-12 h-12 rounded-2xl text-sm font-semibold transition-colors"
                   style={{
                     backgroundColor: ch === currentChapter ? 'var(--accent)' : 'var(--surface-2)',
                     color: ch === currentChapter ? '#fff' : 'var(--text)',
@@ -339,7 +339,7 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
       {showTranslations && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center"
           onClick={() => setShowTranslations(false)}>
-          <div className="bg-surface w-full max-w-lg rounded-t-3xl p-5 flex flex-col"
+          <div className="bg-surface w-full max-w-lg rounded-t-[28px] p-5 flex flex-col"
             onClick={e => e.stopPropagation()}>
             <div className="w-10 h-1 bg-surface-3 rounded self-center mb-4" />
             <h3 className="text-lg font-bold text-conteudo text-center mb-1">Versão da Bíblia</h3>
@@ -352,9 +352,9 @@ export default function CapituloPage({ params }: { params: { book: string; chapt
                     className="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-left transition-all"
                     style={{
                       backgroundColor: active ? 'var(--accent-soft)' : 'var(--surface-2)',
-                      border: active ? '2px solid #4F46E5' : '2px solid transparent',
+                      boxShadow: active ? '0 0 0 2px var(--accent)' : 'none',
                     }}>
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
                       style={{ backgroundColor: active ? 'var(--accent)' : 'var(--border)' }}>
                       <BookOpen size={20} color={active ? '#fff' : 'var(--text-muted)'} />
                     </div>

@@ -142,7 +142,7 @@ export default function InicioPage() {
   return (
     <div className="flex flex-col min-h-full bg-bg">
       {/* Cabeçalho fixo com abas */}
-      <header className="sticky top-0 z-30 bg-bg border-b border-borda">
+      <header className="sticky top-0 z-30 bg-bg">
         <div className="px-5 pt-5 pb-1 flex items-start justify-between">
           <div>
             <p className="text-sm text-conteudo-muted">{saudacao()},</p>

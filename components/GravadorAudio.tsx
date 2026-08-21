@@ -218,7 +218,7 @@ export function GravadorAudio({ onTranscrito }: Props) {
         type="button"
         onClick={() => setAberto(true)}
         aria-label="Ditar anotação por voz"
-        className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors"
+        className="flex items-center gap-2 px-4 py-2 rounded-2xl text-sm font-bold transition-colors"
         style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent)' }}
       >
         <Mic size={17} aria-hidden="true" />
@@ -257,13 +257,13 @@ export function GravadorAudio({ onTranscrito }: Props) {
             <button
               type="button"
               onClick={iniciar}
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-white font-bold text-sm active:scale-95 transition-transform"
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-white font-bold text-sm active:scale-95 transition-transform"
               style={{ background: 'linear-gradient(135deg, #4F46E5, #7C3AED)' }}
             >
               <Mic size={18} aria-hidden="true" /> Começar a gravar
             </button>
             <label
-              className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm cursor-pointer"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl font-bold text-sm cursor-pointer"
               style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent)' }}
             >
               <Upload size={17} aria-hidden="true" />
@@ -301,7 +301,7 @@ export function GravadorAudio({ onTranscrito }: Props) {
               type="button"
               onClick={() => pararGravacao(true)}
               aria-label="Descartar gravação"
-              className="px-4 py-3 rounded-xl font-bold text-sm"
+              className="px-4 py-3 rounded-2xl font-bold text-sm"
               style={{ backgroundColor: 'var(--danger-soft)', color: 'var(--danger)' }}
             >
               <Trash2 size={18} aria-hidden="true" />
@@ -310,7 +310,7 @@ export function GravadorAudio({ onTranscrito }: Props) {
               type="button"
               onClick={alternarPausa}
               aria-label={gravando ? 'Pausar gravação' : 'Continuar gravação'}
-              className="px-4 py-3 rounded-xl font-bold text-sm"
+              className="px-4 py-3 rounded-2xl font-bold text-sm"
               style={{ backgroundColor: 'var(--surface-2)', color: 'var(--text-muted)' }}
             >
               {gravando ? <Pause size={18} aria-hidden="true" /> : <Play size={18} aria-hidden="true" />}
@@ -318,7 +318,7 @@ export function GravadorAudio({ onTranscrito }: Props) {
             <button
               type="button"
               onClick={() => pararGravacao(false)}
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-white font-bold text-sm active:scale-95 transition-transform"
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-white font-bold text-sm active:scale-95 transition-transform"
               style={{ background: 'linear-gradient(135deg, #059669, #10B981)' }}
             >
               <Square size={16} fill="#fff" aria-hidden="true" /> Concluir e transcrever
@@ -328,7 +328,7 @@ export function GravadorAudio({ onTranscrito }: Props) {
       )}
 
       {erro && (
-        <p role="alert" className="mt-3 text-xs font-semibold px-3 py-2 rounded-xl"
+        <p role="alert" className="mt-3 text-xs font-semibold px-3 py-2 rounded-2xl"
           style={{ backgroundColor: 'var(--danger-soft)', color: 'var(--danger)' }}>
           {erro}
         </p>

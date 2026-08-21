@@ -12,7 +12,7 @@ import type { BlocoLeitura } from '@/hooks/useLeitor'
 function Section({ title, content, icon, destacado }: { title: string; content?: string; icon: string; destacado?: boolean }) {
   if (!content?.trim()) return null
   return (
-    <div className="bg-surface rounded-2xl p-4 shadow-sm"
+    <div className="bg-surface rounded-2xl p-4 shadow-cartao"
       style={destacado ? { backgroundColor: 'var(--gold-soft)', boxShadow: 'inset 3px 0 0 #4F46E5' } : undefined}>
       <div className="flex items-center gap-2 mb-2">
         <span className="text-base">{icon}</span>
@@ -80,24 +80,24 @@ export default function EstudoDetalhePage({ params }: { params: { id: string } }
   return (
     <div className="flex flex-col min-h-full">
       <div className="flex items-center gap-2 px-4 py-4 text-white" style={{ backgroundColor: 'var(--accent-hover)' }}>
-        <button onClick={() => router.back()} className="p-2 rounded-xl hover:bg-white/10">
+        <button onClick={() => router.back()} className="p-2 rounded-2xl hover:bg-white/10">
           <ArrowLeft size={22} />
         </button>
         <p className="flex-1 text-center font-bold truncate">{estudo.livro} {estudo.capitulo}:{estudo.versiculo}</p>
-        <button onClick={handleShare} className="p-2 rounded-xl hover:bg-white/10">
+        <button onClick={handleShare} className="p-2 rounded-2xl hover:bg-white/10">
           <Share2 size={18} />
         </button>
-        <Link href={`/estudos/novo?id=${estudo.id}`} className="p-2 rounded-xl hover:bg-white/10">
+        <Link href={`/estudos/novo?id=${estudo.id}`} className="p-2 rounded-2xl hover:bg-white/10">
           <Pencil size={18} />
         </Link>
-        <button onClick={handleDelete} className="p-2 rounded-xl hover:bg-white/10">
+        <button onClick={handleDelete} className="p-2 rounded-2xl hover:bg-white/10">
           <Trash2 size={18} />
         </button>
       </div>
 
       <div className="flex-1 p-5 flex flex-col gap-3 pb-32">
         {/* Reference card */}
-        <div className="bg-surface rounded-2xl p-4 shadow-sm flex items-center gap-4">
+        <div className="bg-surface rounded-2xl p-4 shadow-cartao flex items-center gap-4">
           <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--accent-soft)' }}>
             <BookOpen size={22} color="var(--accent)" />
           </div>
@@ -114,7 +114,7 @@ export default function EstudoDetalhePage({ params }: { params: { id: string } }
         </div>
 
         {/* Completeness */}
-        <div className="bg-surface rounded-2xl p-4 shadow-sm">
+        <div className="bg-surface rounded-2xl p-4 shadow-cartao">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-bold text-conteudo-muted uppercase tracking-wider">Completude do Estudo</p>
             <span className="text-xs font-bold" style={{ color: completeness === 4 ? 'var(--success)' : 'var(--accent)' }}>

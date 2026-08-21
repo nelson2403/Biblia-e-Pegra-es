@@ -69,11 +69,11 @@ export function ConviteInstalar() {
     <div
       role="dialog"
       aria-label="Instalar o aplicativo"
-      className="fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-50 rounded-2xl p-4 shadow-2xl text-white"
+      className="fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-50 rounded-2xl p-4 shadow-alto text-white"
       style={{ background: 'linear-gradient(135deg, #1E1B4B, #4F46E5)' }}
     >
       <div className="flex items-start gap-3">
-        <img src="/icons/icon-96.png" alt="" className="w-12 h-12 rounded-xl flex-shrink-0" />
+        <img src="/icons/icon-96.png" alt="" className="w-12 h-12 rounded-2xl flex-shrink-0" />
         <div className="flex-1 min-w-0">
           <p className="font-extrabold text-sm">Instale o app</p>
           <p className="text-xs mt-0.5 leading-snug" style={{ color: 'rgba(255,255,255,0.75)' }}>
@@ -88,14 +88,14 @@ export function ConviteInstalar() {
       </div>
 
       {ehIOS ? (
-        <div className="flex items-center justify-center gap-2 mt-3 py-2 rounded-xl text-sm font-bold"
+        <div className="flex items-center justify-center gap-2 mt-3 py-2 rounded-2xl text-sm font-bold"
           style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
           <Share size={16} aria-hidden="true" /> Compartilhar → Adicionar à Tela de Início
         </div>
       ) : (
         <button
           onClick={instalar}
-          className="w-full flex items-center justify-center gap-2 mt-3 py-2.5 rounded-xl bg-surface text-sm font-bold"
+          className="w-full flex items-center justify-center gap-2 mt-3 py-2.5 rounded-2xl bg-surface text-sm font-bold"
           style={{ color: 'var(--accent)' }}
         >
           <Download size={16} aria-hidden="true" /> Instalar agora

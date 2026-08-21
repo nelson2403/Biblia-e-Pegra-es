@@ -117,7 +117,7 @@ export default function PerfilPage() {
 
         {/* Feedback banner */}
         {feedback && (
-          <div className="rounded-xl px-4 py-3 text-sm font-semibold flex items-center gap-2"
+          <div className="rounded-2xl px-4 py-3 text-sm font-semibold flex items-center gap-2"
             style={{
               backgroundColor: feedback.type === 'ok' ? 'var(--success-soft)' : 'var(--danger-soft)',
               color: feedback.type === 'ok' ? 'var(--success)' : 'var(--danger)',
@@ -140,7 +140,7 @@ export default function PerfilPage() {
             {editing && (
               <button onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingPhoto}
-                className="absolute bottom-0 right-0 w-8 h-8 rounded-full flex items-center justify-center shadow-lg disabled:opacity-50"
+                className="absolute bottom-0 right-0 w-8 h-8 rounded-full flex items-center justify-center shadow-alto disabled:opacity-50"
                 style={{ backgroundColor: 'var(--accent)' }}>
                 <Camera size={15} color="#fff" />
               </button>
@@ -159,19 +159,19 @@ export default function PerfilPage() {
           {editing ? (
             <div className="flex gap-2">
               <button onClick={handleSave} disabled={saving}
-                className="flex items-center gap-1.5 px-5 py-2 rounded-xl text-white text-sm font-bold disabled:opacity-60"
+                className="flex items-center gap-1.5 px-5 py-2 rounded-2xl text-white text-sm font-bold disabled:opacity-60"
                 style={{ backgroundColor: 'var(--accent)' }}>
                 <Check size={15} /> {saving ? 'Salvando...' : 'Salvar'}
               </button>
               <button onClick={cancelEdit}
-                className="flex items-center gap-1.5 px-5 py-2 rounded-xl text-sm font-bold"
+                className="flex items-center gap-1.5 px-5 py-2 rounded-2xl text-sm font-bold"
                 style={{ backgroundColor: 'var(--surface-2)', color: 'var(--text-muted)' }}>
                 <X size={15} /> Cancelar
               </button>
             </div>
           ) : (
             <button onClick={startEdit}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-xl text-sm font-bold"
+              className="flex items-center gap-1.5 px-5 py-2 rounded-2xl text-sm font-bold"
               style={{ backgroundColor: 'var(--accent-soft)', color: 'var(--accent)' }}>
               <Edit2 size={14} /> Editar perfil
             </button>
@@ -180,7 +180,7 @@ export default function PerfilPage() {
 
         {/* Edit form */}
         {editing && (
-          <div className="bg-surface rounded-2xl shadow-sm p-4 flex flex-col gap-4">
+          <div className="bg-surface rounded-2xl shadow-cartao p-4 flex flex-col gap-4">
             <p className="text-xs font-bold text-conteudo-faint uppercase tracking-wider">Editar informações</p>
 
             <div className="flex flex-col gap-1">
@@ -188,7 +188,7 @@ export default function PerfilPage() {
                 <User size={13} /> Nome
               </label>
               <input value={newName} onChange={e => setNewName(e.target.value)}
-                className="border border-borda rounded-xl px-3 py-2.5 text-sm text-conteudo outline-none focus:ring-2 focus:ring-primary"
+                className="rounded-2xl px-3 py-2.5 text-sm text-conteudo outline-none focus:ring-2 focus:ring-primary"
                 placeholder="Seu nome completo" />
             </div>
 
@@ -198,7 +198,7 @@ export default function PerfilPage() {
               </label>
               <input value={newEmail} onChange={e => setNewEmail(e.target.value)}
                 type="email"
-                className="border border-borda rounded-xl px-3 py-2.5 text-sm text-conteudo outline-none focus:ring-2 focus:ring-primary"
+                className="rounded-2xl px-3 py-2.5 text-sm text-conteudo outline-none focus:ring-2 focus:ring-primary"
                 placeholder="seu@email.com" />
               <span className="text-[11px] text-conteudo-faint">Será enviado um e-mail de confirmação para o novo endereço.</span>
             </div>
@@ -209,14 +209,14 @@ export default function PerfilPage() {
               </label>
               <input value={newPassword} onChange={e => setNewPassword(e.target.value)}
                 type="password"
-                className="border border-borda rounded-xl px-3 py-2.5 text-sm text-conteudo outline-none focus:ring-2 focus:ring-primary"
+                className="rounded-2xl px-3 py-2.5 text-sm text-conteudo outline-none focus:ring-2 focus:ring-primary"
                 placeholder="Deixe em branco para não alterar" />
             </div>
           </div>
         )}
 
         {/* Stats */}
-        <div className="bg-surface rounded-2xl shadow-sm flex divide-x divide-borda">
+        <div className="bg-surface rounded-2xl shadow-cartao flex">
           {[
             { value: stats.estudos, label: 'Estudos', Icon: Layers, color: 'var(--accent)' },
             { value: stats.anotacoes, label: 'Anotações', Icon: PenLine, color: 'var(--gold)' },
@@ -231,15 +231,15 @@ export default function PerfilPage() {
 
         {/* Account info (read-only, shown when not editing) */}
         {!editing && (
-          <div className="bg-surface rounded-2xl shadow-sm p-4">
+          <div className="bg-surface rounded-2xl shadow-cartao p-4">
             <p className="text-xs font-bold text-conteudo-faint uppercase tracking-wider mb-3">Minha conta</p>
             {[
               { Icon: User, label: 'Nome', value: userName },
               { Icon: Mail, label: 'E-mail', value: userEmail },
               { Icon: Calendar, label: 'Membro desde', value: memberSince },
             ].map(({ Icon, label, value }) => (
-              <div key={label} className="flex items-center gap-3 py-3 border-b border-borda last:border-0">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+              <div key={label} className="flex items-center gap-3 py-3 last:border-0">
+                <div className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: 'var(--accent-soft)' }}>
                   <Icon size={19} color="var(--accent)" />
                 </div>
@@ -254,15 +254,15 @@ export default function PerfilPage() {
         <ConfiguracoesApp />
 
         {/* Info menu */}
-        <div className="bg-surface rounded-2xl shadow-sm p-4">
+        <div className="bg-surface rounded-2xl shadow-cartao p-4">
           <p className="text-xs font-bold text-conteudo-faint uppercase tracking-wider mb-3">Informações</p>
           {[
             { Icon: Shield, label: 'Política de Privacidade', href: '/privacidade' },
             { Icon: HelpCircle, label: 'Suporte', href: 'mailto:financeiropedradopombal@gmail.com' },
           ].map(({ Icon, label, href }) => (
             <a key={label} href={href}
-              className="flex items-center gap-3 py-3 border-b border-borda last:border-0">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+              className="flex items-center gap-3 py-3 last:border-0">
+              <div className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0"
                 style={{ backgroundColor: 'var(--surface-2)' }}>
                 <Icon size={19} color="var(--text-muted)" />
               </div>
@@ -274,7 +274,7 @@ export default function PerfilPage() {
 
         {/* Inspirational */}
         <div className="rounded-2xl p-4 flex flex-col items-center gap-2 text-center"
-          style={{ backgroundColor: 'var(--gold-soft)', border: '1px solid #FED7AA' }}>
+          style={{ backgroundColor: 'var(--gold-soft)' }}>
           <p className="text-sm italic" style={{ color: 'var(--gold)' }}>"Posso tudo naquele que me fortalece."</p>
           <p className="text-xs font-bold" style={{ color: 'var(--gold)' }}>Filipenses 4:13</p>
         </div>

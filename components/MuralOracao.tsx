@@ -358,7 +358,7 @@ export function MuralOracao({ compacto = false }: { compacto?: boolean }) {
               </div>
 
               {p.comentarios.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-borda flex flex-col gap-2.5">
+                <div className="mt-3 pt-3 flex flex-col gap-2.5">
                   {p.comentarios.map(c => (
                     <div key={c.id} className="flex gap-2.5">
                       <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-[9px] font-bold mt-0.5"
@@ -423,7 +423,7 @@ export function MuralOracao({ compacto = false }: { compacto?: boolean }) {
           style={{ backgroundColor: 'rgba(0,0,0,.55)' }}
           onClick={() => setFormAberto(false)}
           role="dialog" aria-modal="true" aria-label="Novo pedido de oração">
-          <div className="bg-surface w-full max-w-lg rounded-t-3xl p-5 max-h-[85vh] overflow-y-auto"
+          <div className="bg-surface w-full max-w-lg rounded-t-[28px] p-5 max-h-[85vh] overflow-y-auto"
             onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-extrabold text-conteudo text-base">Pedir oração</h3>
