@@ -29,8 +29,25 @@ const ARTE = `
   <line x1="330" y1="358" x2="386" y2="358" stroke="white" stroke-width="12" stroke-linecap="round"/>
 `
 
+/**
+ * Sem cantos arredondados e sem transparência: o Android aplica a própria
+ * máscara por cima. Se o PNG já vier arredondado sobre fundo transparente,
+ * sobra um contorno escuro em volta do ícone — que era o problema anterior.
+ */
 const svgPadrao = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="100" fill="#1E1B4B"/>
+  <defs>
+    <linearGradient id="fundo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2A2270"/>
+      <stop offset="55%" stop-color="#1E1B4B"/>
+      <stop offset="100%" stop-color="#120F33"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.72" cy="0.74" r="0.5">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#fundo)"/>
+  <rect width="512" height="512" fill="url(#halo)"/>
   ${ARTE}
 </svg>`
 
@@ -40,7 +57,14 @@ const svgPadrao = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
  * sobre um fundo que sangra até a borda.
  */
 const svgMaskable = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#1E1B4B"/>
+  <defs>
+    <linearGradient id="fundoM" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2A2270"/>
+      <stop offset="55%" stop-color="#1E1B4B"/>
+      <stop offset="100%" stop-color="#120F33"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#fundoM)"/>
   <g transform="translate(256,256) scale(0.72) translate(-256,-256)">
     ${ARTE}
   </g>
@@ -106,7 +130,6 @@ async function main() {
   // A Play Store exige o ícone da ficha em 512x512 sem transparência.
   await sharp(Buffer.from(svgPadrao))
     .resize(512, 512)
-    .flatten({ background: '#1E1B4B' })
     .png()
     .toFile(path.join(SAIDA, 'playstore-icon-512.png'))
 

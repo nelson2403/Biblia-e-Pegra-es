@@ -129,6 +129,10 @@ export interface Preferencias {
   notif_hora: number
   tts_voz: string | null
   tts_velocidade: number
+  /** Voz neural da Google escolhida (quando a voz natural está ativa). */
+  tts_voz_nuvem: string | null
+  /** Desligar cai para a voz do próprio aparelho. */
+  voz_natural: boolean
   fonte_grande: boolean
   alto_contraste: boolean
   updated_at?: string

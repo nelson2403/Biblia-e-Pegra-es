@@ -12,15 +12,16 @@ import { useAuth } from '@/contexts/AuthContext'
 const NAV = [
   { href: '/dashboard', label: 'Inicio', Icon: Home },
   { href: '/diario', label: 'Palavra do Dia', Icon: Sun },
+  { href: '/devocionais', label: 'Devocionais', Icon: Sparkles },
+  { href: '/planos', label: 'Planos de Leitura', Icon: Map },
   { href: '/biblia', label: 'Biblia', Icon: BookOpen },
   { href: '/favoritos', label: 'Favoritos', Icon: Heart },
   { href: '/estudos', label: 'Estudos', Icon: Layers },
   { href: '/anotacoes', label: 'Anotacoes', Icon: BookMarked },
   { href: '/pregacoes', label: 'Pregacoes', Icon: Mic },
-  { href: '/plano', label: 'Plano', Icon: Map },
+  { href: '/oracao', label: 'Mural de Oracao', Icon: HeartHandshake },
   { href: '/busca', label: 'Busca', Icon: Search },
   { href: '/dicionario', label: 'Dicionario', Icon: BookA },
-  { href: '/oracao', label: 'Mural de Oracao', Icon: HeartHandshake },
   { href: '/conselheiro', label: 'Conselheiro IA', Icon: Bot },
   { href: '/pregacoes/ia', label: 'Gerar Pregacao IA', Icon: Sparkles },
   { href: '/perfil', label: 'Perfil', Icon: User },
@@ -30,18 +31,20 @@ const BOTTOM_NAV = [
   { href: '/dashboard', label: 'Inicio', Icon: Home },
   { href: '/diario', label: 'Hoje', Icon: Sun },
   { href: '/biblia', label: 'Biblia', Icon: BookOpen },
-  { href: '/estudos', label: 'Estudos', Icon: Layers },
+  { href: '/planos', label: 'Planos', Icon: Map },
 ]
 
 const MAIS_MENU = [
+  { href: '/devocionais', label: 'Devocionais', Icon: Sparkles },
   { href: '/oracao', label: 'Mural de Oracao', Icon: HeartHandshake },
+  { href: '/estudos', label: 'Estudos', Icon: Layers },
   { href: '/conselheiro', label: 'Conselheiro IA', Icon: Bot },
   { href: '/pregacoes/ia', label: 'Gerar Pregacao IA', Icon: Sparkles },
   { href: '/pregacoes', label: 'Pregacoes', Icon: Mic },
   { href: '/favoritos', label: 'Favoritos', Icon: Heart },
   { href: '/anotacoes', label: 'Anotacoes', Icon: BookMarked },
   { href: '/dicionario', label: 'Dicionario', Icon: BookA },
-  { href: '/plano', label: 'Plano', Icon: Map },
+  { href: '/plano', label: 'Meu historico', Icon: Map },
   { href: '/busca', label: 'Busca', Icon: Search },
   { href: '/perfil', label: 'Perfil', Icon: User },
 ]
@@ -120,28 +123,40 @@ export function BottomNav() {
 
   return (
     <>
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-borda z-50">
-        <div className="flex">
-          {BOTTOM_NAV.map(({ href, label, Icon }) => {
-            const active = pathname === href || pathname.startsWith(href + '/')
-            return (
-              <Link key={href} href={href}
-                className="flex-1 flex flex-col items-center py-2 gap-0.5 transition-colors"
-                style={{ color: active ? 'var(--accent)' : 'var(--text-faint)' }}>
-                <Icon size={21} />
-                <span className="text-[10px] font-semibold">{label}</span>
-              </Link>
-            )
-          })}
+      {/* Barra flutuante com vidro fosco — some sob o conteúdo em vez de cortá-lo. */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 pointer-events-none"
+        style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
+        <div className="mx-3 rounded-full pointer-events-auto barra-vidro">
+          <div className="flex px-1.5 py-1.5">
+            {BOTTOM_NAV.map(({ href, label, Icon }) => {
+              const active = pathname === href || pathname.startsWith(href + '/')
+              return (
+                <Link key={href} href={href}
+                  aria-current={active ? 'page' : undefined}
+                  className="flex-1 flex flex-col items-center gap-0.5 py-2 rounded-full transition-all"
+                  style={{
+                    color: active ? 'var(--accent-fg)' : 'var(--text-muted)',
+                    backgroundColor: active ? 'var(--accent)' : 'transparent',
+                  }}>
+                  <Icon size={19} />
+                  <span className="text-[9.5px] font-bold">{label}</span>
+                </Link>
+              )
+            })}
 
-          {/* Botão Mais */}
-          <button
-            onClick={() => setShowMais(v => !v)}
-            className="flex-1 flex flex-col items-center py-2 gap-0.5 transition-colors"
-            style={{ color: showMais || maisActive ? 'var(--accent)' : 'var(--text-faint)' }}>
-            <Grid2x2 size={21} />
-            <span className="text-[10px] font-semibold">Mais</span>
-          </button>
+            <button
+              onClick={() => setShowMais(v => !v)}
+              aria-label="Mais seções"
+              aria-expanded={showMais}
+              className="flex-1 flex flex-col items-center gap-0.5 py-2 rounded-full transition-all"
+              style={{
+                color: showMais || maisActive ? 'var(--accent-fg)' : 'var(--text-muted)',
+                backgroundColor: showMais || maisActive ? 'var(--accent)' : 'transparent',
+              }}>
+              <Grid2x2 size={19} />
+              <span className="text-[9.5px] font-bold">Mais</span>
+            </button>
+          </div>
         </div>
       </nav>
 

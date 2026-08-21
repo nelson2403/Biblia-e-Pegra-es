@@ -281,6 +281,32 @@ html[data-contraste='alto'] .cartao {
     background-color: var(--surface-3);
   }
 
+  /* Reserva o espaço da barra flutuante no celular; no desktop ela não existe. */
+  .area-conteudo {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 768px) {
+    .area-conteudo {
+      padding-bottom: 0;
+    }
+  }
+
+  /* Vidro fosco da barra de navegação e de cabeçalhos fixos. */
+  .barra-vidro {
+    background-color: color-mix(in srgb, var(--surface) 82%, transparent);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+  }
+
+  /* Navegadores sem backdrop-filter recebem fundo sólido, para o texto não sumir. */
+  @supports not (backdrop-filter: blur(1px)) {
+    .barra-vidro {
+      background-color: var(--surface);
+    }
+  }
+
   .etiqueta {
     display: inline-flex;
     align-items: center;
