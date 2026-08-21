@@ -2,6 +2,17 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import type { BlocoLeitura, EstadoLeitor } from '@/hooks/useLeitor'
+import { doCache } from '@/lib/offline'
+
+/** Opus ocupa metade do MP3; nem todo aparelho toca Ogg/Opus. */
+function tocaOpus(): boolean {
+  if (typeof document === 'undefined') return false
+  try {
+    return !!document.createElement('audio').canPlayType('audio/ogg; codecs=opus')
+  } catch {
+    return false
+  }
+}
 
 /** Quantos trechos adiante buscar enquanto o atual toca. */
 const ANTECIPAR = 2
@@ -67,6 +78,8 @@ export function useLeitorNuvem(blocos: BlocoLeitura[]) {
   const cancelandoRef = useRef(false)
   const vozRef = useRef(voz)
   const velocidadeRef = useRef(1)
+  // Object URLs precisam ser revogados, senao o blob fica na memoria do navegador.
+  const objetoUrlRef = useRef<string | null>(null)
 
   const token = session?.access_token
 
@@ -111,7 +124,11 @@ export function useLeitorNuvem(blocos: BlocoLeitura[]) {
       const res = await fetch('/api/falar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ texto: trecho.texto, voz: vozRef.current }),
+        body: JSON.stringify({
+          texto: trecho.texto,
+          voz: vozRef.current,
+          formato: tocaOpus() ? 'opus' : 'mp3',
+        }),
       })
       if (!res.ok) {
         const d = await res.json().catch(() => null)
@@ -158,7 +175,19 @@ export function useLeitorNuvem(blocos: BlocoLeitura[]) {
         setCarregando(false)
         if (!url || cancelandoRef.current) return
 
-        audio.src = url
+        // Se o áudio foi baixado para uso offline, toca do aparelho.
+        // Sem isto o download seria inútil: a Cache Storage não é consultada
+        // sozinha por um elemento <audio>, só pelo service worker.
+        const guardado = await doCache(url)
+        if (guardado) {
+          const anterior = objetoUrlRef.current
+          objetoUrlRef.current = URL.createObjectURL(await guardado.blob())
+          if (anterior) URL.revokeObjectURL(anterior)
+          audio.src = objetoUrlRef.current
+        } else {
+          audio.src = url
+        }
+
         audio.playbackRate = velocidadeRef.current
         await audio.play()
         setEstado('lendo')
@@ -209,7 +238,13 @@ export function useLeitorNuvem(blocos: BlocoLeitura[]) {
   }, [])
 
   // Ao trocar de tela, silencia.
-  useEffect(() => () => { audioRef.current?.pause() }, [])
+  useEffect(
+    () => () => {
+      audioRef.current?.pause()
+      if (objetoUrlRef.current) URL.revokeObjectURL(objetoUrlRef.current)
+    },
+    []
+  )
 
   const ler = useCallback(
     (blocoIdInicial?: string) => {

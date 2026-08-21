@@ -2,10 +2,12 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
   Headphones, Play, Pause, Square, SkipBack, SkipForward, Settings2, X, Check, Loader2, Sparkles,
+  WifiOff, Download,
 } from 'lucide-react'
 import { useLeitor, BlocoLeitura } from '@/hooks/useLeitor'
 import { useLeitorNuvem } from '@/hooks/useLeitorNuvem'
 import { usePreferencias } from '@/hooks/usePreferencias'
+import { useAudioOffline } from '@/hooks/useAudioOffline'
 
 const VELOCIDADES = [0.7, 0.85, 1, 1.15, 1.3, 1.5, 1.75, 2]
 
@@ -33,6 +35,7 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
   const nuvem = useLeitorNuvem(blocos)
   const dispositivo = useLeitor(blocos)
   const { prefs, salvar } = usePreferencias()
+  const audioOffline = useAudioOffline(blocos, nuvem.voz)
   const [aberto, setAberto] = useState(false)
   const [config, setConfig] = useState(false)
 
@@ -202,6 +205,46 @@ export function LeitorAudio({ blocos, titulo, onBlocoAtual, iniciarEm, deslocame
                   <span className="absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-all"
                     style={{ left: usandoNuvem ? 26 : 4 }} />
                 </button>
+              </div>
+            )}
+
+            {/* Guardar o áudio no aparelho */}
+            {usandoNuvem && audioOffline.estado !== 'indisponivel' && (
+              <div className="rounded-card p-4 mt-4" style={{ backgroundColor: 'var(--surface-2)' }}>
+                <div className="flex items-center gap-2 mb-1">
+                  <WifiOff size={15} className="text-conteudo-muted" aria-hidden="true" />
+                  <p className="text-sm font-bold text-conteudo">Ouvir sem internet</p>
+                </div>
+
+                {audioOffline.estado === 'guardado' ? (
+                  <p className="text-xs text-conteudo-muted">
+                    Áudio guardado no aparelho
+                    {audioOffline.mb !== null && ` · ${audioOffline.mb} MB`}. Agora toca offline.
+                  </p>
+                ) : audioOffline.estado === 'baixando' ? (
+                  <div className="flex flex-col gap-2 mt-2">
+                    <div className="h-1.5 rounded-full overflow-hidden bg-surface-3">
+                      <div className="h-1.5 rounded-full transition-all"
+                        style={{ width: `${audioOffline.progresso}%`, backgroundColor: 'var(--accent)' }} />
+                    </div>
+                    <p className="text-xs text-conteudo-muted tabular-nums">
+                      Gerando o áudio… {audioOffline.progresso}%
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xs text-conteudo-muted mb-3 leading-relaxed">
+                      Baixe este texto em áudio para ouvir sem sinal. Cerca de{' '}
+                      <strong className="text-conteudo">
+                        {audioOffline.mbEstimados.toFixed(1)} MB
+                      </strong>
+                      {audioOffline.formato === 'opus' && ' (formato compacto)'}.
+                    </p>
+                    <button onClick={audioOffline.baixar} className="btn-secundario w-full">
+                      <Download size={16} /> Baixar áudio
+                    </button>
+                  </>
+                )}
               </div>
             )}
 

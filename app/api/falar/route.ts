@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sintetizar, vozValida, temChaveTTS, VOZES } from '@/lib/tts'
+import { sintetizar, vozValida, temChaveTTS, formatoValido, VOZES } from '@/lib/tts'
 import { usuarioDaRequisicao } from '@/lib/authServer'
 
 export const dynamic = 'force-dynamic'
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { texto, voz } = await req.json()
+    const { texto, voz, formato } = await req.json()
 
     if (typeof texto !== 'string' || !texto.trim()) {
       return NextResponse.json({ error: 'Texto vazio.' }, { status: 400 })
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
     // A velocidade não entra aqui: o áudio sai em ritmo natural e o aparelho
     // acelera na reprodução, o que mantém um único arquivo em cache por trecho.
-    const resultado = await sintetizar(texto, vozValida(voz))
+    const resultado = await sintetizar(texto, vozValida(voz), formatoValido(formato))
 
     return NextResponse.json(resultado)
   } catch (e: any) {

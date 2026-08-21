@@ -29,8 +29,21 @@ export function temChaveTTS(): boolean {
  * mesmo versículo serve para quem ouve em 0,7× e para quem ouve em 1,5×,
  * em vez de gerar — e cobrar — um arquivo por velocidade.
  */
-function chaveDoAudio(texto: string, voz: string): string {
-  return createHash('sha256').update(`${voz}|${texto}`).digest('hex').slice(0, 40)
+function chaveDoAudio(texto: string, voz: string, formato: Formato): string {
+  const sufixo = formato === 'opus' ? '|opus' : ''
+  return createHash('sha256').update(`${voz}|${texto}${sufixo}`).digest('hex').slice(0, 40)
+}
+
+/**
+ * Opus ocupa cerca de metade do MP3 para a mesma voz — o que importa muito
+ * quando o usuário baixa capítulos para ouvir sem internet. Nem todo aparelho
+ * toca Ogg/Opus (Safari antigo, principalmente), então o cliente informa o que
+ * consegue e guardamos os dois formatos em cache separado.
+ */
+export type Formato = 'mp3' | 'opus'
+
+export function formatoValido(f: unknown): Formato {
+  return f === 'opus' ? 'opus' : 'mp3'
 }
 
 let baldeVerificado = false
@@ -44,7 +57,7 @@ async function garantirBalde() {
     await admin.storage.createBucket(BALDE, {
       public: true,
       fileSizeLimit: 10 * 1024 * 1024,
-      allowedMimeTypes: ['audio/mpeg'],
+      allowedMimeTypes: ['audio/mpeg', 'audio/ogg'],
     })
   }
   baldeVerificado = true
@@ -81,7 +94,11 @@ export interface AudioGerado {
  * não existir. O cache é o que segura o custo: cada trecho da Bíblia é
  * sintetizado uma única vez e depois serve para todos os usuários.
  */
-export async function sintetizar(texto: string, voz: string): Promise<AudioGerado> {
+export async function sintetizar(
+  texto: string,
+  voz: string,
+  formato: Formato = 'mp3'
+): Promise<AudioGerado> {
   const chave = process.env.GOOGLE_TTS_API_KEY
   if (!chave) throw new Error('GOOGLE_TTS_API_KEY não configurada.')
 
@@ -92,7 +109,9 @@ export async function sintetizar(texto: string, voz: string): Promise<AudioGerad
 
   await garantirBalde()
   const admin = getSupabaseAdmin()
-  const caminho = `${chaveDoAudio(limpo, voz)}.mp3`
+  const extensao = formato === 'opus' ? 'ogg' : 'mp3'
+  const tipoMime = formato === 'opus' ? 'audio/ogg' : 'audio/mpeg'
+  const caminho = `${chaveDoAudio(limpo, voz, formato)}.${extensao}`
 
   const { data: publico } = admin.storage.from(BALDE).getPublicUrl(caminho)
 
@@ -112,7 +131,7 @@ export async function sintetizar(texto: string, voz: string): Promise<AudioGerad
       input: { ssml: comoSSML(limpo) },
       voice: { languageCode: 'pt-BR', name: voz },
       audioConfig: {
-        audioEncoding: 'MP3',
+        audioEncoding: formato === 'opus' ? 'OGG_OPUS' : 'MP3',
         speakingRate: 1,
         pitch: 0,
         // Perfil de fone/celular: deixa a voz mais presente no aparelho.
@@ -134,7 +153,7 @@ export async function sintetizar(texto: string, voz: string): Promise<AudioGerad
 
   const bytes = Buffer.from(base64, 'base64')
   const { error } = await admin.storage.from(BALDE).upload(caminho, bytes, {
-    contentType: 'audio/mpeg',
+    contentType: tipoMime,
     cacheControl: '31536000',
     upsert: true,
   })
