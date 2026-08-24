@@ -48,18 +48,42 @@ export function formatoValido(f: unknown): Formato {
 
 let baldeVerificado = false
 
-/** Cria o balde público na primeira execução. Ignora "já existe". */
+const TIPOS_ACEITOS = ['audio/mpeg', 'audio/ogg', 'audio/opus', 'audio/webm']
+
+/**
+ * Garante que o balde existe E aceita os formatos que usamos hoje.
+ *
+ * A correção do balde existente não é zelo excessivo: o balde foi criado
+ * aceitando só MP3, e quando o app passou a gerar Opus todos os uploads
+ * começaram a ser recusados em silêncio — o áudio parou de tocar no app
+ * inteiro. Conferir a configuração, e não só a existência, evita repetir isso
+ * a cada formato novo.
+ */
 async function garantirBalde() {
   if (baldeVerificado) return
   const admin = getSupabaseAdmin()
+
   const { data } = await admin.storage.getBucket(BALDE)
+
   if (!data) {
     await admin.storage.createBucket(BALDE, {
       public: true,
       fileSizeLimit: 10 * 1024 * 1024,
-      allowedMimeTypes: ['audio/mpeg', 'audio/ogg'],
+      allowedMimeTypes: TIPOS_ACEITOS,
     })
+  } else {
+    const aceitos = data.allowedMimeTypes ?? []
+    const faltando = TIPOS_ACEITOS.some(t => !aceitos.includes(t))
+    if (faltando) {
+      console.warn('[tts] balde desatualizado; corrigindo os formatos aceitos')
+      await admin.storage.updateBucket(BALDE, {
+        public: true,
+        fileSizeLimit: 10 * 1024 * 1024,
+        allowedMimeTypes: TIPOS_ACEITOS,
+      })
+    }
   }
+
   baldeVerificado = true
 }
 
@@ -159,8 +183,14 @@ export async function sintetizar(
   })
 
   if (error) {
-    console.error('[tts] erro ao guardar:', error.message)
-    throw new Error('Não foi possível guardar o áudio gerado.')
+    // O cache é otimização, não requisito. Falhar aqui derrubava a leitura em
+    // voz alta do app inteiro; agora devolvemos o áudio pronto e apenas
+    // registramos o problema — o usuário ouve, e o próximo acesso tenta de novo.
+    console.error('[tts] nao consegui guardar em cache:', error.message)
+    return {
+      url: `data:${tipoMime};base64,${base64}`,
+      reaproveitado: false,
+    }
   }
 
   return { url: publico.publicUrl, reaproveitado: false }
