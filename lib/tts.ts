@@ -72,8 +72,9 @@ async function garantirBalde() {
       allowedMimeTypes: TIPOS_ACEITOS,
     })
   } else {
-    const aceitos = data.allowedMimeTypes ?? []
-    const faltando = TIPOS_ACEITOS.some(t => !aceitos.includes(t))
+    // O SDK devolve o campo em snake_case, diferente do que aceita ao criar.
+    const aceitos: string[] = (data as { allowed_mime_types?: string[] | null }).allowed_mime_types ?? []
+    const faltando = aceitos.length > 0 && TIPOS_ACEITOS.some(t => !aceitos.includes(t))
     if (faltando) {
       console.warn('[tts] balde desatualizado; corrigindo os formatos aceitos')
       await admin.storage.updateBucket(BALDE, {
